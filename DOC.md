@@ -1,6 +1,6 @@
 # Vodafone Vendor Management System Documentation
 
-Note: Home is https://vodafone-backend.herokuapp.com
+Note: Home is https://voda-api.herokuapp.com
 
 ## Register
 ```js
