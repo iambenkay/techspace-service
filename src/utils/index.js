@@ -24,7 +24,7 @@ function verifyToken (token) {
     }
 }
 
-function httperror(message) {
+function HTTPError(message) {
     return {
         error: true,
         message,
@@ -48,7 +48,7 @@ module.exports = {
     createToken,
     verifyToken,
     Id,
-    httperror,
+    HTTPError,
     isAuthenticated,
     removeDuplicates
 }
