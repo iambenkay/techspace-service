@@ -4,7 +4,7 @@ Note: Home is https://voda-api.herokuapp.com
 
 ## Register
 ```js
-POST /accounts
+POST /api/v1/accounts
 
 {
     email: string,
@@ -15,7 +15,7 @@ POST /accounts
 ```
 ## Login
 ```js
-POST /login
+POST /api/v1/login
 
 {
     email: string,
@@ -24,13 +24,13 @@ POST /login
 ```
 ## Get account details
 ```js
-GET /accounts
+GET /api/v1/accounts
 
 Authorization: Bearer <token>
 ```
 ## Assign admins
 ```js
-POST /accounts/admins
+POST /api/v1/accounts/admins
 
 Authorization: Bearer <token>
 
@@ -40,7 +40,7 @@ Authorization: Bearer <token>
 ```
 ## Upload vendor requirements
 ```js
-POST /accounts/vendor-requirements
+POST /api/v1/accounts/vendor-requirements
 
 Authorization: Bearer <token>
 
