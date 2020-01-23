@@ -1,13 +1,13 @@
 const { MongoClient } = require("mongodb")
 require("dotenv").config()
-const {MONGO_URI, DB_NAME} = process.env
+const {MONGODB_URI, DB_NAME} = process.env
 
-const client = new MongoClient(MONGO_URI, {
+const client = new MongoClient(MONGODB_URI, {
     useNewUrlParser: true,
     useUnifiedTopology: true
 })
 
-console.log(MONGO_URI, DB_NAME)
+console.log(MONGODB_URI, DB_NAME)
 
 module.exports = async () => {
     if(!client.isConnected()) await client.connect()
