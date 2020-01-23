@@ -3,7 +3,7 @@
 Note: Home is https://vodafone-backend.herokuapp.com
 
 ## Register
-```json
+```js
 POST /accounts
 
 {
@@ -14,7 +14,7 @@ POST /accounts
 }
 ```
 ## Login
-```json
+```js
 POST /login
 
 {
@@ -23,13 +23,13 @@ POST /login
 }
 ```
 ## Get account details
-```json
+```js
 GET /accounts
 
 Authorization: Bearer <token>
 ```
 ## Assign admins
-```json
+```js
 POST /accounts/admins
 
 Authorization: Bearer <token>
@@ -39,7 +39,7 @@ Authorization: Bearer <token>
 }
 ```
 ## Upload vendor requirements
-```json
+```js
 POST /accounts/vendor-requirements
 
 Authorization: Bearer <token>
