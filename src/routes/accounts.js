@@ -26,8 +26,9 @@ router.post("/accounts/add-vendors", isAuthenticated, async (req, res) => {
     
     const business = await Account.find({_id: id})
 
-    if(business.userType !== 'business') return res.status(400).send(HTTPError("Not a business account"))
+    if(business.userType !== 'business') return res.status(400).send(HTTPError("You can't add vendors to a non-business a business account"))
     
+
 })
 
 router.post("/accounts/doc-upload", isAuthenticated, upload.single("document"), async (req, res) => {
@@ -80,7 +81,7 @@ router.post("/accounts/admins", isAuthenticated, async (req, res) => {
     const { email } = req.body
     if (!email) return res.status(400).send(HTTPError("You must provide the email of the user you want to make admin"))
     const regularUser = await Account.find({ email })
-    if (regularUser.userType !== "regular") res.status(400).send(HTTPError("You must provide a registered regular user account"))
+    if (!regularUser || regularUser.userType !== "regular") res.status(400).send(HTTPError("You must provide a registered regular user account"))
     const admins = await Account.find({ _id: id }).then(account => account.admins || [])
     if (regularUser.id === id) return res.status(400).send(HTTPError("You can't add your businesss account. It is a default admin"))
     if (admins.includes(regularUser.id)) return res.status(200).send({
