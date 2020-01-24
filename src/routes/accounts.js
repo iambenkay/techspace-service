@@ -18,30 +18,13 @@ router.get("/accounts", isAuthenticated, async (req, res) => {
     return res.status(200).send(user)
 })
 
-router.post("/accounts/add-vendors", isAuthenticated, async (req, res) => {
+router.post("/accounts/apply-to-business", isAuthenticated, async (req, res) => {
     const { id } = req.payload
     const { email } = req.body
 
     if(!email) return res.status(400).send(HTTPError("You must provide id of the business you're trying to add"))
     
-    const {userType, vendorRequirements, vendors = {}} = await Account.find({_id: id})
-    const vendor = await Account.find({email}).then(user => user || user.userType === 'vendor')
-    if(!vendor) return res.status(400).send(HTTPError("email does not belong to a vendor"))
-
-    if(userType !== 'business') return res.status(400).send(HTTPError("You can't add vendors to a non-business a business account"))
-    const reqList = vendorRequirements.split("|")
-    let satisfied = true
-    for(let i of reqList){
-        const identity = await Collection(i).find({owner: email})
-        if(!identity) {
-            satisfied = false
-            break
-        }
-    }
-    await Account.update({_id: id}, {vendors: {[vendor.id]: satisfied, ...vendors}})
-    const {businesses = []} = vendor
-    await Account.update({email}, {businesses: [id, ...businesses]})
-
+    
     return res.status(200).send({
         error: false,
         message: "Vendor added to business"
