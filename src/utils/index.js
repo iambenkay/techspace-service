@@ -37,10 +37,10 @@ function Id(){
 
 function isAuthenticated (req, res, next) {
     if(!req.get("Authorization") || !req.get("Authorization").startsWith("Bearer "))
-        return res.status(401).send(httperror("You have to provide a JWT Token"))
+        return res.status(401).send(HTTPError("You have to provide a JWT Token"))
     const token = req.get("Authorization").split(" ")[1]
     req.payload = verifyToken(token)
-    if(!req.payload) return res.status(401).send(httperror("Invalid JWT Token"))
+    if(!req.payload) return res.status(401).send(HTTPError("Invalid JWT Token"))
     return next()
 }
 

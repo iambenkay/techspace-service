@@ -1,19 +1,21 @@
 const router = require("express").Router()
-const Account = require("../models/accounts")
+const Collection = require("../models/orm")
 const bcrypt = require("bcryptjs")
-const {createToken, HTTPError} = require("../utils")
+const { createToken, HTTPError } = require("../utils")
 
-router.post("/login", async(req, res) => {
-    const {email, password} = req.body
+const Account = Collection("accounts")
 
-    const data = await Account.find({email})
+router.post("/login", async (req, res) => {
+    const { email, password } = req.body
 
-    if(data === null) return res.status(400).send(HTTPError("The provided email does not belong to an account"))
+    const data = await Account.find({ email })
+
+    if (data === null) return res.status(400).send(HTTPError("The provided email does not belong to an account"))
 
     const valid = bcrypt.compareSync(password, data.password)
 
-    if(!valid) return res.status(400).send(HTTPError("Password or email does not match an existing account"))
-
+    if (!valid) return res.status(400).send(HTTPError("Password or email does not match an existing account"))
+    Account.update({email}, { lastLogin: Date.now() })
     const token = createToken({
         email: data.email,
         phone: data.phone,

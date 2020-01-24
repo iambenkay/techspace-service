@@ -48,3 +48,15 @@ Authorization: Bearer <token>
     requirements: nin|nationalid|driverslicense|certofownership|tin|intlpassport
 }
 ```
+## Upload vendor documents
+```js
+POST /api/v1/accounts/doc-upload
+
+Authorization: Bearer <token>
+Content-Type: multipart/form-data
+
+{
+    type: nin|nationalid|driverslicense|certofownership|tin|intlpassport,
+    document: PDF file
+}
+```

@@ -1,8 +1,12 @@
 const router = require("express").Router()
-const Account = require("../models/accounts")
+const Collection = require("../models/orm")
+const {Binary} = require("mongodb")
 const bcrypt = require("bcryptjs")
 const { createToken, HTTPError, isAuthenticated, removeDuplicates } = require("../utils")
 const allReqs = ["nin", "nationalid", "driverslicense", "certofownership", "tin", "intlpassport"]
+const upload = require("multer")()
+
+const Account = Collection("accounts")
 
 router.get("/accounts", isAuthenticated, async (req, res) => {
     const { id } = req.payload
@@ -14,22 +18,41 @@ router.get("/accounts", isAuthenticated, async (req, res) => {
     return res.status(200).send(user)
 })
 
-
-router.post("/accounts/vendors", isAuthenticated, async (req, res) => {
+router.post("/accounts/add-vendors", isAuthenticated, async (req, res) => {
     const { id } = req.payload
-    const { businessId } = req.body
+    const { email } = req.body
 
-    if(!businessId) return res.status(400).send(HTTPError("You have "))
+    if(!email) return res.status(400).send(HTTPError("You must provide id of the business you're trying to add"))
+    
+    const business = await Account.find({_id: id})
+
+    if(business.userType !== 'business') return res.status(400).send(HTTPError("Not a business account"))
+    
 })
 
-router.post("/accounts/doc-upload", isAuthenticated, async (req, res) => {
+router.post("/accounts/doc-upload", isAuthenticated, upload.single("document"), async (req, res) => {
     const { id } = req.payload
-    const { document, type } = req.body
+    const { type } = req.body
+    const {file: document} = req
+    const isVendor = Account.find({_id: id}).then(user => user.userType === 'vendor')
+    if(!isVendor) return res.status(400).send(HTTPError("Account must be a vendor to upload identity documents"))
+    const allowedMime = 'application/pdf'
+    const maxSize = 6291456
+    if(document.mimetype !== allowedMime) return res.status(400).send(HTTPError("You must upload a PDF file"))
+    if(document.size > maxSize) return res.status(400).send(HTTPError("You must upload a file of less than 6MB"))
+    const Identity = Collection(type)
 
     if (!document || !type) return res.status(400).send(HTTPError("You have to provide a document and type"))
     if(!allReqs.includes(type)) return res.status(400).send(HTTPError("Invalid document type"))
+    const updateInstead = await Identity.find({owner: id}).then(user => !!user)
+    if(updateInstead){
+        await Identity.update({owner: id, document, verified: false})
+    } else await Identity.insert({owner: id, document, verified: false})
 
-
+    return res.status(200).send({
+        error: false,
+        message: "Document has been uploaded to database"
+    })
 })
 
 router.post("/accounts/vendor-requirements", isAuthenticated, async (req, res) => {
@@ -77,7 +100,7 @@ router.post("/accounts", async (req, res) => {
     const { name, email, userType, password, phone } = req.body
 
     if (!email || !name || !userType || !password || !phone) {
-        return res.status(400).send(HTTPError("You need to provide email, userType, password, phone"))
+        return res.status(400).send(HTTPError("You need to provide name, email, userType, password, phone"))
     }
     if (!(/^(business|regular|vendor)$/.test(userType))) {
         return res.status(400).send(HTTPError("userType must be one of business, regular, vendor"))
@@ -101,7 +124,8 @@ router.post("/accounts", async (req, res) => {
         name,
         userType,
         password: hashedPassword,
-        phone
+        phone,
+        isVerified: false,
     })
     const token = createToken({
         email: data.email,
