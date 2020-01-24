@@ -60,3 +60,13 @@ Content-Type: multipart/form-data
     document: PDF file
 }
 ```
+## Add vendor to business
+```js
+POST /api/v1/accounts/add-vendors
+
+Authorization: Bearer <token>
+
+{
+    email: string
+}
+```
