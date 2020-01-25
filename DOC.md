@@ -38,16 +38,17 @@ Authorization: Bearer <token>
     email: string
 }
 ```
-## Upload vendor requirements
+## Upload vendor requirements from business
 ```js
 POST /api/v1/accounts/vendor-requirements
 
 Authorization: Bearer <token>
 
 {
-    requirements: nin|nationalid|driverslicense|certofownership|tin|intlpassport
+    requirements: <value>|<value>|<value> ...
 }
 ```
+value  can be any of `nin`, `nationalid`, `driverslicense`, `certofownership`, `tin`, `intlpassport`
 ## Upload vendor documents
 ```js
 POST /api/v1/accounts/doc-upload
@@ -60,9 +61,9 @@ Content-Type: multipart/form-data
     document: PDF file
 }
 ```
-## Add vendor to business
+## Apply to business as vendor
 ```js
-POST /api/v1/accounts/add-vendors
+POST /api/v1/accounts/apply-to-business
 
 Authorization: Bearer <token>
 

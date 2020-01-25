@@ -1,8 +1,9 @@
 const router = require("express").Router()
 const Collection = require("../models/orm")
-const {Binary} = require("mongodb")
+const { Binary } = require("mongodb")
 const bcrypt = require("bcryptjs")
-const { createToken, HTTPError, isAuthenticated, removeDuplicates } = require("../utils")
+const { createToken, HTTPError, removeDuplicates } = require("../utils")
+const { isAuthenticated, isAccountType } = require("../middleware")
 const allReqs = ["nin", "nationalid", "driverslicense", "certofownership", "tin", "intlpassport"]
 const upload = require("multer")()
 
@@ -18,37 +19,50 @@ router.get("/accounts", isAuthenticated, async (req, res) => {
     return res.status(200).send(user)
 })
 
-router.post("/accounts/apply-to-business", isAuthenticated, async (req, res) => {
+router.post("/accounts/apply-to-business", isAuthenticated, isAccountType("vendor"), async (req, res) => {
     const { id } = req.payload
     const { email } = req.body
 
-    if(!email) return res.status(400).send(HTTPError("You must provide id of the business you're trying to add"))
-    
-    
+    if (!email) return res.status(400).send(HTTPError("You must provide id of the business you're trying to apply to"))
+
+    const { vendorRequirements: v, id: businessId, vendors = {} } = await Account.find({ email })
+    const vendorRequirements = v.split("|")
+    let satisified = true
+    for (let r of vendorRequirements) {
+        const hasDoc = await Collection(r).find({ owner: id }).then(user => !!user)
+        if (!hasDoc) {
+            satisified = false
+            break;
+        }
+    }
+    if (!satisified) return res.status(400).send(HTTPError(`You are not qualified to apply to this business. Upload the following: ${vendorRequirements.join(", ")}`))
+    const { businesses = [] } = await Account.find({ _id: id })
+    await Account.update({ _id: id }, { businesses: [businessId, ...businesses] })
+    await Account.update({email}, {vendors: {[id]: true, ...vendors}})
     return res.status(200).send({
         error: false,
         message: "Vendor added to business"
     })
 })
 
-router.post("/accounts/doc-upload", isAuthenticated, upload.single("document"), async (req, res) => {
+router.post("/accounts/doc-upload", isAuthenticated, isAccountType("vendor"), upload.single("document"), async (req, res) => {
     const { id } = req.payload
     const { type } = req.body
-    const {file: document} = req
-    const isVendor = Account.find({_id: id}).then(user => user.userType === 'vendor')
-    if(!isVendor) return res.status(400).send(HTTPError("Account must be a vendor to upload identity documents"))
+    const { file: document } = req
+    const isVendor = Account.find({ _id: id }).then(user => user.userType === 'vendor')
+    if (!isVendor) return res.status(400).send(HTTPError("Account must be a vendor to upload identity documents"))
     const allowedMime = 'application/pdf'
     const maxSize = 6291456
-    if(document.mimetype !== allowedMime) return res.status(400).send(HTTPError("You must upload a PDF file"))
-    if(document.size > maxSize) return res.status(400).send(HTTPError("You must upload a file of less than 6MB"))
+    if (document.mimetype !== allowedMime) return res.status(400).send(HTTPError("You must upload a PDF file"))
+    if (document.size > maxSize) return res.status(400).send(HTTPError("You must upload a file of less than 6MB"))
     const Identity = Collection(type)
 
     if (!document || !type) return res.status(400).send(HTTPError("You have to provide a document and type"))
-    if(!allReqs.includes(type)) return res.status(400).send(HTTPError("Invalid document type"))
-    const updateInstead = await Identity.find({owner: id}).then(user => !!user)
-    if(updateInstead){
-        await Identity.update({owner: id, document, verified: false})
-    } else await Identity.insert({owner: id, document, verified: false})
+    if (!allReqs.includes(type)) return res.status(400).send(HTTPError("Invalid document type"))
+    const updateInstead = await Identity.find({ owner: id }).then(user => !!user)
+    if (updateInstead) {
+        await Identity.update({ owner: id, document, verified: false })
+    } else await Identity.insert({ owner: id, document, verified: false })
 
     return res.status(200).send({
         error: false,
@@ -56,7 +70,7 @@ router.post("/accounts/doc-upload", isAuthenticated, upload.single("document"), 
     })
 })
 
-router.post("/accounts/vendor-requirements", isAuthenticated, async (req, res) => {
+router.post("/accounts/vendor-requirements", isAuthenticated, isAccountType("business"), async (req, res) => {
     const { id, userType } = req.payload
     let { requirements } = req.body
 
