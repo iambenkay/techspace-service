@@ -35,6 +35,7 @@ router.post("/accounts/apply-to-business", isAuthenticated, isAccountType("vendo
             break;
         }
     }
+
     if (!satisified) return res.status(400).send(HTTPError(`You are not qualified to apply to this business. Upload the following: ${vendorRequirements.join(", ")}`))
     const { businesses = [] } = await Account.find({ _id: id })
     await Account.update({ _id: id }, { businesses: [businessId, ...businesses] })
@@ -45,11 +46,19 @@ router.post("/accounts/apply-to-business", isAuthenticated, isAccountType("vendo
     })
 })
 
+router.post("/accounts/invite-vendor", isAuthenticated, isAccountType("business"), (req, res) => {
+    const {id} = req.payload
+    const {email} = req.body
+
+    if(!email) return res.status(400).send(HTTPError("You must provide the email of the vendor"))
+
+})
+
 router.post("/accounts/doc-upload", isAuthenticated, isAccountType("vendor"), upload.single("document"), async (req, res) => {
     const { id } = req.payload
     const { type } = req.body
     const { file: document } = req
-    const isVendor = Account.find({ _id: id }).then(user => user.userType === 'vendor')
+    const isVendor = Account.find({ _id: id }).then(user => user && user.userType === 'vendor')
     if (!isVendor) return res.status(400).send(HTTPError("Account must be a vendor to upload identity documents"))
     const allowedMime = 'application/pdf'
     const maxSize = 6291456
