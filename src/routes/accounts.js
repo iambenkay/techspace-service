@@ -25,7 +25,7 @@ router.post("/accounts/apply-to-business", isAuthenticated, isAccountType("vendo
 
     if (!email) return res.status(400).send(HTTPError("You must provide id of the business you're trying to apply to"))
 
-    const { vendorRequirements: v, id: businessId, vendors = {} } = await Account.find({ email })
+    const { vendorRequirements: v = "", id: businessId, vendors = {} } = await Account.find({ email })
     const vendorRequirements = v.split("|")
     let satisified = true
     for (let r of vendorRequirements) {
