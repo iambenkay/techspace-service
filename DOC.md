@@ -77,3 +77,13 @@ POST /api/v1/accounts/business-search?q=<query>
 
 Authorization: Bearer <token>
 ```
+## Invite vendor to business
+```js
+POST /api/v1/accounts/invite-vendor
+
+Authorization: Bearer <token>
+
+{
+    email: string
+}
+```
