@@ -52,7 +52,7 @@ router.post("/accounts/invite-vendor", isAuthenticated, isAccountType("business"
     const { email } = req.body
 
     if (!email) return res.status(400).send(HTTPError("You must provide the email of the vendor"))
-    const { vendorRequirements: v, id: businessId, vendors = {} } = await Account.find({ _id: id })
+    const { vendorRequirements: v = "", id: businessId, vendors = {} } = await Account.find({ _id: id })
     const { id: vendorId } = await Account.find({ email })
     const vendorRequirements = v.split("|")
     let satisified = true
