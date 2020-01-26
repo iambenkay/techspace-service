@@ -46,7 +46,7 @@ router.post("/accounts/apply-to-business", isAuthenticated, isAccountType("vendo
     })
 })
 
-router.post("/accounts/invite-vendor", isAuthenticated, isAccountType("business"), (req, res) => {
+router.post("/accounts/invite-vendor", isAuthenticated, isAccountType("business"), async (req, res) => {
     const { id } = req.payload
     const { email } = req.body
 
