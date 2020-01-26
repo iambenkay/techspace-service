@@ -57,6 +57,7 @@ router.post("/accounts/invite-vendor", isAuthenticated, isAccountType("business"
     const vendorRequirements = v.split("|")
     let satisified = true
     for (let r of vendorRequirements) {
+        if(!r) break
         const hasDoc = await Collection(r).find({ owner: vendorId }).then(user => !!user)
         if (!hasDoc) {
             satisified = false
