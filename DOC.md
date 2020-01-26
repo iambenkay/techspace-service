@@ -71,3 +71,9 @@ Authorization: Bearer <token>
     email: string
 }
 ```
+## Search businesses
+```js
+POST /api/v1/accounts/business-search?q=<query>
+
+Authorization: Bearer <token>
+```

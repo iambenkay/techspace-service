@@ -78,7 +78,17 @@ router.post("/accounts/doc-upload", isAuthenticated, isAccountType("vendor"), up
         message: "Document has been uploaded to database"
     })
 })
+router.get("/accounts/business-search", isAuthenticated, async (req, res) => {
+    const {q: searchQuery} = req.query
+    if(!searchQuery) return res.status(400).send(HTTPError("You must send a query"))
 
+    const businesses = await Account.findAll({name: new RegExp(searchQuery, "i")})
+
+    return res.status(200).send({
+        error: false,
+        businesses
+    })
+})
 router.post("/accounts/vendor-requirements", isAuthenticated, isAccountType("business"), async (req, res) => {
     const { id, userType } = req.payload
     let { requirements } = req.body
