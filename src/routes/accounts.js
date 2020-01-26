@@ -39,7 +39,7 @@ router.post("/accounts/apply-to-business", isAuthenticated, isAccountType("vendo
     if (!satisified) return res.status(400).send(HTTPError(`You are not qualified to apply to this business. Upload the following: ${vendorRequirements.join(", ")}`))
     const { businesses = [] } = await Account.find({ _id: id })
     await Account.update({ _id: id }, { businesses: [businessId, ...businesses] })
-    await Account.update({email}, {vendors: {[id]: true, ...vendors}})
+    await Account.update({ email }, { vendors: { [id]: true, ...vendors } })
     return res.status(200).send({
         error: false,
         message: "Vendor added to business"
@@ -47,11 +47,37 @@ router.post("/accounts/apply-to-business", isAuthenticated, isAccountType("vendo
 })
 
 router.post("/accounts/invite-vendor", isAuthenticated, isAccountType("business"), (req, res) => {
-    const {id} = req.payload
-    const {email} = req.body
+    const { id } = req.payload
+    const { email } = req.body
 
-    if(!email) return res.status(400).send(HTTPError("You must provide the email of the vendor"))
-
+    if (!email) return res.status(400).send(HTTPError("You must provide the email of the vendor"))
+    const { vendorRequirements: v, id: businessId, vendors = {} } = await Account.find({ _id: id })
+    const { id: vendorId } = await Account.find({ email })
+    const vendorRequirements = v.split("|")
+    let satisified = true
+    for (let r of vendorRequirements) {
+        const hasDoc = await Collection(r).find({ owner: vendorId }).then(user => !!user)
+        if (!hasDoc) {
+            satisified = false
+            break;
+        }
+    }
+    if (!satisified) {
+        const { businesses = [] } = await Account.find({ _id: vendorId })
+        await Account.update({ _id: vendorId }, { businesses: [businessId, ...businesses] })
+        await Account.update({ _id: id }, { vendors: { [id]: false, ...vendors } })
+        return res.status(200).send({
+            error: false,
+            message: "Vendor added to business"
+        })
+    }
+    const { businesses = [] } = await Account.find({ _id: vendorId })
+    await Account.update({ _id: vendorId }, { businesses: [businessId, ...businesses] })
+    await Account.update({ _id: id }, { vendors: { [id]: true, ...vendors } })
+    return res.status(200).send({
+        error: false,
+        message: "Vendor added to business"
+    })
 })
 
 router.post("/accounts/doc-upload", isAuthenticated, isAccountType("vendor"), upload.single("document"), async (req, res) => {
@@ -79,10 +105,10 @@ router.post("/accounts/doc-upload", isAuthenticated, isAccountType("vendor"), up
     })
 })
 router.get("/accounts/business-search", isAuthenticated, async (req, res) => {
-    const {q: searchQuery} = req.query
-    if(!searchQuery) return res.status(400).send(HTTPError("You must send a query"))
+    const { q: searchQuery } = req.query
+    if (!searchQuery) return res.status(400).send(HTTPError("You must send a query"))
 
-    const businesses = await Account.findAll({name: new RegExp(searchQuery, "i")})
+    const businesses = await (await Account.findAll({ name: new RegExp(searchQuery, "i") })).map(({id, name = "", email}) => ({id, name, email}))
 
     return res.status(200).send({
         error: false,
