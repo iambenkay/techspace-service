@@ -29,10 +29,11 @@ router.post("/accounts/apply-to-business", isAuthenticated, isAccountType("vendo
     const vendorRequirements = v.split("|")
     let satisified = true
     for (let r of vendorRequirements) {
+        if(!r) break
         const hasDoc = await Collection(r).find({ owner: id }).then(user => !!user)
         if (!hasDoc) {
             satisified = false
-            break;
+            break
         }
     }
 
