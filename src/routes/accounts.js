@@ -19,7 +19,7 @@ router.get("/accounts", isAuthenticated, async (req, res) => {
     return res.status(200).send(user)
 })
 
-router.delete("/accounts/vendors", isAuthenticated, isAccountType("business"), (req, res) => {
+router.delete("/accounts/vendors", isAuthenticated, isAccountType("business"), async (req, res) => {
     const { id } = req.payload
 
     const {id: vendorId} = req.body
