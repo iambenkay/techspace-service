@@ -89,7 +89,7 @@ Authorization: Bearer <token>
 ```
 ## Delisting a vendor
 ```js
-DELETE /api/v1/accounts/delete-vendor
+DELETE /api/v1/accounts/vendors
 
 Authorization: Bearer <token>
 

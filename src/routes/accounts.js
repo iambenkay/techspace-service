@@ -19,7 +19,7 @@ router.get("/accounts", isAuthenticated, async (req, res) => {
     return res.status(200).send(user)
 })
 
-router.post("/accounts/delete-vendor", isAuthenticated, isAccountType("business"), async (req, res) => {
+router.delete("/accounts/vendors", isAuthenticated, isAccountType("business"), async (req, res) => {
     const { id } = req.payload
 
     const {email: vendorEmail} = req.body
@@ -34,6 +34,10 @@ router.post("/accounts/delete-vendor", isAuthenticated, isAccountType("business"
     const {vendors = {}} = await Account.find({_id: id})
     delete vendors[vendorId]
     await Account.update({_id: id}, {vendors})
+    return res.status(200).send({
+        error: false,
+        message: "You have delisted this vendor"
+    })
 })
 
 router.post("/accounts/apply-to-business", isAuthenticated, isAccountType("vendor"), async (req, res) => {
