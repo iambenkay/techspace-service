@@ -22,15 +22,16 @@ router.get("/accounts", isAuthenticated, async (req, res) => {
 router.delete("/accounts/vendors", isAuthenticated, isAccountType("business"), async (req, res) => {
     const { id } = req.payload
 
-    const {id: vendorId} = req.body
-    const vendor = {businesses} = await Account.find({_id: vendorId})
+    const {email: vendorEmail} = req.body
+    if(!vendorEmail) return res.status(400).send(HTTPError("Vendor email was not provided"))
+    const vendor = {businesses = [], id: vendorId} = await Account.find({email: vendorEmail})
     if(!vendor) return res.status(400).send(HTTPError("You can't remove a non-existent vendor account"))
     const isAVendorOf = businesses && businesses.includes(id)
     if(!isAVendorOf) return res.status(400).send(HTTPError("Vendor is not a part of your business"))
     const index = businesses.indexOf(id)
     delete businesses[index]
     await Account.update({_id: vendorId}, {businesses})
-    const {vendors} = await Account.find({_id: id})
+    const {vendors = {}} = await Account.find({_id: id})
     delete vendors[vendorId]
     await Account.update({_id: id}, {vendors})
 })
@@ -151,10 +152,14 @@ router.post("/accounts/vendor-requirements", isAuthenticated, isAccountType("bus
         message: "Requirements have been updated"
     })
 })
+router.delete("/accounts/admins", isAuthenticated, isAccountType("business"), async (req, res) => {
+    const {id} = req.payload
 
-router.post("/accounts/admins", isAuthenticated, async (req, res) => {
-    const { id, userType } = req.payload
-    if (userType !== "business") return res.status(400).send(HTTPError("You must be a business to have admins"))
+
+})
+
+router.post("/accounts/admins", isAuthenticated, isAccountType("business"), async (req, res) => {
+    const { id } = req.payload
     const { email } = req.body
     if (!email) return res.status(400).send(HTTPError("You must provide the email of the user you want to make admin"))
     const regularUser = await Account.find({ email })
