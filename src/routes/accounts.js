@@ -167,7 +167,7 @@ router.post("/accounts/admins", isAuthenticated, isAccountType("business"), asyn
     const { email } = req.body
     if (!email) return res.status(400).send(HTTPError("You must provide the email of the user you want to make admin"))
     const regularUser = await Account.find({ email })
-    if (!regularUser || regularUser.userType !== "regular") res.status(400).send(HTTPError("You must provide a registered regular user account"))
+    if (!regularUser || regularUser.userType !== "regular") return res.status(400).send(HTTPError("You must provide a registered regular user account"))
     const admins = await Account.find({ _id: id }).then(account => account.admins || [])
     if (regularUser.id === id) return res.status(400).send(HTTPError("You can't add your businesss account. It is a default admin"))
     if (admins.includes(regularUser.id)) return res.status(200).send({
