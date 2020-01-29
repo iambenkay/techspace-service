@@ -73,13 +73,23 @@ Authorization: Bearer <token>
 ```
 ## Search businesses
 ```js
-POST /api/v1/accounts/business-search?q=<query>
+GET /api/v1/accounts/business-search?q=<query>
 
 Authorization: Bearer <token>
 ```
 ## Invite vendor to business
 ```js
 POST /api/v1/accounts/invite-vendor
+
+Authorization: Bearer <token>
+
+{
+    email: string
+}
+```
+## Delisting a vendor
+```js
+DELETE /api/v1/accounts/vendors
 
 Authorization: Bearer <token>
 

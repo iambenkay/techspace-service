@@ -19,6 +19,22 @@ router.get("/accounts", isAuthenticated, async (req, res) => {
     return res.status(200).send(user)
 })
 
+router.delete("/accounts/vendors", isAuthenticated, isAccountType("business"), (req, res) => {
+    const { id } = req.payload
+
+    const {id: vendorId} = req.body
+    const vendor = {businesses} = await Account.find({_id: vendorId})
+    if(!vendor) return res.status(400).send(HTTPError("You can't remove a non-existent vendor account"))
+    const isAVendorOf = businesses && businesses.includes(id)
+    if(!isAVendorOf) return res.status(400).send(HTTPError("Vendor is not a part of your business"))
+    const index = businesses.indexOf(id)
+    delete businesses[index]
+    await Account.update({_id: vendorId}, {businesses})
+    const {vendors} = await Account.find({_id: id})
+    delete vendors[vendorId]
+    await Account.update({_id: id}, {vendors})
+})
+
 router.post("/accounts/apply-to-business", isAuthenticated, isAccountType("vendor"), async (req, res) => {
     const { id } = req.payload
     const { email } = req.body
@@ -29,7 +45,7 @@ router.post("/accounts/apply-to-business", isAuthenticated, isAccountType("vendo
     const vendorRequirements = v.split("|")
     let satisified = true
     for (let r of vendorRequirements) {
-        if(!r) break
+        if (!r) break
         const hasDoc = await Collection(r).find({ owner: id }).then(user => !!user)
         if (!hasDoc) {
             satisified = false
@@ -57,7 +73,7 @@ router.post("/accounts/invite-vendor", isAuthenticated, isAccountType("business"
     const vendorRequirements = v.split("|")
     let satisified = true
     for (let r of vendorRequirements) {
-        if(!r) break
+        if (!r) break
         const hasDoc = await Collection(r).find({ owner: vendorId }).then(user => !!user)
         if (!hasDoc) {
             satisified = false
@@ -110,7 +126,7 @@ router.get("/accounts/business-search", isAuthenticated, async (req, res) => {
     const { q: searchQuery } = req.query
     if (!searchQuery) return res.status(400).send(HTTPError("You must send a query"))
 
-    const businesses = await (await Account.findAll({ name: new RegExp(searchQuery, "i") })).map(({id, name = "", email}) => ({id, name, email}))
+    const businesses = await (await Account.findAll({ name: new RegExp(searchQuery, "i") })).map(({ id, name = "", email }) => ({ id, name, email }))
 
     return res.status(200).send({
         error: false,
