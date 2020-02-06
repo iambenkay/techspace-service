@@ -4,7 +4,7 @@ const {MONGODB_URI, DB_NAME} = process.env
 
 const client = new MongoClient(MONGODB_URI, DB_NAME, {
     useNewUrlParser: true,
-    useUnifiedTopology: true
+    useUnifiedTopology: true,
 })
 
 console.log(MONGODB_URI, DB_NAME)

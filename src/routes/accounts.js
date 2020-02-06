@@ -1,6 +1,5 @@
 const router = require("express").Router()
 const Collection = require("../models/orm")
-const { Binary } = require("mongodb")
 const bcrypt = require("bcryptjs")
 const { createToken, HTTPError, removeDuplicates } = require("../utils")
 const { isAuthenticated, isAccountType } = require("../middleware")
@@ -9,6 +8,7 @@ const upload = require("multer")()
 
 const Account = Collection("accounts")
 
+// Get Account details
 router.get("/accounts", isAuthenticated, async (req, res) => {
     const { id } = req.payload
 
@@ -19,27 +19,29 @@ router.get("/accounts", isAuthenticated, async (req, res) => {
     return res.status(200).send(user)
 })
 
+// Delist a vendor from a business
 router.delete("/accounts/vendors", isAuthenticated, isAccountType("business"), async (req, res) => {
     const { id } = req.payload
 
-    const {email: vendorEmail} = req.body
-    if(!vendorEmail) return res.status(400).send(HTTPError("Vendor email was not provided"))
-    const vendor = {businesses = [], id: vendorId} = await Account.find({email: vendorEmail})
-    if(!vendor) return res.status(400).send(HTTPError("You can't remove a non-existent vendor account"))
+    const { email: vendorEmail } = req.body
+    if (!vendorEmail) return res.status(400).send(HTTPError("Vendor email was not provided"))
+    const vendor = { businesses =[], id: vendorId } = await Account.find({ email: vendorEmail })
+    if (!vendor) return res.status(400).send(HTTPError("You can't remove a non-existent vendor account"))
     const isAVendorOf = businesses && businesses.includes(id)
-    if(!isAVendorOf) return res.status(400).send(HTTPError("Vendor is not a part of your business"))
+    if (!isAVendorOf) return res.status(400).send(HTTPError("Vendor is not a part of your business"))
     const index = businesses.indexOf(id)
     delete businesses[index]
-    await Account.update({_id: vendorId}, {businesses})
-    const {vendors = {}} = await Account.find({_id: id})
+    await Account.update({ _id: vendorId }, { businesses })
+    const { vendors = {} } = await Account.find({ _id: id })
     delete vendors[vendorId]
-    await Account.update({_id: id}, {vendors})
+    await Account.update({ _id: id }, { vendors })
     return res.status(200).send({
         error: false,
         message: "You have delisted this vendor"
     })
 })
 
+// For vendors to apply business
 router.post("/accounts/apply-to-business", isAuthenticated, isAccountType("vendor"), async (req, res) => {
     const { id } = req.payload
     const { email } = req.body
@@ -68,6 +70,7 @@ router.post("/accounts/apply-to-business", isAuthenticated, isAccountType("vendo
     })
 })
 
+// For businesses to invite vendors
 router.post("/accounts/invite-vendor", isAuthenticated, isAccountType("business"), async (req, res) => {
     const { id } = req.payload
     const { email } = req.body
@@ -76,33 +79,25 @@ router.post("/accounts/invite-vendor", isAuthenticated, isAccountType("business"
     const { vendorRequirements: v = "", id: businessId, vendors = {} } = await Account.find({ _id: id })
     const { id: vendorId } = await Account.find({ email })
     const vendorRequirements = v.split("|")
-    let satisified = true
+    let satisfied = true
     for (let r of vendorRequirements) {
         if (!r) break
         const hasDoc = await Collection(r).find({ owner: vendorId }).then(user => !!user)
         if (!hasDoc) {
-            satisified = false
+            satisfied = false
             break;
         }
     }
-    if (!satisified) {
-        const { businesses = [] } = await Account.find({ _id: vendorId })
-        await Account.update({ _id: vendorId }, { businesses: [businessId, ...businesses] })
-        await Account.update({ _id: id }, { vendors: { [id]: false, ...vendors } })
-        return res.status(200).send({
-            error: false,
-            message: "Vendor added to business"
-        })
-    }
     const { businesses = [] } = await Account.find({ _id: vendorId })
     await Account.update({ _id: vendorId }, { businesses: [businessId, ...businesses] })
-    await Account.update({ _id: id }, { vendors: { [id]: true, ...vendors } })
+    await Account.update({ _id: id }, { vendors: { [id]: satisfied, ...vendors } })
     return res.status(200).send({
         error: false,
         message: "Vendor added to business"
     })
 })
 
+// For vendors to upload their certificates
 router.post("/accounts/doc-upload", isAuthenticated, isAccountType("vendor"), upload.single("document"), async (req, res) => {
     const { id } = req.payload
     const { type } = req.body
@@ -127,17 +122,45 @@ router.post("/accounts/doc-upload", isAuthenticated, isAccountType("vendor"), up
         message: "Document has been uploaded to database"
     })
 })
+
+// Search through the list of businesses
 router.get("/accounts/business-search", isAuthenticated, async (req, res) => {
-    const { q: searchQuery } = req.query
+    const { q: searchQuery, by = "name" } = req.query
     if (!searchQuery) return res.status(400).send(HTTPError("You must send a query"))
 
-    const businesses = await (await Account.findAll({ name: new RegExp(searchQuery, "i") })).map(({ id, name = "", email }) => ({ id, name, email }))
+    const businesses = await (await Account.findAll({ [by]: new RegExp(searchQuery, "i"), userType: "business" })).map(({ id, name = "", email }) => ({ id, name, email }))
 
     return res.status(200).send({
         error: false,
         businesses
     })
 })
+
+router.get("/accounts/user-search", isAuthenticated, async (req, res) => {
+    const { q: searchQuery, by = "name" } = req.query
+    if (!searchQuery) return res.status(400).send(HTTPError("You must send a query"))
+
+    const businesses = await (await Account.findAll({ [by]: new RegExp(searchQuery, "i"), userType: "regular" })).map(({ id, name = "", email }) => ({ id, name, email }))
+
+    return res.status(200).send({
+        error: false,
+        businesses
+    })
+})
+
+router.get("/accounts/vendor-search", isAuthenticated, async (req, res) => {
+    const { q: searchQuery, by = "name" } = req.query
+    if (!searchQuery) return res.status(400).send(HTTPError("You must send a query"))
+
+    const vendors = await (await Account.findAll({ [by]: new RegExp(searchQuery, "i"), userType: "vendor" })).map(({ id, name = "", email }) => ({ id, name, email }))
+
+    return res.status(200).send({
+        error: false,
+        vendors
+    })
+})
+
+// For businesses to post what they require of vendors
 router.post("/accounts/vendor-requirements", isAuthenticated, isAccountType("business"), async (req, res) => {
     const { id, userType } = req.payload
     let { requirements } = req.body
@@ -156,12 +179,24 @@ router.post("/accounts/vendor-requirements", isAuthenticated, isAccountType("bus
         message: "Requirements have been updated"
     })
 })
+
+// For businesses to remove admins
 router.delete("/accounts/admins", isAuthenticated, isAccountType("business"), async (req, res) => {
-    const {id} = req.payload
+    const { id } = req.payload
 
-
+    const {email} = req.body
+    if(!email) return res.status(400).send(HTTPError("You need to provide an email of the admin you're trying to remove"))
+    const admin = {_id: adminId, businessId} = await Account.find({email})
+    if(!admin) return res.status(400).send(HTTPError("Account does not exist"))
+    if(businessId !== id) return res.status(400).send(HTTPError("This is not an admin of this business"))
+    const {admins} = await Account.find({_id: id})
+    const index = admins.indexOf(vendorId)
+    delete admins[index]
+    await Account.update({_id: id}, {admins})
+    await Account.update({_id: adminId}, {businessId: null})
 })
 
+// for businesses to add admins
 router.post("/accounts/admins", isAuthenticated, isAccountType("business"), async (req, res) => {
     const { id } = req.payload
     const { email } = req.body
@@ -183,6 +218,36 @@ router.post("/accounts/admins", isAuthenticated, isAccountType("business"), asyn
     })
 })
 
+router.get("/accounts/vendors", isAuthenticated, isAccountType("business"), async (req, res) => {
+    const {id} = req.payload
+
+    const vendors = await Account.find({_id: id}).then(async business => {
+        return Object.keys(business.vendors || {}).map(async vendor => {
+            return await Account.find({_id: vendor}).then(({name, email, id}) => {name, email, id})
+        })
+    })
+    return res.status(200).send({
+        error: false,
+        vendors
+    })
+})
+
+router.get("/accounts/admins", isAuthenticated, isAccountType("business"), async (req, res) => {
+    const {id} = req.payload
+
+    const admins = await Account.findAll({_id: id}).then(async business => {
+        business.admins = business.admins ? business.admins : []
+        return business.admins.map(async v => {
+            return await Account.find({_id: v}).then(({name, email, id}) => {name, email, id})
+        })
+    })
+    return res.status(200).send({
+        error: false,
+        admins
+    })
+})
+
+// For creating one of business, vendor or regular accounts
 router.post("/accounts", async (req, res) => {
     const { name, email, userType, password, phone } = req.body
 
@@ -192,7 +257,7 @@ router.post("/accounts", async (req, res) => {
     if (!(/^(business|regular|vendor)$/.test(userType))) {
         return res.status(400).send(HTTPError("userType must be one of business, regular, vendor"))
     }
-    if (!(/\+234 \d{3} \d{3} \d{4}/.test(phone))) {
+    if (!(/\+234\ ?\d{3}\ ?\d{3}\ ?\d{4}/.test(phone))) {
         return res.status(400).send(HTTPError("phone must be of the form +234 --- --- ----"))
     }
     if (!(/(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/.test(email))) {

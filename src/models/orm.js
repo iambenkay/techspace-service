@@ -53,11 +53,11 @@ module.exports = collection => {
         return result.modifiedCount > 0 ? update : null
     }
 
-    const remove = async query => {
+    const remove = async (query = {}) => {
         const db = await DB()
         const result = await db
             .collection(collection)
-            .deleteOne(query)
+            .deleteMany(query)
 
         return result.deletedCount
     }
