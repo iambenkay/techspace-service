@@ -71,24 +71,6 @@ Authorization: Bearer <token>
     email: string
 }
 ```
-## Search businesses
-```js
-GET /api/v1/accounts/business-search?q=<query>&by="name|email"
-
-Authorization: Bearer <token>
-```
-## Search vendors
-```js
-GET /api/v1/accounts/vendor-search?q=<query>&by="name|email"
-
-Authorization: Bearer <token>
-```
-## Search users
-```js
-GET /api/v1/accounts/user-search?q=<query>&by="name|email"
-
-Authorization: Bearer <token>
-```
 ## Invite vendor to business
 ```js
 POST /api/v1/accounts/invite-vendor
@@ -108,4 +90,34 @@ Authorization: Bearer <token>
 {
     email: string
 }
+```
+## Search businesses
+```js
+GET /api/v1/accounts/business-search?q=<query>&by="name|email"
+
+Authorization: Bearer <token>
+```
+## Search vendors
+```js
+GET /api/v1/accounts/vendor-search?q=<query>&by="name|email"
+
+Authorization: Bearer <token>
+```
+## Search users
+```js
+GET /api/v1/accounts/user-search?q=<query>&by="name|email"
+
+Authorization: Bearer <token>
+```
+## Get vendors for a particular business
+```js
+GET /api/v1/accounts/vendors
+
+Authorization: Bearer <token>
+```
+## Get admins of a business
+```js
+GET /api/v1/accounts/admins
+
+Authorization: Bearer <token>
 ```
