@@ -184,16 +184,16 @@ router.post("/accounts/vendor-requirements", isAuthenticated, isAccountType("bus
 router.delete("/accounts/admins", isAuthenticated, isAccountType("business"), async (req, res) => {
     const { id } = req.payload
 
-    const {email} = req.body
-    if(!email) return res.status(400).send(HTTPError("You need to provide an email of the admin you're trying to remove"))
-    const admin = {_id: adminId, businessId} = await Account.find({email})
-    if(!admin) return res.status(400).send(HTTPError("Account does not exist"))
-    if(businessId !== id) return res.status(400).send(HTTPError("This is not an admin of this business"))
-    const {admins} = await Account.find({_id: id})
+    const { email } = req.body
+    if (!email) return res.status(400).send(HTTPError("You need to provide an email of the admin you're trying to remove"))
+    const admin = { _id: adminId, businessId } = await Account.find({ email })
+    if (!admin) return res.status(400).send(HTTPError("Account does not exist"))
+    if (businessId !== id) return res.status(400).send(HTTPError("This is not an admin of this business"))
+    const { admins } = await Account.find({ _id: id })
     const index = admins.indexOf(vendorId)
     delete admins[index]
-    await Account.update({_id: id}, {admins})
-    await Account.update({_id: adminId}, {businessId: null})
+    await Account.update({ _id: id }, { admins })
+    await Account.update({ _id: adminId }, { businessId: null })
 })
 
 // for businesses to add admins
@@ -219,11 +219,11 @@ router.post("/accounts/admins", isAuthenticated, isAccountType("business"), asyn
 })
 
 router.get("/accounts/vendors", isAuthenticated, isAccountType("business"), async (req, res) => {
-    const {id} = req.payload
+    const { id } = req.payload
 
-    const vendors = await Account.find({_id: id}).then(async business => {
+    const vendors = await Account.find({ _id: id }).then(async business => {
         return Object.keys(business.vendors || {}).map(async vendor => {
-            return await Account.find({_id: vendor}).then(({name, email, id}) => {name, email, id})
+            return await Account.find({ _id: vendor }).then(({ name, email, id }) => { name, email, id })
         })
     })
     return res.status(200).send({
@@ -233,12 +233,12 @@ router.get("/accounts/vendors", isAuthenticated, isAccountType("business"), asyn
 })
 
 router.get("/accounts/admins", isAuthenticated, isAccountType("business"), async (req, res) => {
-    const {id} = req.payload
+    const { id } = req.payload
 
-    const admins = await Account.findAll({_id: id}).then(async business => {
+    const admins = await Account.findAll({ _id: id }).then(async business => {
         business.admins = business.admins ? business.admins : []
         return business.admins.map(async v => {
-            return await Account.find({_id: v}).then(({name, email, id}) => {name, email, id})
+            return await Account.find({ _id: v }).then(({ name, email, id }) => { name, email, id })
         })
     })
     return res.status(200).send({
