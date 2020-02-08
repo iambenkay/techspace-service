@@ -9,3 +9,5 @@ app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({extended: false}))
 
 app.use("/api/v1", require("./routes"))
+
+module.exports = app
