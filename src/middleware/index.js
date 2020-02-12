@@ -1,5 +1,5 @@
 const {verifyToken, HTTPError} = require("../utils")
-const Collection = require("../models/orm")
+const Collection = require("../data/orm")
 
 const Account = Collection("accounts")
 
