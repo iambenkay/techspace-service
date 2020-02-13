@@ -26,13 +26,13 @@ module.exports.create = async request => {
 
 module.exports.retrieve = async request => {
     const { id } = request.payload
+    console.log(id)
+    const adminIds = await Account.find({ _id: id }).then(({admins = []}) => admins)
+    const admins = []
+    for (let a of adminIds){
+        admins.push(await Account.find({_id: a}).then(({name, email, id}) => ({name, email, id})))
+    }
 
-    const admins = await Account.findAll({ _id: id }).then(async business => {
-        business.admins = business.admins ? business.admins : []
-        return business.admins.map(async v => {
-            return await Account.find({ _id: v }).then(({ name, email, id }) => { name, email, id })
-        })
-    })
     return new Response(200, {
         error: false,
         admins

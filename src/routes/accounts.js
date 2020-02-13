@@ -1,8 +1,6 @@
 const router = require("express").Router()
-const Collection = require("../data/orm")
-const { HTTPError, removeDuplicates, handler } = require("../utils")
+const { handler } = require("../utils")
 const { isAuthenticated, isAccountType } = require("../middleware")
-const allReqs = ["nin", "nationalid", "driverslicense", "certofownership", "tin", "intlpassport"]
 const upload = require("multer")()
 const register = require("../controllers/auth/register")
 const account_details = require("../controllers/accounts/details")
@@ -15,8 +13,6 @@ const searchBusiness = require("../controllers/search/business")
 const searchUser = require("../controllers/search/user")
 const searchVendor = require("../controllers/search/vendor")
 const docUpload = require("../controllers/vendors/upload")
-
-const Account = Collection("accounts")
 
 // Get Account details
 router.get("/accounts", isAuthenticated, handler(account_details))

@@ -1,6 +1,6 @@
 const Collection = require("../../data/orm")
 const { Response, ResponseError, removeDuplicates } = require("../../utils")
-
+const allReqs = ["nin", "nationalid", "driverslicense", "certofownership", "tin", "intlpassport"]
 const Account = Collection("accounts")
 
 module.exports = async request => {

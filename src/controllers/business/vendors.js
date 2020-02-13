@@ -6,11 +6,13 @@ const Account = Collection("accounts")
 module.exports.retrieve = async request => {
     const { id } = request.payload
 
-    const vendors = await Account.find({ _id: id }).then(async business => {
-        return Object.keys(business.vendors || {}).map(async vendor => {
-            return await Account.find({ _id: vendor }).then(({ name, email, id }) => { name, email, id })
-        })
-    })
+    const vendorIds = await Account.find({ _id: id }).then(({vendors}) => vendors)
+    const vendors = []
+    for(let v of Object.keys(vendorIds)){
+        const vendor = await Account.find({_id: v}).then(({name, email, id}) => ({name, email, id, status: vendorIds[v]}))
+        vendors.push(vendor)
+    }
+
     return new Response(200, {
         error: false,
         vendors

@@ -1,4 +1,3 @@
-const bcrypt = require("bcryptjs")
 const jwt = require("jsonwebtoken")
 const cuid = require("cuid")
 
@@ -59,8 +58,17 @@ function handler (controller){
                 error: true,
                 message: error.message,
             })
-            return response.status(500).send("Something went wrong")
+            return response.status(500).send(error.message)
         }
+    }
+}
+
+class Notification {
+    static async create(message, userId){
+        Notifications.insert({
+            message,
+            userId
+        })
     }
 }
 
