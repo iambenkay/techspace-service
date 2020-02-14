@@ -121,3 +121,13 @@ GET /api/v1/accounts/admins
 
 Authorization: Bearer <token>
 ```
+## Delisting admins
+```js
+DELETE /api/v1/accounts/admins
+
+Authorization: Bearer <token>
+
+{
+    email: string
+}
+```
