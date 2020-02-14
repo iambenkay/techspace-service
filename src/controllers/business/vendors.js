@@ -12,7 +12,6 @@ module.exports.retrieve = async request => {
         const vendor = await Account.find({_id: v}).then(({name, email, id}) => ({name, email, id, status: vendorIds[v]}))
         vendors.push(vendor)
     }
-
     return new Response(200, {
         error: false,
         vendors

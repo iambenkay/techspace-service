@@ -1,5 +1,5 @@
 const Collection = require("../../data/orm")
-const { Response, ResponseError, removeDuplicates } = require("../../utils")
+const { Response, ResponseError } = require("../../utils")
 const Notifications = Collection("notifications")
 
 class Notification {
@@ -7,9 +7,22 @@ class Notification {
         Notifications.insert({
             message,
             user,
+            read: false
         })
     }
-    static read(id){
+    async static read(id){
         Notifications.update({_id: id}, {read: true})
     }
 }
+
+module.exports.readNotification = async request => {
+    const {id} = request.params
+    
+    await Notification.read(id)
+
+    return new Response(200, {
+        error: false,
+    })
+}
+
+module.exports.Notification = Notification

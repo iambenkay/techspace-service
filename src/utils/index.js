@@ -58,7 +58,7 @@ function handler (controller){
                 error: true,
                 message: error.message,
             })
-            return response.status(500).send(error.message)
+            return response.status(500).send(`${error.message} - ${error.stack}`)
         }
     }
 }
