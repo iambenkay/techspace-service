@@ -27,7 +27,7 @@ module.exports.destroy = async request => {
     const vendor = { businesses =[], id: vendorId } = await Account.find({ email: vendorEmail })
     if (!vendor) throw new ResponseError(400, "You can't remove a non-existent vendor account")
     const isAVendorOf = businesses && businesses.includes(id)
-    if (!isAVendorOf) throw new ReponseError(400, "Vendor is not a part of your business")
+    if (!isAVendorOf) throw new ResponseError(400, "Vendor is not a part of your business")
     const index = businesses.indexOf(id)
     delete businesses[index]
     await Account.update({ _id: vendorId }, { businesses })
