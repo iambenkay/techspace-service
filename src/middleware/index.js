@@ -3,12 +3,14 @@ const Collection = require("../data/orm")
 
 const Account = Collection("accounts")
 
-function isAuthenticated (req, res, next) {
+async function isAuthenticated (req, res, next) {
     if(!req.get("Authorization") || !req.get("Authorization").startsWith("Bearer "))
         return res.status(401).send(HTTPError("You have to provide a JWT Token"))
     const token = req.get("Authorization").split(" ")[1]
     req.payload = verifyToken(token)
     if(!req.payload) return res.status(401).send(HTTPError("Invalid JWT Token"))
+    const user = await Account.find({_id: req.payload.id})
+    if(!user) return res.status(401).send(HTTPError("Invalid Account details"))
     return next()
 }
 

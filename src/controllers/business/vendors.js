@@ -6,9 +6,9 @@ const Account = Collection("accounts")
 module.exports.retrieve = async request => {
     const { id } = request.payload
 
-    const vendorIds = await Account.find({ _id: id }).then(({vendors}) => vendors)
+    const vendorIds = await Account.find({ _id: id }).then(business => business ? business.vendors : {})
     const vendors = []
-    for(let v of Object.keys(vendorIds)){
+    for(let v in vendorIds){
         const vendor = await Account.find({_id: v}).then(({name, email, id}) => ({name, email, id, status: vendorIds[v]}))
         vendors.push(vendor)
     }

@@ -15,8 +15,7 @@ module.exports.create = async request => {
         error: false,
         message: "Already an admin"
     })
-    admins.push(regularUser.id)
-    await Account.update({ _id: id }, { admins })
+    await Account.update({ _id: id }, { admins : [regularUser.id, ...admins] })
     await Account.update({ _id: regularUser.id }, { businessId: id })
     return new Response(200, {
         error: false,
@@ -26,12 +25,8 @@ module.exports.create = async request => {
 
 module.exports.retrieve = async request => {
     const { id } = request.payload
-    console.log(id)
-    const adminIds = await Account.find({ _id: id }).then(({admins = []}) => admins)
-    const admins = []
-    for (let a of adminIds){
-        admins.push(await Account.find({_id: a}).then(({name, email, id}) => ({name, email, id})))
-    }
+    const data = await Account.findAll({ businessId: id })
+    const admins = data.map(({name, email, id}) => ({name, email, id}))
 
     return new Response(200, {
         error: false,
@@ -44,17 +39,19 @@ module.exports.destroy = async request => {
 
     const { email } = request.body
     if (!email) throw new ResponseError(400, "You need to provide an email of the admin you're trying to remove")
-    const admin = { _id: adminId, businessId } = await Account.find({ email })
+    const admin = await Account.find({ email })
     if (!admin) throw new ResponseError(400, "Account does not exist")
+    const { id: adminId, businessId } = admin
     if (businessId !== id) throw new ResponseError(400, "This is not an admin of this business")
     const { admins } = await Account.find({ _id: id })
-    const index = admins.indexOf(vendorId)
+    if(!admins.includes(adminId)) throw new ResponseError(400, "This is not an admin of this business")
+    const index = admins.indexOf(adminId)
     delete admins[index]
     await Account.update({ _id: id }, { admins })
     await Account.update({ _id: adminId }, { businessId: null })
 
     return new Response(200, {
         error: false,
-        message: "Admin ha been delisted"
+        message: "Admin has been delisted"
     })
 }

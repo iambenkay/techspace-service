@@ -3,19 +3,19 @@ const cuid = require("cuid")
 
 const JWT_SECRET_KEY = "extremelysecretkey"
 
-function createToken (payload) {
+function createToken(payload) {
     return jwt.sign(payload, JWT_SECRET_KEY)
 }
-function removeDuplicates (list) {
+function removeDuplicates(list) {
     const result = []
-    for (let i of list){
-        if(!result.includes(i)) result.push(i)
+    for (let i of list) {
+        if (!result.includes(i)) result.push(i)
     }
     return result
 }
 
 
-function verifyToken (token) {
+function verifyToken(token) {
     try {
         return jwt.verify(token, JWT_SECRET_KEY)
     } catch {
@@ -23,38 +23,57 @@ function verifyToken (token) {
     }
 }
 
-function HTTPError(message) {
+function HTTPError(message){
     return {
         error: true,
-        message,
+        message
     }
 }
 
 class ResponseError extends Error {
-    constructor(status, message){
+    constructor(status, message) {
         super(message)
         this.status = status
     }
 }
 
 class Response {
-    constructor(status, data){
+    constructor(status, data, notifications = null) {
         this.status = status
         this.data = data
+        this.notifications = notifications
     }
 }
 
-function Id(){
+class Notification {
+    static create(message, user){
+        Notifications.insert({
+            message,
+            user,
+            read: false
+        })
+    }
+    static async read(id){
+        await Notifications.update({_id: id}, {read: true})
+    }
+}
+
+function Id() {
     return cuid()
 }
 
-function handler (controller){
+function handler(controller) {
     return async (request, response) => {
         try {
             let x = await controller(request)
+            if(x.notifications){
+                for (let i in x.notifications){
+                    await Notification.create(x.notifications[i], i)
+                }
+            }
             return response.status(x.status).send(x.data)
-        } catch(error){
-            if(error instanceof ResponseError) return response.status(error.status).send({
+        } catch (error) {
+            if (error instanceof ResponseError) return response.status(error.status).send({
                 error: true,
                 message: error.message,
             })
@@ -63,22 +82,13 @@ function handler (controller){
     }
 }
 
-class Notification {
-    static async create(message, userId){
-        Notifications.insert({
-            message,
-            userId
-        })
-    }
-}
-
 module.exports = {
     createToken,
     verifyToken,
     Id,
-    HTTPError,
     ResponseError,
     Response,
     handler,
+    HTTPError,
     removeDuplicates
 }
