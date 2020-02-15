@@ -1,7 +1,7 @@
 {
   "name": "vodafone",
   "version": "1.0.0",
-  "description": "Vodafone Vendor Mgmt System",
+  "description": "Vodacom Vendor Mgmt System",
   "main": "src/index.js",
   "scripts": {
     "start": "node src/index.js",

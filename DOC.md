@@ -1,4 +1,4 @@
-# Vodafone Vendor Management System Documentation
+# Vodacom Vendor Management System Documentation
 
 Note: Home is https://voda-api.herokuapp.com
 

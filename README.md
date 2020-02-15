@@ -1,1 +1,1 @@
-# Vodafone Vendor Mgmt System
+# Vodacom Vendor Mgmt System
