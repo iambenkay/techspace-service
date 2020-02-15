@@ -30,11 +30,14 @@ module.exports.destroy = async request => {
     const index = businesses.indexOf(id)
     delete businesses[index]
     await Account.update({ _id: vendorId }, { businesses })
-    const { vendors = {} } = await Account.find({ _id: id })
+    const { vendors = {}, email } = await Account.find({ _id: id })
     delete vendors[vendorId]
     await Account.update({ _id: id }, { vendors })
     return new Response(200, {
         error: false,
         message: "You have delisted this vendor"
+    }, {
+        [id]: `You removed the vendor ${vendorEmail} from your business`,
+        [regularUser.id]: `You were removed from the business run by ${email}`
     })
 }
