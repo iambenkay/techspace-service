@@ -1,9 +1,9 @@
 const router = require("express").Router()
 const { handler } = require("../utils")
 const { isAuthenticated } = require("../middleware")
-const readNotification = require("../controllers/notification")
+const notifications = require("../controllers/notification")
 
-router.post("/notifications", isAuthenticated, handler(readNotification))
-router.get("/notifications", isAuthenticated, handler(getNotifications))
+router.post("/notifications", isAuthenticated, handler(notifications.read))
+router.get("/notifications", isAuthenticated, handler(notifications.get))
 
 module.exports = router

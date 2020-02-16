@@ -174,3 +174,9 @@ GET /api/v1/rfqs/<id>
 
 Authorization: Bearer <token>
 ```
+## Get all notifications
+```js
+GET /api/v1/notifications
+
+Authorization: Bearer <token>
+```
