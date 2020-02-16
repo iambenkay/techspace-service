@@ -1,5 +1,6 @@
 const { Response } = require("../../utils")
 const Notification = require("../../utils/notifier")
+const Notifications = require("../../data/orm")("notifications")
 
 module.exports.read = async request => {
     // TODO: Enforce ownership before access (OBA)
@@ -15,7 +16,7 @@ module.exports.read = async request => {
 module.exports.retrieve = async request => {
     const {id} = request.payload
 
-    const notifications = await Notification.findAll({_id: id})
+    const notifications = await Notifications.findAll({_id: id})
 
     return new Response(200, {
         error: false,
