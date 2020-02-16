@@ -1,8 +1,7 @@
-const Collection = require("../../data/orm")
-const { Response, ResponseError } = require("../../utils")
-const Notifications = Collection("notifications")
+const { Response } = require("../../utils")
+const Notification = require("../../utils/notifier")
 
-module.exports.readNotification = async request => {
+module.exports = async request => {
     const {id} = request.params
     
     await Notification.read(id)
@@ -11,5 +10,3 @@ module.exports.readNotification = async request => {
         error: false,
     })
 }
-
-module.exports.Notification = Notification

@@ -1,5 +1,6 @@
 const jwt = require("jsonwebtoken")
 const cuid = require("cuid")
+const Notification = require("./notifier")
 
 const JWT_SECRET_KEY = "extremelysecretkey"
 
@@ -45,19 +46,6 @@ class Response {
     }
 }
 
-class Notification {
-    static create(message, user){
-        Notifications.insert({
-            message,
-            user,
-            read: false
-        })
-    }
-    static async read(id){
-        await Notifications.update({_id: id}, {read: true})
-    }
-}
-
 function Id() {
     return cuid()
 }
@@ -67,8 +55,8 @@ function handler(controller) {
         try {
             let x = await controller(request)
             if(x.notifications){
-                for (let i in x.notifications){
-                    await Notification.create(x.notifications[i], i)
+                for (let user in x.notifications.content){
+                    await Notification.create(x.notifications.content[user], user, x.notifications.type)
                 }
             }
             return response.status(x.status).send(x.data)

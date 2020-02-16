@@ -32,7 +32,9 @@ module.exports = async request => {
         error: false,
         message: "Vendor added to business"
     }, {
-            [id]: `You invited the vendor ${email} to your business`,
-            [regularUser.id]: `You were invited to the business run by ${businessEmail}`
+            content: {
+                [id]: `You invited the vendor ${email} to your business`,
+                [regularUser.id]: `You were invited to the business run by ${businessEmail}`,
+            }, type: ""
         })
 }

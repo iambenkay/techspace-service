@@ -8,8 +8,8 @@ module.exports.retrieve = async request => {
 
     const vendorIds = await Account.find({ _id: id }).then(business => business ? business.vendors : {})
     const vendors = []
-    for(let v in vendorIds){
-        const vendor = await Account.find({_id: v}).then(({name, email, id}) => ({name, email, id, status: vendorIds[v]}))
+    for (let v in vendorIds) {
+        const vendor = await Account.find({ _id: v }).then(({ name, email, id }) => ({ name, email, id, status: vendorIds[v] }))
         vendors.push(vendor)
     }
     return new Response(200, {
@@ -37,7 +37,9 @@ module.exports.destroy = async request => {
         error: false,
         message: "You have delisted this vendor"
     }, {
-        [id]: `You removed the vendor ${vendorEmail} from your business`,
-        [regularUser.id]: `You were removed from the business run by ${email}`
-    })
+            content: {
+                [id]: `You removed the vendor ${vendorEmail} from your business`,
+                [regularUser.id]: `You were removed from the business run by ${email}`
+            }, type: ""
+        })
 }

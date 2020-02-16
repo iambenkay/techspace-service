@@ -22,8 +22,10 @@ module.exports.create = async request => {
         error: false,
         message: "User was added to admins"
     }, {
-            [id]: `You added the user ${email} to your business`,
-            [regularUser.id]: `You were added to the business run by ${businessEmail}`
+            content: {
+                [id]: `You added the user ${email} to your business`,
+                [regularUser.id]: `You were added to the business run by ${businessEmail}`
+            }, type: ""
         })
 }
 
@@ -58,7 +60,9 @@ module.exports.destroy = async request => {
         error: false,
         message: "Admin has been delisted"
     }, {
-            [id]: `You removed the user ${email} from your business`,
-            [regularUser.id]: `You were removed from the business run by ${businessEmail}`
+            content: {
+                [id]: `You removed the user ${email} from your business`,
+                [regularUser.id]: `You were removed from the business run by ${businessEmail}`
+            }, type: ""
         })
 }
