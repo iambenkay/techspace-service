@@ -1,7 +1,7 @@
 const DB = require("./db")
-const { Id } = require("../utils")
 
 module.exports = collection => {
+    const { Id } = require("../utils")
     const insert = async data => {
         const db = await DB()
         const record = {
@@ -21,7 +21,6 @@ module.exports = collection => {
             ...insertedData
         }
     }
-
     const find = async query => {
         const db = await DB()
         const result = await db

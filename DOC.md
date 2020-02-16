@@ -131,3 +131,46 @@ Authorization: Bearer <token>
     email: string
 }
 ```
+## Read a notification
+```js
+POST /api/v1/notifications?id=<id>
+
+Authorization: Bearer  <token>
+```
+## Create RFQ
+```js
+POST /api/v1/rfqs
+
+Authorization: Bearer  <token>
+
+{
+	"title": "Building materials",
+	"description": "I need ",
+	"category": "Survey and Informatics",
+	"deadline": 1581874494183,
+	"location": "12345678",
+	"quantity": 50
+}
+```
+## Delete RFQ
+```js
+DELETE /api/v1/rfqs
+
+Authorization: Bearer <token>
+
+{
+    id: "ck23131mkd1313425225"
+}
+```
+## Retrieve all RFQs
+```js
+GET /api/v1/rfqs
+
+Authorization: Bearer <token>
+```
+## Retrieve an RFQ
+```js
+GET /api/v1/rfqs/<id>
+
+Authorization: Bearer <token>
+```
