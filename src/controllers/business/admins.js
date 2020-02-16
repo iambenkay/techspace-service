@@ -25,7 +25,7 @@ module.exports.create = async request => {
             content: {
                 [id]: `You added the user ${email} to your business`,
                 [regularUser.id]: `You were added to the business run by ${businessEmail}`
-            }, type: ""
+            }, type: "accounts"
         })
 }
 
@@ -62,7 +62,7 @@ module.exports.destroy = async request => {
     }, {
             content: {
                 [id]: `You removed the user ${email} from your business`,
-                [regularUser.id]: `You were removed from the business run by ${businessEmail}`
-            }, type: ""
+                [adminId]: `You were removed from the business run by ${businessEmail}`
+            }, type: "accounts"
         })
 }

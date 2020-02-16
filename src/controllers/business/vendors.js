@@ -40,6 +40,6 @@ module.exports.destroy = async request => {
             content: {
                 [id]: `You removed the vendor ${vendorEmail} from your business`,
                 [vendorId]: `You were removed from the business run by ${email}`
-            }, type: ""
+            }, type: "accounts"
         })
 }

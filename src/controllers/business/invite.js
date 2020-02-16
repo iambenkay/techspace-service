@@ -35,6 +35,6 @@ module.exports = async request => {
             content: {
                 [id]: `You invited the vendor ${email} to your business`,
                 [vendorId]: `You were invited to the business run by ${businessEmail}`,
-            }, type: ""
+            }, type: "accounts"
         })
 }
