@@ -8,7 +8,7 @@ module.exports = async request => {
     const { email } = request.body
 
     if (!email) throw new ResponseError(400, "You must provide the email of the vendor")
-    const { vendorRequirements: v = "", vendors = {} } = await Account.find({ _id: id })
+    const { vendorRequirements: v = "", vendors = {}, email: businessEmail } = await Account.find({ _id: id })
     const { id: vendorId, userType } = await Account.find({ email })
     if (userType !== "vendor") throw new ResponseError(400, "You must provide a valid vendor account")
     const vendorRequirements = v.split("|")
@@ -34,7 +34,7 @@ module.exports = async request => {
     }, {
             content: {
                 [id]: `You invited the vendor ${email} to your business`,
-                [regularUser.id]: `You were invited to the business run by ${businessEmail}`,
+                [vendorId]: `You were invited to the business run by ${businessEmail}`,
             }, type: ""
         })
 }

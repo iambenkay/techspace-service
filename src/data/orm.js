@@ -1,7 +1,7 @@
 const DB = require("./db")
+const { Id } = require("../utils/tools")
 
 module.exports = collection => {
-    const { Id } = require("../utils")
     const insert = async data => {
         const db = await DB()
         const record = {

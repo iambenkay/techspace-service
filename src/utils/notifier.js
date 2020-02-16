@@ -1,9 +1,9 @@
 const Notifications = require("../data/orm")("notifications")
 
 class Notification {
-    static create(message, user, type) {
+    static async create(message, user, type) {
 
-        Notifications.insert({
+        await Notifications.insert({
             message,
             user,
             type,

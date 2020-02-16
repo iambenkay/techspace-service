@@ -16,7 +16,7 @@ module.exports.read = async request => {
 module.exports.retrieve = async request => {
     const {id} = request.payload
 
-    const notifications = await Notifications.findAll({_id: id})
+    const notifications = await Notifications.findAll({user: id})
 
     return new Response(200, {
         error: false,

@@ -46,10 +46,6 @@ class Response {
     }
 }
 
-function Id() {
-    return cuid()
-}
-
 function handler(controller) {
     return async (request, response) => {
         try {
@@ -73,7 +69,6 @@ function handler(controller) {
 module.exports = {
     createToken,
     verifyToken,
-    Id,
     ResponseError,
     Response,
     handler,
