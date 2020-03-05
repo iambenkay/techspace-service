@@ -1,5 +1,5 @@
 const { Response } = require("../../utils")
-const Notification = require("../../utils/notifier")
+const Notification = require("../../services/notifier")
 const Notifications = require("../../data/orm")("notifications")
 
 module.exports.read = async request => {

@@ -1,4 +1,4 @@
-const {ResponseError} = require("./")
+const {ResponseError} = require("../utils")
 
 class V {
     /**

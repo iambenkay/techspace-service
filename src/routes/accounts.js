@@ -1,5 +1,5 @@
 const router = require("express").Router()
-const { handler } = require("../utils")
+const handler = require("../services/request-injector")
 const { isAuthenticated, isAccountType } = require("../middleware")
 const upload = require("multer")()
 const register = require("../controllers/auth/register")

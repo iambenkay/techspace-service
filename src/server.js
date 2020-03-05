@@ -1,7 +1,7 @@
 const express = require("express")
 const bodyParser = require("body-parser")
 const cors = require("cors")
-const V = require("./utils/validator")
+const V = require("./services/validator")
 
 const app = express()
 

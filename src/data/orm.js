@@ -1,5 +1,5 @@
 const DB = require("./db")
-const { Id } = require("../utils/tools")
+const { Id } = require("../services/provider")
 
 module.exports = collection => {
     const insert = async data => {

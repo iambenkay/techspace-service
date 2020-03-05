@@ -1,5 +1,5 @@
 const Collection = require("../../data/orm")
-const { Response, ResponseError, removeDuplicates } = require("../../utils")
+const { Response, ResponseError } = require("../../utils")
 
 const Account = Collection("accounts")
 

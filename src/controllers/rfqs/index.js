@@ -1,6 +1,6 @@
 const Collection = require("../../data/orm")
 const { Response, ResponseError } = require("../../utils")
-const V = require("../../utils/validator")
+const V = require("../../services/validator")
 
 const RFQ = Collection("rfqs")
 

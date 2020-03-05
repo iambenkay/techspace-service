@@ -1,6 +1,7 @@
 const Collection = require("../../data/orm")
 const bcrypt = require("bcryptjs")
-const { createToken, ResponseError, Response } = require("../../utils")
+const { ResponseError, Response } = require("../../utils")
+const tokeniser = require("../../services/tokeniser")
 
 const Account = Collection("accounts")
 
@@ -15,7 +16,7 @@ module.exports = async request => {
 
     if (!valid) throw new ResponseError(400, "Password or email does not match an existing account")
     Account.update({email}, { lastLogin: Date.now() })
-    const token = createToken({
+    const token = tokeniser.create({
         email: data.email,
         phone: data.phone,
         userType: data.userType,

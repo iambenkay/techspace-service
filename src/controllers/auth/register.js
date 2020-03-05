@@ -1,6 +1,7 @@
 const Collection = require("../../data/orm")
 const bcrypt = require("bcryptjs")
-const { createToken, ResponseError, Response } = require("../../utils")
+const { ResponseError, Response } = require("../../utils")
+const tokeniser = require("../../services/tokeniser")
 
 const Account = Collection("accounts")
 
@@ -35,7 +36,7 @@ module.exports = async request => {
         phone,
         isVerified: false,
     })
-    const token = createToken({
+    const token = tokeniser.create({
         email: data.email,
         phone: data.phone,
         userType: data.userType,
