@@ -13,6 +13,7 @@ const searchBusiness = require("../controllers/search/business")
 const searchUser = require("../controllers/search/user")
 const searchVendor = require("../controllers/search/vendor")
 const docUpload = require("../controllers/vendors/upload")
+const inventory = require("../controllers/vendors/inventory")
 
 // Get Account details
 router.get("/accounts", isAuthenticated, handler(account_details))
@@ -56,4 +57,9 @@ router.get("/accounts/admins", isAuthenticated, isAccountType("business"), handl
 // For creating one of business, vendor or regular accounts
 router.post("/accounts", handler(register))
 
+// For adding a product to vendor inventory
+router.post("/accounts/vendors/inventory", isAuthenticated, isAccountType("vendor"), handler(inventory.add))
+
+// For deleting a product from vendor inventory
+router.delete("/accounts/vendors/inventory", isAuthenticated, isAccountType("vendor"), handler(inventory.remove))
 module.exports = router

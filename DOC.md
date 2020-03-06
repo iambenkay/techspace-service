@@ -180,3 +180,44 @@ GET /api/v1/notifications
 
 Authorization: Bearer <token>
 ```
+## Add product to vendor inventory
+```js
+POST /api/v1/accounts/vendors/inventory
+
+Authorization: Bearer <token>
+{
+	"name": "Cement",
+	"description": "Well granulated cement for housing needs",
+	"price": "34",
+	"oem": "Dangote"
+}
+Example result:
+{
+  "error": false,
+  "message": "Product has been succesfully added to Inventory",
+  "data": {
+    "id": "ck7flrq0z0000hscufyir8pzp",
+    "createdAt": 1583464316291,
+    "updatedAt": 1583464316291,
+    "name": "Cement",
+    "description": "Well granulated cement for housing needs",
+    "price": "34",
+    "oem": "Dangote",
+    "vendorId": "ck7fli7ga0000nhcufn9b1qao"
+  }
+}
+```
+## Remove product from vendor inventory
+```js
+DELETE /api/v1/accounts/vendors/inventory
+
+Authorization: Bearer <token>
+{
+	"productId": "ck7fm0sb600000hcu07l8httr"
+}
+Example result:
+{
+  "error": false,
+  "message": "Product has been succesfully removed from Inventory"
+}
+```
