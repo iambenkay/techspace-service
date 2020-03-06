@@ -22,8 +22,8 @@ module.exports = async request => {
 
     let data = {}
     if (userType === 'vendor') {
-        const { oem, service_category, service_location } = request.body
-        V.allExist("You must provide oem, service_category and service_location for a vendor account before registering", oem, service_category, service_location)
+        const { service_category, service_location } = request.body
+        V.allExist("You must provide service_category and service_location for a vendor account before registering", service_category, service_location)
         data = await Account.insert({
             email,
             name,
@@ -31,7 +31,7 @@ module.exports = async request => {
             password: hashedPassword,
             phone,
             isVerified: false,
-            oem, service_category, service_location
+            service_category, service_location
         })
     } else {
         data = await Account.insert({
