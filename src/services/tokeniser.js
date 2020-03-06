@@ -8,7 +8,7 @@ class Token {
      * @param {Object} data
      * @returns String 
      */
-    static async create(data) {
+    static create(data) {
         return jwt.sign(data, JWT_SECRET_KEY)
     }
     /**
@@ -16,7 +16,7 @@ class Token {
      * @param {String} token
      * @returns Object 
      */
-    static async decode(token) {
+    static decode(token) {
         try {
             return jwt.verify(token, JWT_SECRET_KEY)
         } catch {
