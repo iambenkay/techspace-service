@@ -14,6 +14,8 @@ const searchUser = require("../controllers/search/user")
 const searchVendor = require("../controllers/search/vendor")
 const docUpload = require("../controllers/vendors/upload")
 const inventory = require("../controllers/vendors/inventory")
+const inventorySearch = require("../controllers/search/product")
+const category = require("../controllers/business/category")
 
 // Get Account details
 router.get("/accounts", isAuthenticated, handler(account_details))
@@ -62,4 +64,18 @@ router.post("/accounts/vendors/inventory", isAuthenticated, isAccountType("vendo
 
 // For deleting a product from vendor inventory
 router.delete("/accounts/vendors/inventory", isAuthenticated, isAccountType("vendor"), handler(inventory.remove))
+
+// For fetching a list of all products by a vendor
+router.get("/accounts/vendors/inventory", isAuthenticated, isAccountType("vendor"), handler(inventory.retrieveAll))
+
+// For searching through products available
+router.get("/accounts/product-search", isAuthenticated, handler(inventorySearch))
+
+// For managing business authored vendor categories
+router.post("/accounts/business/category", isAuthenticated, isAccountType("business"), handler(category.add))
+router.delete("/accounts/business/category", isAuthenticated, isAccountType("business"), handler(category.remove))
+router.get("/accounts/business/category", isAuthenticated, isAccountType("business"), handler(category.getCategories))
+
+router.post("/accounts/business/add-vendor-to-category", isAuthenticated, isAccountType("business"), handler(category.addVendor))
+
 module.exports = router

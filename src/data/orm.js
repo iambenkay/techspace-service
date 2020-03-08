@@ -21,7 +21,7 @@ module.exports = collection => {
             ...insertedData
         }
     }
-    const find = async query => {
+    const find = async (query = {}) => {
         const db = await DB()
         const result = await db
             .collection(collection)
@@ -32,7 +32,7 @@ module.exports = collection => {
 
         return { id, ...data }
     }
-    const findAll = async query => {
+    const findAll = async (query = {}) => {
         const db = await DB()
         const result = await db
             .collection(collection)
@@ -44,7 +44,7 @@ module.exports = collection => {
         }))
     }
 
-    const update = async (query, update) => {
+    const update = async (query = {}, update = {}) => {
         const db = await DB()
         const result = await db
             .collection(collection)
@@ -60,12 +60,17 @@ module.exports = collection => {
 
         return result.deletedCount
     }
-
+    const aggregate = async (...query) => {
+        const db = await DB()
+        const result = await db.collection(collection).aggregate(...query).toArray()
+        return result.map(({ _id: id, ...data }) => ({ id, ...data }))
+    }
     return Object.freeze({
         insert,
         find,
         findAll,
         remove,
-        update
+        update,
+        aggregate,
     })
 }

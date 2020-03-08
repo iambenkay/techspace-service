@@ -221,3 +221,82 @@ Example result:
   "message": "Product has been succesfully removed from Inventory"
 }
 ```
+## Fetch all products from inventory
+```js
+GET /api/v1/accounts/vendors/inventory
+
+Authorization: Bearer <token>
+
+Example result:
+{
+  "error": false,
+  "vendors": [
+    {
+      "vendorId": "ck7g99r3j0001tqcugfj1a2o6",
+      "name": "Dangote Inc.",
+      "email": "cement@dangote.com",
+      "userType": "vendor",
+      "accepted": false,
+      "dateJoined": null,
+      "business_category": null,
+      "service_category": "Industry and Housing",
+      "service_location": "Nigeria"
+    }
+  ]
+}
+```
+## Add vendor category (business)
+```js
+POST /api/v1/accounts/business/category
+
+Authorization: Bearer <token>
+
+Example result:
+{
+  "error": false,
+  "products": []
+}
+```
+## Remove vendor category (business)
+```js
+DELETE /api/v1/accounts/business/category
+
+Authorization: Bearer <token>
+
+Example result:
+{
+  "error": false,
+  "products": []
+}
+```
+## Get vendor categories (business)
+```js
+GET /api/v1/accounts/business/category
+
+Authorization: Bearer <token>
+
+Example result:
+{
+  "error": false,
+  "categories": [
+    "building materials"
+  ]
+}
+```
+## Add vendor to category
+```js
+POST /accounts/business/add-vendor-to-category
+
+Authorization: Bearer <token>
+
+{
+	"email": "cement@dangote.com",
+	"category": "building materials"
+}
+
+Example result:
+{
+  "error": false,
+  "message": "You have added the vendor cement@dangote.com to the category building materials"
+}
+```

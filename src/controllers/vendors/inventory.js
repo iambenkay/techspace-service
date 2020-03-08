@@ -29,11 +29,29 @@ module.exports.remove = async request => {
     const { id } = request.payload
     const { productId } = request.body
     const product = await Inventory.find({ _id: productId })
-    if(!product) throw new ResponseError(404, "There is no product that matches your query")
+    if (!product) throw new ResponseError(404, "There is no product that matches your query")
     if (product.vendorId !== id) throw new ResponseError(401, "You are not authorized to delete this product")
     await Inventory.remove({ _id: productId })
     return new Response(200, {
         error: false,
         message: "Product has been succesfully removed from Inventory",
     })
+}
+
+module.exports.retrieveAll = async request => {
+    const { id } = request.payload
+
+    const data = await Inventory.findAll({ vendorId: id })
+
+    return new Response(200, {
+        error: false,
+        data
+    })
+}
+
+module.exports.retrieve = async request => {
+    const { id } = request.payload
+
+    const { id: productId } = request.body
+    const data = await Inventory.find({ _id: productId }) 
 }

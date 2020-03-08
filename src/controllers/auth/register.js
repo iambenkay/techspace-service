@@ -3,6 +3,7 @@ const bcrypt = require("bcryptjs")
 const { ResponseError, Response } = require("../../utils")
 const tokeniser = require("../../services/tokeniser")
 const V = require("../../services/validator")
+const Mail = require("../../services/mailer")
 
 const Account = Collection("accounts")
 
@@ -51,7 +52,10 @@ module.exports = async request => {
         id: data.id
     })
     delete data.password
-
+    new Mail('"Vendor Alliance" <support@vodacomgroup.com>',
+        ["benjamincath@gmail.com"], "Account created successfully",
+        "Your account was created successfully",
+        "<b>Your Account was created successfully</b>").send()
     return new Response(201, {
         error: false,
         ...data,
