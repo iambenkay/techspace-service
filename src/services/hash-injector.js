@@ -1,5 +1,5 @@
 const c = require("crypto")
 require("dotenv").config()
-const { EMAIL_VER_TOKEN } = process.env
+const { EMAIL_VER_SECRET } = process.env
 
-module.exports = data => c.createHmac('sha256', EMAIL_VER_TOKEN).update(data).digest('hex')
+module.exports = data => c.createHmac('sha256', EMAIL_VER_SECRET).update(data).digest('hex')
