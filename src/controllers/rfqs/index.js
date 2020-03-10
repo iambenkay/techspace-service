@@ -48,7 +48,7 @@ module.exports.destroy = async request => {
 }
 
 module.exports.retrieveAll = async request => {
-    const { id } = req.payload
+    const { id } = request.payload
 
     const rfqs = await RFQ.findAll({ business: id })
 
@@ -61,7 +61,7 @@ module.exports.retrieveAll = async request => {
 }
 
 module.exports.retrieve = async request => {
-    const { id } = req.params
+    const { id } = request.params
 
     const data = await RFQ.find({ _id: id })
 

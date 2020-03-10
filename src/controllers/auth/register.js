@@ -1,12 +1,17 @@
 const Collection = require("../../data/orm")
 const bcrypt = require("bcryptjs")
 const { ResponseError, Response } = require("../../utils")
-const tokeniser = require("../../services/tokeniser")
 const V = require("../../services/validator")
 const Mail = require("../../services/mailer")
+const hash = require("../../services/hash-injector")
+const express = require('express')
+require("dotenv").config()
 
 const Account = Collection("accounts")
 
+/**
+ * @param {express.response} request
+ */
 module.exports = async request => {
     const { name, email, userType, password, phone } = request.body
 
@@ -44,21 +49,17 @@ module.exports = async request => {
             isVerified: false,
         })
     }
-
-    const token = tokeniser.create({
-        email: data.email,
-        phone: data.phone,
-        userType: data.userType,
-        id: data.id
-    })
+    const host = request.get('host')
+    const scheme = process.env.STATE === 'development' ? 'http' : 'https'
+    const email_ver_link = `${scheme}://${host}/verify?token=${hash(email)}&email=${email}`
+    if (process.env.STATE === 'development') console.log(email_ver_link)
     delete data.password
     new Mail('"Vendor Alliance" <support@vodacomgroup.com>',
-        ["benjamincath@gmail.com"], "Account created successfully",
-        "Your account was created successfully",
-        "<b>Your Account was created successfully</b>").send()
+        ["henryeze019@gmail.com"], "Verify your email address!",
+        `Your account was created successfully. Click this link to verify your account: ${email_ver_link}`,
+        `<b>Your Account was created successfully. Click this link to verify your account: <a href="${email_ver_link}">${email_ver_link}</a></b>`).send()
     return new Response(201, {
         error: false,
         ...data,
-        token
     })
 }

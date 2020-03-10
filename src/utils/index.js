@@ -6,13 +6,6 @@ function removeDuplicates(list) {
     return result
 }
 
-function HTTPError(message){
-    return {
-        error: true,
-        message
-    }
-}
-
 class ResponseError extends Error {
     constructor(status, message) {
         super(message)

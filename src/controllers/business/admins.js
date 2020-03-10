@@ -50,11 +50,7 @@ module.exports.destroy = async request => {
     if (!admin) throw new ResponseError(400, "Account does not exist")
     const { id: adminId, businessId } = admin
     if (businessId !== id) throw new ResponseError(400, "This is not an admin of this business")
-    const { admins, email: businessEmail } = await Account.find({ _id: id })
-    if (!admins || !admins.includes(adminId)) throw new ResponseError(400, "This is not an admin of this business")
-    const index = admins.indexOf(adminId)
-    delete admins[index]
-    await Account.update({ _id: id }, { admins })
+    const { email: businessEmail } = await Account.find({ _id: id })
     await Account.update({ _id: adminId }, { businessId: null })
 
     return new Response(200, {
