@@ -230,17 +230,16 @@ Authorization: Bearer <token>
 Example result:
 {
   "error": false,
-  "vendors": [
+  "data": [
     {
-      "vendorId": "ck7g99r3j0001tqcugfj1a2o6",
-      "name": "Dangote Inc.",
-      "email": "cement@dangote.com",
-      "userType": "vendor",
-      "accepted": false,
-      "dateJoined": null,
-      "business_category": null,
-      "service_category": "Industry and Housing",
-      "service_location": "Nigeria"
+      "id": "ck7ldc43h0000m7cu50kg1ki1",
+      "createdAt": 1583812948157,
+      "updatedAt": 1583812948157,
+      "name": "Cement",
+      "description": "Well granulated cement for housing needs",
+      "price": "34",
+      "oem": "Dangote",
+      "vendorId": "ck7g99r3j0001tqcugfj1a2o6"
     }
   ]
 }
