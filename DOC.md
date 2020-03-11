@@ -299,3 +299,44 @@ Example result:
   "message": "You have added the vendor cement@dangote.com to the category building materials"
 }
 ```
+## Fetch businesses tied to a vendor
+```js
+GET /accounts/vendors/businesses
+
+Authorization
+
+Example result:
+{
+  "error": false,
+  "businesses": [
+    {
+      "businessId": "ck7llx5hi0002uvcu3lta5526",
+      "name": "Vodacom",
+      "email": "support@voda.com",
+      "userType": "business",
+      "accepted": true,
+      "dateJoined": null,
+      "business_category": null
+    }
+  ]
+}
+```
+## Fetch a business tied to a vendor
+```js
+GET /accounts/vendors/businesses/<id>
+
+Authorization
+
+Example result:
+{
+  "error": false,
+  "business": {
+    "businessId": "ck7llx5hi0002uvcu3lta5526",
+    "name": "Vodacom",
+    "email": "support@voda.com",
+    "userType": "business",
+    "accepted": true,
+    "dateJoined": null
+  }
+}
+```
