@@ -250,10 +250,14 @@ POST /api/v1/accounts/business/category
 
 Authorization: Bearer <token>
 
+{
+	"category": "building materials"
+}
+
 Example result:
 {
   "error": false,
-  "products": []
+  "message": "New category has been added"
 }
 ```
 ## Remove vendor category (business)

@@ -51,7 +51,7 @@ module.exports.retrieveAll = async request => {
 
 module.exports.retrieve = async request => {
     const { id } = request.payload
-    const {id: businessId} = request.params
+    const { id: businessId } = request.params
     const businesses = await Business_Vendor_Rel.aggregate(
         {
             "$match": { businessId, vendorId: id }
