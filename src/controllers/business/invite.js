@@ -23,7 +23,7 @@ module.exports = async request => {
         message: "Vendor is already a part of your business",
     })
     const invite_token = RndToken()
-    const { relId } = await Business_Vendor_Rel.insert({
+    await Business_Vendor_Rel.insert({
         businessId: id,
         vendorId,
         accepted: false,

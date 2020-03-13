@@ -2,7 +2,7 @@ const Collection = require("../../data/orm")
 const { Response, ResponseError } = require("../../utils")
 const V = require("../../services/validator")
 
-const RFQ = Collection("rfqs")
+const Rfq = Collection("rfqs")
 
 module.exports.create = async request => {
     const { id } = request.payload
@@ -17,14 +17,15 @@ module.exports.create = async request => {
         location,
         quantity
     )
-    const data = await RFQ.insert({
+    const data = await Rfq.insert({
         title,
         deadline,
         description,
-        category,
+        service_category,
+        business_category,
         location,
         quantity,
-        business: id,
+        initiator: id,
     })
     return new Response(201, {
         error: false,
@@ -35,11 +36,11 @@ module.exports.create = async request => {
 module.exports.destroy = async request => {
     const { id: rfqId } = request.body
 
-    const rfq = await RFQ.find({ _id: rfqId })
+    const rfq = await Rfq.find({ _id: rfqId })
 
     if (!rfq) throw new ResponseError(400, "The RFQ does not exist")
 
-    await RFQ.remove({ _id: rfqId })
+    await Rfq.remove({ _id: rfqId })
 
     return new Response(200, {
         error: false,
@@ -50,7 +51,7 @@ module.exports.destroy = async request => {
 module.exports.retrieveAll = async request => {
     const { id } = request.payload
 
-    const rfqs = await RFQ.findAll({ business: id })
+    const rfqs = await Rfq.findAll({ business: id })
 
     const data = rfqs.map(({ title, quantity, id }) => ({ title, quantity, id }))
 
@@ -63,7 +64,7 @@ module.exports.retrieveAll = async request => {
 module.exports.retrieve = async request => {
     const { id } = request.params
 
-    const data = await RFQ.find({ _id: id })
+    const data = await Rfq.find({ _id: id })
 
     return new Response(200, {
         error: false,

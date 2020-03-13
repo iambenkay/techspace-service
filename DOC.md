@@ -133,9 +133,12 @@ Authorization: Bearer <token>
 ```
 ## Read a notification
 ```js
-POST /api/v1/notifications?id=<id>
+POST /api/v1/notifications
 
 Authorization: Bearer  <token>
+{
+
+}
 ```
 ## Create RFQ
 ```js
@@ -288,7 +291,7 @@ Example result:
 ```
 ## Add vendor to category
 ```js
-POST /accounts/business/add-vendor-to-category
+POST /api/v1/accounts/business/add-vendor-to-category
 
 Authorization: Bearer <token>
 
@@ -305,7 +308,7 @@ Example result:
 ```
 ## Fetch businesses tied to a vendor
 ```js
-GET /accounts/vendors/businesses
+GET /api/v1/accounts/vendors/businesses
 
 Authorization
 
@@ -327,7 +330,7 @@ Example result:
 ```
 ## Fetch a business tied to a vendor
 ```js
-GET /accounts/vendors/businesses/<id>
+GET /api/v1/accounts/vendors/businesses/<id>
 
 Authorization
 
@@ -343,4 +346,13 @@ Example result:
     "dateJoined": null
   }
 }
+```
+## Fetch data for business dashboard
+```js
+GET /api/v1/ui/business-dashboard-data
+
+Authorization
+
+Example Result:
+
 ```
