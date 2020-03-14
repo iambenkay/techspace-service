@@ -354,5 +354,24 @@ GET /api/v1/ui/business-dashboard-data
 Authorization
 
 Example Result:
-
+{
+  "error": false,
+  "account": {
+    "id": "ck7llx5hi0002uvcu3lta5526",
+    "createdAt": 1583827366662,
+    "updatedAt": 1583914216119,
+    "email": "support@voda.com",
+    "name": "Vodacom",
+    "userType": "business",
+    "phone": "+2349080450823",
+    "isVerified": true,
+    "lastLogin": 1583914216117
+  },
+  "extras": {
+    "no_of_admins": 0,
+    "no_of_unread_notifications": 1,
+    "no_of_vendors_linked_to": 1,
+    "no_of_rfqs": 0
+  }
+}
 ```
