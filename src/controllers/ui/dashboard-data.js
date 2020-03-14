@@ -22,7 +22,10 @@ module.exports.vendor = async request => {
     delete account.password
     return new Response(200, {
         error: false,
-        account,
+        account: {
+            name: account.name,
+            email: account.email
+        },
         extras: {
             no_of_businesses_tied_to,
             no_of_unread_notifications,
