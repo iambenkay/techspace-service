@@ -16,5 +16,6 @@ app.use((req, _, next) => {
 app.use("/api/v1", require("./routes"))
 app.get("/verify", require("./routes/verify"))
 app.get("/vendor-invite", require("./routes/vendor-invite"))
+app.get("/admin-invite", require("./routes/admin-invite"))
 
 module.exports = app

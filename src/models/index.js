@@ -1,13 +1,4 @@
-module.exports = class Model {
-    static ModelError = ModelError
-    /**
-     * 
-     * @param {{}} data
-     */
-    constructor(data) {
-        this._model = resource
-        this._data = data
-    }
+module.exports = {
+    Business: require("./Business"),
+    Vendor: require("./Vendor")
 }
-
-class ModelError extends Error { }

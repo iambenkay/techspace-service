@@ -8,7 +8,7 @@ const Account = Collection("accounts")
 module.exports = async request => {
     const { email, password } = request.body
     request.V.allExist("You must provide email and password", email, password)
-    const data = await Account.find({ email })
+    const data = await Account.find({ email, registration_completed: true })
 
     if (data === null) throw new ResponseError(400, "The provided email does not belong to an account")
 

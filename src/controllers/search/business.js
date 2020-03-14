@@ -7,9 +7,19 @@ module.exports = async request => {
     const { q: searchQuery, by = "name" } = request.query
     if (!searchQuery) throw new ResponseError(400, "You must send a query")
 
-    const businesses = await Account.findAll({ [by]: new RegExp(searchQuery, "i"), userType: "business" }).then(x => {
-        return x.map(({ id, name = "", email }) => ({ id, name, email }))
-    })
+    const businesses = await Account.findAll({
+        [by]: new RegExp(searchQuery, "i"),
+        userType: "business",
+        registration_completed: true
+    }).then(x => x.map(({
+        id,
+        name,
+        location
+    }) => ({
+        id,
+        name,
+        location
+    })))
 
     return new Response(200, {
         error: false,

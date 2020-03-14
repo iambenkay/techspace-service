@@ -1,4 +1,4 @@
-const Model = require("./")
+const { Model, ModelError } = require("./model")
 const c = require('../data/collections')
 const { RndToken } = require("../services/provider")
 
@@ -9,34 +9,36 @@ module.exports = class Business extends Model {
     get objects() {
         return this._data
     }
-    async invite_admins(email) {
+    async invite_admin(email) {
         let user = await c.accounts.find({ email })
         if (!user) user = await c.accounts.insert({
             email,
             isVerified: false,
-            userType: "regular"
+            userType: "regular",
+            registration_completed: false,
         })
-        if (vendor.userType !== "regular") throw new super.ModelError("Email is not registered as a regular user")
+        if(user.id === this.objects.id) throw new ModelError("You are already a super admin")
+        if (user.userType !== "regular") throw new ModelError("Email is not registered as a regular user")
 
         const already_belongs_to_other_business = await c.business_admin_rel.find({
             userId: user.id,
             businessId: new RegExp(`^((?!${this.objects.id}).)*$`, "gi")
         })
-        if (already_belongs_to_other_business) throw new super.ModelError("Admin already registered with another business")
+        if (already_belongs_to_other_business) throw new ModelError("Admin already registered with another business")
 
         const invitation_in_progress = await c.business_admin_rel.find({
             businessId: this.objects.id,
             userId: user.id,
             accepted: false
         })
-        if (invitation_in_progress) throw new super.ModelError("Invitation already in progress")
+        if (invitation_in_progress) throw new ModelError("Invitation already in progress")
 
         const already_an_admin = await c.business_admin_rel.find({
             businessId: this.objects.id,
             userId: user.id,
             accepted: true
         })
-        if (already_an_admin) throw new super.ModelError("Already an admin of your business")
+        if (already_an_admin) throw new ModelError("Already an admin of your business")
         const invite_token = RndToken()
 
         await c.business_admin_rel.insert({
@@ -54,22 +56,23 @@ module.exports = class Business extends Model {
             email,
             isVerified: false,
             userType: "vendor",
+            invited: true,
         })
-        if (vendor.userType !== "vendor") throw new super.ModelError("Email is not registered as a vendor")
+        if (vendor.userType !== "vendor") throw new ModelError("Email is not registered as a vendor")
 
         const invitation_in_progress = await c.business_vendor_rel.find({
             businessId: this.objects.id,
             vendorId: vendor.id,
             accepted: false
         })
-        if (invitation_in_progress) throw new super.ModelError("Invitation already in progress")
+        if (invitation_in_progress) throw new ModelError("Invitation already in progress")
 
         const already_a_vendor = await c.business_vendor_rel.find({
             businessId: this.objects.id,
             vendorId: vendor.id,
             accepted: true
         })
-        if (already_a_vendor) throw new super.ModelError("Already a vendor at your business")
+        if (already_a_vendor) throw new ModelError("Already a vendor at your business")
 
         const invite_token = RndToken()
         await c.business_vendor_rel.insert({

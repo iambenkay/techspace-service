@@ -7,7 +7,6 @@ const account_details = require("../controllers/accounts/details")
 const { create: addAdmin, destroy: delistAdmin, retrieve: getAdmins } = require("../controllers/business/admins")
 const { destroy: delistVendor, retrieve: getVendors } = require("../controllers/business/vendors")
 const inviteVendor = require("../controllers/business/invite")
-const requirements = require("../controllers/business/requirements")
 const applyToBusiness = require("../controllers/vendors/apply")
 const searchBusiness = require("../controllers/search/business")
 const searchUser = require("../controllers/search/user")
@@ -17,6 +16,8 @@ const inventory = require("../controllers/vendors/inventory")
 const inventorySearch = require("../controllers/search/product")
 const category = require("../controllers/business/category")
 const vendorBusiness = require("../controllers/vendors/business")
+const requirements = require("../controllers/business/requirements")
+
 
 // Get Account details
 router.get("/accounts", isAuthenticated, handler(account_details))
@@ -41,9 +42,6 @@ router.get("/accounts/user-search", isAuthenticated, handler(searchUser))
 
 // Search through the list of vendors
 router.get("/accounts/vendor-search", isAuthenticated, handler(searchVendor))
-
-// For businesses to post what they require of vendors
-router.post("/accounts/vendor-requirements", isAuthenticated, isAccountType("business"), handler(requirements))
 
 // For businesses to remove admins
 router.delete("/accounts/admins", isAuthenticated, isAccountType("business"), handler(delistAdmin))
@@ -81,5 +79,11 @@ router.post("/accounts/business/add-vendor-to-category", isAuthenticated, isAcco
 
 router.get("/accounts/vendors/businesses", isAuthenticated, isAccountType("vendor"), handler(vendorBusiness.retrieveAll))
 router.get("/accounts/vendors/businesses/:id", isAuthenticated, isAccountType("vendor"), handler(vendorBusiness.retrieve))
+
+// For managing requirements
+router.post("/accounts/requirements", isAuthenticated, isAccountType("business"), handler(requirements.set))
+router.put("/accounts/requirements", isAuthenticated, isAccountType("business"), handler(requirements.edit))
+router.get("/accounts/requirements", isAuthenticated, isAccountType("business"), handler(requirements.get))
+router.delete("/accounts/requirements", isAuthenticated, isAccountType("business"), handler(requirements.remove))
 
 module.exports = router

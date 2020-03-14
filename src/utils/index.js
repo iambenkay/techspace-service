@@ -1,10 +1,4 @@
-function removeDuplicates(list) {
-    const result = []
-    for (let i of list) {
-        if (!result.includes(i)) result.push(i)
-    }
-    return result
-}
+
 
 class ResponseError extends Error {
     constructor(status, message) {
@@ -24,5 +18,4 @@ class Response {
 module.exports = {
     ResponseError,
     Response,
-    removeDuplicates
 }

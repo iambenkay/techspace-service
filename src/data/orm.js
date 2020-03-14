@@ -2,10 +2,10 @@ const DB = require("./db")
 const { Id } = require("../services/provider")
 
 module.exports = collection => {
-    const insert = async data => {
+    const insert = async ({_id = Id(), ...data}) => {
         const db = await DB()
         const record = {
-            _id: Id(),
+            _id,
             createdAt: Date.now(),
             updatedAt: Date.now(),
             ...data

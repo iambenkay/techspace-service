@@ -1,14 +1,15 @@
 require("dotenv").config()
 const { CLIENT_APP } = process.env
-const Business_Vendor_Rel = require("../data/orm")("business-vendor-rel")
+const c = require("../data/collections")
 
 module.exports = async (request, response) => {
     const { token: invite_token } = request.query
 
-    const modified = await Business_Vendor_Rel.update({ invite_token }, { accepted: true })
-    const bvr = await Business_Vendor_Rel.find({invite_token})
+    const modified = await c.business_vendor_rel.update({ invite_token }, { accepted: true })
+    const bvr = await c.business_vendor_rel.find({invite_token})
+    const vendor = await c.accounts.find({_id: bvr.userId})
     return modified
-        ? response.redirect(`${CLIENT_APP}/fulfill-requirements?business=${bvr.businessId}`)
+        ? response.redirect(`${CLIENT_APP}/register?type=${vendor.userType}&email=${vendor.email}`)
         : response.redirect(CLIENT_APP)
 }
 

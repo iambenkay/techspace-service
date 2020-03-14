@@ -1,4 +1,4 @@
-const Collection = require("../../data/orm")
+const c = require("../../data/collections")
 const bcrypt = require("bcryptjs")
 const { ResponseError, Response } = require("../../utils")
 const V = require("../../services/validator")
@@ -6,8 +6,6 @@ const Mail = require("../../services/mailer")
 const hash = require("../../services/hash-injector")
 const express = require('express')
 require("dotenv").config()
-
-const Account = Collection("accounts")
 
 /**
  * @param {express.response} request
@@ -21,34 +19,36 @@ module.exports = async request => {
         .isEmail("email is not valid", email);
     const hashedPassword = bcrypt.hashSync(password)
 
-    const emailExists = await Account.find({ email }).then(user => !!user)
-    if (emailExists) throw new ResponseError(400, "email is already in use")
-    const phoneExists = await Account.find({ phone }).then(user => !!user)
+    const emailExists = await c.accounts.find({ email })
+    if (emailExists && emailExists.registration_completed) throw new ResponseError(400, "email is already in use")
+    const phoneExists = await c.accounts.find({ phone }).then(user => !!user)
     if (phoneExists) throw new ResponseError(400, "phone is already in use")
-
+    if (emailExists.userType !== userType) throw new ResponseError(400, `You were not invited as a ${userType}. Register as a ${emailExists.userType} instead`)
     let data = {}
+    await c.accounts.remove({ email })
+    const userData = {
+        email,
+        name,
+        userType,
+        password: hashedPassword,
+        phone,
+        isVerified: false,
+        registration_completed: true,
+    }
     if (userType === 'vendor') {
         const { service_category, service_location } = request.body
         V.allExist("You must provide service_category and service_location for a vendor account before registering", service_category, service_location)
-        data = await Account.insert({
-            email,
-            name,
-            userType,
-            password: hashedPassword,
-            phone,
-            isVerified: false,
-            service_category, service_location
-        })
-    } else {
-        data = await Account.insert({
-            email,
-            name,
-            userType,
-            password: hashedPassword,
-            phone,
-            isVerified: false,
-        })
+        userData.service_category = service_category
+        userData.service_location = service_location
     }
+    if(userType === 'business') {
+        const {location} = request.body
+        V.allExist("You must provide location", location)
+        userData.location = location
+    }
+    if (!emailExists.registration_completed) userData._id = emailExists.id
+    data = await c.accounts.insert(userData)
+
     const host = request.get('host')
     const scheme = process.env.STATE === 'development' ? 'http' : 'https'
     const email_ver_link = `${scheme}://${host}/verify?token=${hash(email)}&email=${email}`

@@ -38,17 +38,6 @@ Authorization: Bearer <token>
     email: string
 }
 ```
-## Upload vendor requirements from business
-```js
-POST /api/v1/accounts/vendor-requirements
-
-Authorization: Bearer <token>
-
-{
-    requirements: <value>|<value>|<value> ...
-}
-```
-value  can be any of `nin`, `nationalid`, `driverslicense`, `certofownership`, `tin`, `intlpassport`
 ## Upload vendor documents
 ```js
 POST /api/v1/accounts/doc-upload
@@ -373,5 +362,66 @@ Example Result:
     "no_of_vendors_linked_to": 1,
     "no_of_rfqs": 0
   }
+}
+```
+## Fetch requirements
+```js
+GET /api/v1/accounts/requirements
+
+Authorization
+
+Example result:
+{
+  "error": false,
+  "requirements": [
+    "ID Card"
+  ]
+}
+```
+## Set requirements
+```js
+POST /api/v1/accounts/requirements
+
+Authorization
+
+{
+	"requirement": "Identification Document"
+}
+
+Example result:
+{
+  "error": false,
+  "message": "Requirement has been set"
+}
+```
+## Update requirements
+```js
+PUT /api/v1/accounts/requirements
+
+Authorization
+
+{
+	"new_requirement": "ID Card",
+	"old_requirement": "Identification Document"
+}
+
+Example result:
+{
+  "error": false,
+  "message": "Requirement has been updated"
+}
+```
+## Delete requirements
+```js
+Authorization
+
+{
+	"requirement": "ID Card"
+}
+
+Example result:
+{
+  "error": false,
+  "message": "Requirement has been removed"
 }
 ```
