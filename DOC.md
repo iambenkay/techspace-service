@@ -444,3 +444,15 @@ Example Result:
   }
 }
 ```
+## Explore existing RFQs (vendor)
+```js
+GET /api/v1/rfqs/explore
+
+Authorization
+
+Example result:
+{
+  "error": false,
+  "data": []
+}
+```

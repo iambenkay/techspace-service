@@ -1,8 +1,6 @@
-const Collection = require("../../data/orm")
+const c = require("../../data/collections")
 const { Response, ResponseError } = require("../../utils")
 const V = require("../../services/validator")
-
-const Rfq = Collection("rfqs")
 
 module.exports.create = async request => {
     const { id } = request.payload
@@ -17,7 +15,7 @@ module.exports.create = async request => {
         location,
         quantity
     )
-    const data = await Rfq.insert({
+    const data = await c.rfq.insert({
         title,
         deadline,
         description,
@@ -36,11 +34,11 @@ module.exports.create = async request => {
 module.exports.destroy = async request => {
     const { id: rfqId } = request.body
 
-    const rfq = await Rfq.find({ _id: rfqId })
+    const rfq = await c.rfq.find({ _id: rfqId })
 
     if (!rfq) throw new ResponseError(400, "The RFQ does not exist")
 
-    await Rfq.remove({ _id: rfqId })
+    await c.rfq.remove({ _id: rfqId })
 
     return new Response(200, {
         error: false,
@@ -51,7 +49,7 @@ module.exports.destroy = async request => {
 module.exports.retrieveAll = async request => {
     const { id } = request.payload
 
-    const rfqs = await Rfq.findAll({ business: id })
+    const rfqs = await c.rfq.findAll({ business: id })
 
     const data = rfqs.map(({ title, quantity, id }) => ({ title, quantity, id }))
 
@@ -64,7 +62,41 @@ module.exports.retrieveAll = async request => {
 module.exports.retrieve = async request => {
     const { id } = request.params
 
-    const data = await Rfq.find({ _id: id })
+    const data = await c.rfq.find({ _id: id })
+
+    return new Response(200, {
+        error: false,
+        data
+    })
+}
+
+module.exports.explore = async request => {
+    const { id } = request.payload
+    const vendor = await c.accounts.find({ _id: id })
+    const data = await c.rfq.aggregate([
+        { $match: { category: vendor.service_category } },
+        {
+            $lookup: {
+                from: "accounts",
+                localField: "initiator",
+                foreignField: "_id",
+                as: "business"
+            }
+        },
+        {
+            $unwind: "$business",
+        }
+    ]).then(rfqs => rfqs.map(({
+        title,
+        business: {
+            name,
+            _id: id
+        }
+    }) => ({
+        title,
+        name,
+        id
+    })))
 
     return new Response(200, {
         error: false,
