@@ -425,3 +425,22 @@ Example result:
   "message": "Requirement has been removed"
 }
 ```
+## Fetch data for vendor dashboard
+```js
+GET /api/v1/ui/vendor-dashboard-data
+
+Authorization
+
+Example Result:
+{
+  "error": false,
+  "account": {
+    "name": "Dangote Inc.",
+    "email": "cement@dangote.com"
+  },
+  "extras": {
+    "no_of_businesses_tied_to": 0,
+    "no_of_unread_notifications": 4
+  }
+}
+```

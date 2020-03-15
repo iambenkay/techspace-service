@@ -83,7 +83,7 @@ router.get("/accounts/vendors/businesses/:id", isAuthenticated, isAccountType("v
 // For managing requirements
 router.post("/accounts/requirements", isAuthenticated, isAccountType("business"), handler(requirements.set))
 router.put("/accounts/requirements", isAuthenticated, isAccountType("business"), handler(requirements.edit))
-router.get("/accounts/requirements", isAuthenticated, isAccountType("business"), handler(requirements.get))
+router.get("/accounts/requirements", isAuthenticated, isAccountType("business", "vendor"), handler(requirements.get))
 router.delete("/accounts/requirements", isAuthenticated, isAccountType("business"), handler(requirements.remove))
 
 module.exports = router

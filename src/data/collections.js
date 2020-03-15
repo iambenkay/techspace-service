@@ -5,4 +5,6 @@ module.exports = {
     business_vendor_rel: C("business-vendor-rel"),
     notifications: C("notifications"),
     business_admin_rel: C("business-admin-rel"),
+    inventory: C("inventory"),
+    rfq: C("rfqs")
 }

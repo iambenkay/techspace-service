@@ -23,7 +23,7 @@ module.exports = async request => {
     if (emailExists && emailExists.registration_completed) throw new ResponseError(400, "email is already in use")
     const phoneExists = await c.accounts.find({ phone }).then(user => !!user)
     if (phoneExists) throw new ResponseError(400, "phone is already in use")
-    if (emailExists.userType !== userType) throw new ResponseError(400, `You were not invited as a ${userType}. Register as a ${emailExists.userType} instead`)
+    if (emailExists && emailExists.userType !== userType) throw new ResponseError(400, `You were not invited as a ${userType}. Register as a ${emailExists.userType} instead`)
     let data = {}
     await c.accounts.remove({ email })
     const userData = {
@@ -46,7 +46,7 @@ module.exports = async request => {
         V.allExist("You must provide location", location)
         userData.location = location
     }
-    if (!emailExists.registration_completed) userData._id = emailExists.id
+    if (emailExists && !emailExists.registration_completed) userData._id = emailExists.id
     data = await c.accounts.insert(userData)
 
     const host = request.get('host')

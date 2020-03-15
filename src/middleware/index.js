@@ -1,7 +1,5 @@
-const Collection = require("../data/orm")
+const c = require("../data/collections")
 const tokeniser = require("../services/tokeniser")
-
-const Account = Collection("accounts")
 
 async function isAuthenticated(req, res, next) {
     if (!req.get("Authorization") || !req.get("Authorization").startsWith("Bearer "))
@@ -15,7 +13,7 @@ async function isAuthenticated(req, res, next) {
         error: true,
         message: "Invalid JWT Token",
     })
-    const user = await Account.find({ _id: req.payload.id })
+    const user = await c.accounts.find({ _id: req.payload.id })
     if (!user) return res.status(401).send({
         error: true,
         message: "Invalid Account details",
@@ -27,10 +25,10 @@ async function isAuthenticated(req, res, next) {
     return next()
 }
 
-function isAccountType(type) {
+function isAccountType(...type) {
     return async (req, res, next) => {
         const { userType } = req.payload
-        if (userType !== type) return res.status(401).send({
+        if (!type.includes(userType)) return res.status(401).send({
             error: true,
             message: `You need to have account type ${type} to access this route`,
         })
