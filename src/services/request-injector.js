@@ -13,6 +13,7 @@ module.exports = controller => {
             }
             return response.status(x.status).send(x.data)
         } catch (error) {
+            console.error(error.message)
             if (error instanceof ResponseError) return response.status(error.status).send({
                 error: true,
                 message: error.message,
