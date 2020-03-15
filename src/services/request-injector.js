@@ -2,7 +2,7 @@ const Notification = require("./notifier")
 const { ResponseError } = require("../utils")
 const { ModelError } = require("../models/model")
 
-module.exports = (controller) => {
+module.exports = controller => {
     return async (request, response) => {
         try {
             let x = await controller(request)
