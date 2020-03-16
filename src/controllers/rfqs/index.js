@@ -4,14 +4,15 @@ const V = require("../../services/validator")
 
 module.exports.create = async request => {
     const { id } = request.payload
-    const { title, description, full_description_document, category, deadline, location, quantity } = request.body
+    const { title, description, full_description_document, business_category, service_category, deadline, location, quantity } = request.body
+
 
     V.allExist(
         "You must provide title, description, category, deadline, location, quantity",
         title,
         deadline,
         description,
-        category,
+        service_category,
         location,
         quantity
     )
@@ -20,12 +21,12 @@ module.exports.create = async request => {
         deadline,
         description,
         service_category,
-        business_category,
         location,
         quantity,
         initiator: id,
     }
-    if(full_description_document) rfq_data.full_description_document = full_description_document
+    if (full_description_document) rfq_data.full_description_document = full_description_document
+    if (business_category) rfq_data.business_category = business_category
     const data = await c.rfq.insert(rfq_data)
     return new Response(201, {
         error: false,
@@ -76,7 +77,7 @@ module.exports.explore = async request => {
     const { id } = request.payload
     const vendor = await c.accounts.find({ _id: id })
     const data = await c.rfq.aggregate([
-        { $match: { category: vendor.service_category } },
+        { $match: { service_category: vendor.service_category } },
         {
             $lookup: {
                 from: "accounts",
@@ -87,19 +88,12 @@ module.exports.explore = async request => {
         },
         {
             $unwind: "$business",
+        },
+        {
+            $project: { "business.name": true, title: true, "business._id": true }
         }
-    ]).then(rfqs => rfqs.map(({
-        title,
-        business: {
-            name,
-            _id: id
-        }
-    }) => ({
-        title,
-        name,
-        id
-    })))
-
+    ])
+    const a = await c.rfq.findAll({ service_category: vendor.service_category })
     return new Response(200, {
         error: false,
         data

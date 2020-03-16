@@ -5,5 +5,7 @@ router.use(require("./accounts"))
 router.use(require("./notification"))
 router.use(require("./rfqs"))
 router.use(require("./ui"))
+router.use(require("./details"))
+router.use(require("./quotes"))
 
 module.exports = router

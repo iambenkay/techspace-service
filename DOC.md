@@ -477,6 +477,46 @@ Example result:
   "data": []
 }
 ```
+## Get business details
+```js
+GET /api/v1/details/business/<id>
+
+Authorization
+
+Example result:
+
+{
+  "error": false,
+  "business": {
+    "id": "ck7uj5f5400004wcu2rqmcgke",
+    "name": "Vodacom",
+    "email": "support@voda.com",
+    "userType": "business",
+    "phone": "+2349080450821",
+    "location": "Nigeria"
+  }
+}
+```
+```js
+GET /api/v1/details/vendor/<id>
+
+Authorization
+
+Example result:
+
+{
+  "error": false,
+  "vendor": {
+    "id": "ck7uj7xlq00014wcu2z17a94e",
+    "name": "Dangote Inc.",
+    "email": "cement@dangote.com",
+    "userType": "vendor",
+    "phone": "+2349080450822",
+    "service_category": "Industry and Housing",
+    "service_location": "Nigeria"
+  }
+}
+```
 ## Send quote for RFQ
 ```js
 POST /api/v1/quotes

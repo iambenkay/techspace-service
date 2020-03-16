@@ -87,12 +87,12 @@ module.exports = class Business extends Model {
         return invite_token
     }
     get vendors() {
-        return c.business_vendor_rel.aggregate(
+        return c.business_vendor_rel.aggregate([
             {
-                "$match": { businessId: id }
+                "$match": { businessId: this.objects.id }
             },
             {
-                "$lookup": {
+                $lookup: {
                     from: "accounts",
                     localField: "vendorId",
                     foreignField: "_id",
@@ -100,12 +100,9 @@ module.exports = class Business extends Model {
                 },
             },
             {
-                "$unwind": "$vendor",
-            },
-            {
-                "$project": {},
+                $unwind: "$vendor",
             }
-        ).then(vendors => vendors.map(({
+        ]).then(vendors => vendors.map(({
             vendor: {
                 name,
                 email,
