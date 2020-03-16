@@ -8,7 +8,7 @@ module.exports.create = async request => {
 
 
     V.allExist(
-        "You must provide title, description, category, deadline, location, quantity",
+        "You must provide title, description, service_category, deadline, location, quantity",
         title,
         deadline,
         description,
