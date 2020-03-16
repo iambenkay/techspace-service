@@ -11,4 +11,4 @@ module.exports = async (request, response) => {
     return modified
         ? response.redirect(`${CLIENT_APP}/register?type=${vendor.userType}&email=${vendor.email}`)
         : response.redirect(CLIENT_APP)
-}FIxed 
+}
