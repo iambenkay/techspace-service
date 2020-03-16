@@ -258,10 +258,14 @@ DELETE /api/v1/accounts/business/category
 
 Authorization: Bearer <token>
 
+{
+	"category": "building materials"
+}
+
 Example result:
 {
   "error": false,
-  "products": []
+  "message": "Category has been removed"
 }
 ```
 ## Get vendor categories (business)
@@ -293,6 +297,23 @@ Example result:
 {
   "error": false,
   "message": "You have added the vendor cement@dangote.com to the category building materials"
+}
+```
+## Remove vendor from category
+```js
+POST /api/v1/accounts/business/remove-vendor-from-category
+
+Authorization: Bearer <token>
+
+{
+	"email": "benjamincath@gmail.com",
+	"category": "building materials"
+}
+
+Example result:
+{
+  "error": false,
+  "message": "You have removed the vendor benjamincath@gmail.com from the category building materials"
 }
 ```
 ## Fetch businesses tied to a vendor
@@ -455,4 +476,13 @@ Example result:
   "error": false,
   "data": []
 }
+```
+## Send quote for RFQ
+```js
+POST /api/v1/quotes
+
+Authorization
+
+Example result:
+
 ```

@@ -4,7 +4,7 @@ const V = require("../../services/validator")
 
 module.exports.create = async request => {
     const { id } = request.payload
-    const { title, description, category, deadline, location, quantity } = request.body
+    const { title, description, full_description_document, category, deadline, location, quantity } = request.body
 
     V.allExist(
         "You must provide title, description, category, deadline, location, quantity",
@@ -15,7 +15,7 @@ module.exports.create = async request => {
         location,
         quantity
     )
-    const data = await c.rfq.insert({
+    const rfq_data = {
         title,
         deadline,
         description,
@@ -24,7 +24,9 @@ module.exports.create = async request => {
         location,
         quantity,
         initiator: id,
-    })
+    }
+    if(full_description_document) rfq_data.full_description_document = full_description_document
+    const data = await c.rfq.insert(rfq_data)
     return new Response(201, {
         error: false,
         ...data

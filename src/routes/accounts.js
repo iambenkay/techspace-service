@@ -76,6 +76,7 @@ router.delete("/accounts/business/category", isAuthenticated, isAccountType("bus
 router.get("/accounts/business/category", isAuthenticated, isAccountType("business"), handler(category.getCategories))
 
 router.post("/accounts/business/add-vendor-to-category", isAuthenticated, isAccountType("business"), handler(category.addVendor))
+router.post("/accounts/business/remove-vendor-from-category", isAuthenticated, isAccountType("business"), handler(category.removeVendor))
 
 router.get("/accounts/vendors/businesses", isAuthenticated, isAccountType("vendor"), handler(vendorBusiness.retrieveAll))
 router.get("/accounts/vendors/businesses/:id", isAuthenticated, isAccountType("vendor"), handler(vendorBusiness.retrieve))
