@@ -11,6 +11,4 @@ module.exports = async (request, response) => {
     return modified
         ? response.redirect(`${CLIENT_APP}/register?type=${vendor.userType}&email=${vendor.email}`)
         : response.redirect(CLIENT_APP)
-}
-
-// http://localhost:3000/vendor-invite?token=ebc665db90d8581e1dcaf6d5a93f6486
+}FIxed 
