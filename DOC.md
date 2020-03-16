@@ -136,12 +136,27 @@ POST /api/v1/rfqs
 Authorization: Bearer  <token>
 
 {
-	"title": "Building materials",
-	"description": "I need ",
-	"category": "Survey and Informatics",
-	"deadline": 1581874494183,
-	"location": "12345678",
+	"title": "Cement",
+	"description": "benjamin cement is a boy",
+	"service_category": "Industry and Housing",
+	"deadline": 33323823893,
+	"location": "Nigeria",
 	"quantity": 50
+}
+
+Example result:
+{
+  "error": false,
+  "id": "ck7ullvkt0000lqcu0rb9593y",
+  "createdAt": 1584371036189,
+  "updatedAt": 1584371036189,
+  "title": "Cement",
+  "deadline": 33323823893,
+  "description": "benjamin cement is a boy",
+  "service_category": "Industry and Housing",
+  "location": "Nigeria",
+  "quantity": 50,
+  "initiator": "ck7uj5f5400004wcu2rqmcgke"
 }
 ```
 ## Delete RFQ
@@ -434,6 +449,7 @@ Example result:
 ```
 ## Delete requirements
 ```js
+DELETE /api/v1/accounts/requirements
 Authorization
 
 {
@@ -497,6 +513,7 @@ Example result:
   }
 }
 ```
+## Get vendor details
 ```js
 GET /api/v1/details/vendor/<id>
 
@@ -523,6 +540,17 @@ POST /api/v1/quotes
 
 Authorization
 
-Example result:
+{
+	"price": "500000",
+	"description": "The quote of the future",
+	"quantity": 70,
+	"rfq_id": "ck7ullvkt0000lqcu0rb9593y",
+	"delivery_date": 429482938234
+}
 
+Example result:
+{
+  "error": false,
+  "message": "Your quote has been successfully sent"
+}
 ```
