@@ -10,7 +10,7 @@ module.exports.add = async request => {
 
     if (!category) throw new ResponseError(400, "You must provide the category you want to add")
     const { categories = [] } = await Account.find({ _id: id })
-    if(categories.includes(category)) return new ResponseError(400, "Category already exists")
+    if(categories.includes(category)) throw new ResponseError(400, "Category already exists")
     if(!categories.includes(category)) await Account.update({ _id: id }, { categories: [category, ...categories] })
     return new Response(200, {
         error: false,
