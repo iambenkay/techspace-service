@@ -11,7 +11,7 @@ module.exports = async request => {
     const business_data = await c.accounts.find({ _id: id })
     const business = new m.Business(business_data)
     const invite_token = await business.invite_vendor(email)
-    const user = await c.accounts.find({ email })
+    const vendor = await c.accounts.find({ email })
 
     const host = request.get('host')
     const scheme = process.env.STATE === 'development' ? 'http' : 'https'
@@ -29,8 +29,8 @@ module.exports = async request => {
         message: "Invitation has been sent to vendor"
     }, {
         content: {
-            [id]: `You invited the vendor ${email} to your business`,
-            [user.id]: `You were invited to the business run by ${business.email}`,
+            [id]: `You invited the vendor ${vendor.name} to your business`,
+            [vendor.id]: `You were invited to the business run by ${business.objects.name}`,
         }, type: "accounts"
     })
 }
