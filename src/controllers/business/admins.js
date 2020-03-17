@@ -35,8 +35,23 @@ module.exports.create = async request => {
 
 module.exports.retrieve = async request => {
     const { id } = request.payload
-    const data = await c.accounts.findAll({ businessId: id })
-    const admins = data.map(({ name, email, id }) => ({ name, email, id }))
+    const data = await c.business_admin_rel.aggregate([
+        {
+          $match: { businessId: this.objects.id }
+        },
+        {
+          $lookup: {
+            from: "accounts",
+            localField: "userId",
+            foreignField: "_id",
+            as: "admin"
+          }
+        },
+        {
+          $unwind: "$admin"
+        }
+      ])
+    const admins = data.map(({ accepted, admin: { name, email, id }}) => ({ name, email, id, accepted }))
 
     return new Response(200, {
         error: false,
@@ -49,12 +64,12 @@ module.exports.destroy = async request => {
 
     const { email } = request.body
     if (!email) throw new ResponseError(400, "You need to provide an email of the admin you're trying to remove")
-    const admin = await c.accounts.find({ email })
-    if (!admin) throw new ResponseError(400, "Account does not exist")
-    const { id: adminId, businessId } = admin
-    if (businessId !== id) throw new ResponseError(400, "This is not an admin of this business")
+    const user = c.accounts.find({email})
+    const bar = await c.business_admin_rel.find({ businessId: id, userId: user.id })
+    if (!user) throw new ResponseError(400, "Account does not exist")
+    if (id !== bar.businessId) throw new ResponseError(400, "This is not an admin of this business")
     const { email: businessEmail } = await c.accounts.find({ _id: id })
-    await Account.update({ _id: adminId }, { businessId: null })
+    await c.business_vendor_rel.remove({ userId: user.id, businessId: id })
 
     return new Response(200, {
         error: false,
