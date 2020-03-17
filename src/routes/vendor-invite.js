@@ -8,7 +8,8 @@ module.exports = async (request, response) => {
     const modified = await c.business_vendor_rel.update({ invite_token }, { accepted: true })
     const bvr = await c.business_vendor_rel.find({invite_token})
     const vendor = await c.accounts.find({_id: bvr.vendorId})
-    return modified
-        ? response.redirect(`${CLIENT_APP}/register?type=${vendor.userType}&email=${vendor.email}`)
-        : response.redirect(CLIENT_APP)
+    if(vendor.modified){
+        if(!vendor.registration_completed) return response.redirect(`${CLIENT_APP}/register?type=${vendor.userType}&email=${vendor.email}`)
+        return response.redirect(`${CLIENT_APP}/login`)
+    } else response.redirect(CLIENT_APP)
 }
