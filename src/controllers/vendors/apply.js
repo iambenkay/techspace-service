@@ -6,9 +6,9 @@ const { Response, ResponseError } = require("../../utils")
 
 module.exports = async request => {
     const { id } = request.payload
-    const { email, requirements } = request.body
+    const { email, requirements = {} } = request.body
 
-    if (!email) throw new ResponseError(400, "You must provide id of the business you're trying to apply to")
+    if (!email) throw new ResponseError(400, "You must provide email of the business you're trying to apply to")
     const vendor_data = await c.accounts.find({ _id: id })
     const vendor = new m.Vendor(vendor_data)
 
