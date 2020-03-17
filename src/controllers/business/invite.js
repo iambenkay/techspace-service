@@ -26,7 +26,7 @@ module.exports = async request => {
         `Click the link to accept the offer: <a href="${email_ver_link}">${email_ver_link}</a></div>`).send()
     return new Response(200, {
         error: false,
-        message: "Vendor added to business"
+        message: "Invitation has been sent to vendor"
     }, {
         content: {
             [id]: `You invited the vendor ${email} to your business`,

@@ -100,7 +100,7 @@ module.exports = class Business extends Model {
     return c.business_vendor_rel
       .aggregate([
         {
-          $match: { businessId: this.objects.id, accepted: true }
+          $match: { businessId: this.objects.id }
         },
         {
           $lookup: {
