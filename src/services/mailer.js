@@ -1,5 +1,5 @@
 const nodemailer = require("nodemailer")
-const { EMAIL_HOST, EMAIL_USER, EMAIL_PASSWORD, EMAIL_PORT } = process.env
+const { EMAIL_HOST, EMAIL_USER, EMAIL_PASSWORD, EMAIL_PORT, EMAIL_USE_TLS } = process.env
 
 class Mail {
     /**
@@ -23,7 +23,7 @@ class Mail {
             let transporter = nodemailer.createTransport({
                 host: EMAIL_HOST,
                 port: EMAIL_PORT,
-                secure: true,
+                secure: EMAIL_USE_TLS == 0 ? false: true,
                 auth: {
                     user: EMAIL_USER,
                     pass: EMAIL_PASSWORD
