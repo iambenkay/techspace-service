@@ -10,8 +10,7 @@ class Mail {
      * @param {String} text 
      * @param {String} html 
      */
-    constructor(from, to, subject, text, html) {
-        this.from = from
+    constructor(to, subject, text, html) {
         this.to = to.join(", ")
         this.subject = subject
         this.text = text
@@ -30,7 +29,7 @@ class Mail {
                 }
             })
             transporter.sendMail({
-                from: this.from, to: this.to, subject: this.subject, text: this.text, html: this.html
+                from: '"Vendor Alliance" <support@vodacomgroup.com>', to: this.to, subject: this.subject, text: this.text, html: this.html
             })
         } catch (e) {
             console.error(e.message)

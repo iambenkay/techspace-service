@@ -17,8 +17,8 @@ module.exports = async request => {
     const scheme = process.env.STATE === 'development' ? 'http' : 'https'
     const email_ver_link = `${scheme}://${host}/vendor-invite?token=${invite_token}`
     if (process.env.STATE === 'development') console.log(email_ver_link)
-    new Mail("\"Vendor Alliance\" <support@voda.com>",
-        ["henryeze019@gmail.com"],
+    new Mail(
+        [email],
         `Invitation to be a vendor at ${business.objects.name}!`,
         `You have been invited by ${business.objects.name} (${business.objects.email}) to be a vendor.` +
         `Click the link to accept the offer: ${email_ver_link}`,

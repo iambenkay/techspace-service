@@ -54,8 +54,8 @@ module.exports = async request => {
     const email_ver_link = `${scheme}://${host}/verify?token=${hash(email)}&email=${email}`
     if (process.env.STATE === 'development') console.log(email_ver_link)
     delete data.password
-    new Mail('"Vendor Alliance" <support@vodacomgroup.com>',
-        ["henryeze019@gmail.com"], "Verify your email address!",
+    new Mail(
+        [email], "Verify your email address!",
         `Your account was created successfully. Click this link to verify your account: ${email_ver_link}`,
         `<b>Your Account was created successfully. Click this link to verify your account: <a href="${email_ver_link}">${email_ver_link}</a></b>`).send()
     return new Response(201, {
