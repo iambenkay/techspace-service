@@ -10,7 +10,7 @@ module.exports = class Vendor extends Model {
         return this._data
     }
     async apply_to_business(email, requirements = {}) {
-        const business = c.accounts.find({email})
+        const business = await c.accounts.find({email})
         if(!business ||business.userType !== 'business') throw new ModelError("This email does not belong to a business account")
 
         const application_in_progress = await c.business_vendor_rel.find({
