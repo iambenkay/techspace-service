@@ -37,7 +37,7 @@ module.exports.retrieve = async request => {
     const { id } = request.payload
     const data = await c.business_admin_rel.aggregate([
         {
-          $match: { businessId: this.objects.id }
+          $match: { businessId: id }
         },
         {
           $lookup: {
@@ -65,8 +65,8 @@ module.exports.destroy = async request => {
     const { email } = request.body
     if (!email) throw new ResponseError(400, "You need to provide an email of the admin you're trying to remove")
     const user = c.accounts.find({email})
-    const bar = await c.business_admin_rel.find({ businessId: id, userId: user.id })
     if (!user) throw new ResponseError(400, "Account does not exist")
+    const bar = await c.business_admin_rel.find({ businessId: id, userId: user.id })
     if (id !== bar.businessId) throw new ResponseError(400, "This is not an admin of this business")
     const { email: businessEmail } = await c.accounts.find({ _id: id })
     await c.business_vendor_rel.remove({ userId: user.id, businessId: id })
@@ -77,7 +77,7 @@ module.exports.destroy = async request => {
     }, {
         content: {
             [id]: `You removed the user ${email} from your business`,
-            [adminId]: `You were removed from the business run by ${businessEmail}`
+            [user.d]: `You were removed from the business run by ${businessEmail}`
         }, type: "accounts"
     })
 }
