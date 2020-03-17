@@ -22,7 +22,7 @@ module.exports = class Vendor extends Model {
 
         const already_a_vendor = await c.business_vendor_rel.find({
             businessId: this.objects.id,
-            vendorId: vendor.id,
+            vendorId: this.objects.id,
             accepted: true
         })
         if (already_a_vendor) throw new ModelError("Already a vendor at this business")
