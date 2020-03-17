@@ -14,9 +14,11 @@ module.exports = async request => {
     }).then(x => x.map(({
         id,
         name,
+        email,
         location
     }) => ({
         id,
+        email,
         name,
         location
     })))
