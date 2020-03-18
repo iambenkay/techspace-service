@@ -138,7 +138,8 @@ Authorization: Bearer  <token>
 {
 	"title": "Cement",
 	"description": "benjamin cement is a boy",
-	"service_category": "Industry and Housing",
+  "category": "Industry and Housing",
+  "type": "service|business"
 	"deadline": 33323823893,
 	"location": "Nigeria",
 	"quantity": 50
@@ -153,7 +154,7 @@ Example result:
   "title": "Cement",
   "deadline": 33323823893,
   "description": "benjamin cement is a boy",
-  "service_category": "Industry and Housing",
+  "category": "Industry and Housing",
   "location": "Nigeria",
   "quantity": 50,
   "initiator": "ck7uj5f5400004wcu2rqmcgke"
