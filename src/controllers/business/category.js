@@ -73,8 +73,8 @@ module.exports.addVendor = async request => {
     vendorId: vendor.id
   });
   V.expr(
-    "Vendor is already a part of your business",
-    rel.business_category === category
+    "Vendor is already a part of this category",
+    rel.business_category !== category
   );
   const bvr = await c.business_vendor_rel.update(
     { businessId: id, vendorId: vendor.id },
