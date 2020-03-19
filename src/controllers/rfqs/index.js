@@ -39,19 +39,20 @@ module.exports.create = async request => {
     if (request.file.mimetype != "application/pdf")
       throw new ResponseError(400, "You must provide only pdf files");
     const file_data = request.file.buffer.toString("base64");
-    const result = await store
-      .upload(
+    let result;
+    try {
+      result = await store.upload(
         `data:${request.file.mimetype};base64,${file_data}`,
-        "rfq_description_documents",
-      )
-      .catch(error => {
-        throw new ResponseError(400, error.message);
-      });
+        "rfq_description_documents"
+      );
+    } catch (error) {
+      throw new ResponseError(400, error.message);
+    }
     console.log(result);
     rfq_data.full_description_document = result.public_id;
   }
   if (business_category) rfq_data.business_category = business_category;
-  
+
   const data = await c.rfq.insert(rfq_data);
   return new Response(201, {
     error: false,
