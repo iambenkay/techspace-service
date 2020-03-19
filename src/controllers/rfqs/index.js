@@ -2,7 +2,6 @@ const c = require("../../data/collections");
 const { Response, ResponseError } = require("../../utils");
 const V = require("../../services/validator");
 const store = require("../../services/cloudinary-provider");
-const multer = require("multer")();
 
 module.exports.create = async request => {
   const { id } = request.payload;
@@ -35,6 +34,7 @@ module.exports.create = async request => {
     quantity,
     initiator: id
   };
+  console.log(request.file)
   if (request.file) {
     if (request.file.mimetype != "application/pdf")
       throw new ResponseError(400, "You must provide only pdf files");
