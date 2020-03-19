@@ -134,7 +134,7 @@ Authorization: Bearer  <token>
 POST /api/v1/rfqs
 
 Authorization: Bearer  <token>
-
+Content-Type: multipart/form-data
 {
 	"title": "Cement",
 	"description": "benjamin cement is a boy",
@@ -142,22 +142,24 @@ Authorization: Bearer  <token>
   "type": "service|business"
 	"deadline": 33323823893,
 	"location": "Nigeria",
-	"quantity": 50
+  "quantity": 50,
+  "document (optional)": File(frontend)
 }
 
 Example result:
 {
   "error": false,
-  "id": "ck7ullvkt0000lqcu0rb9593y",
-  "createdAt": 1584371036189,
-  "updatedAt": 1584371036189,
+  "id": "ck7xwda200000rhcucc9ufxob",
+  "createdAt": 1584570509353,
+  "updatedAt": 1584570509353,
   "title": "Cement",
-  "deadline": 33323823893,
-  "description": "benjamin cement is a boy",
-  "category": "Industry and Housing",
+  "deadline": "13939139139",
+  "description": "How to be a man",
+  "service_category": "Masonry",
   "location": "Nigeria",
-  "quantity": 50,
-  "initiator": "ck7uj5f5400004wcu2rqmcgke"
+  "quantity": "14",
+  "initiator": "ck7vwsa560001mocu175uagdn",
+  "full_description_document (optional)": "rfq_description_documents/l8efonlj1sghvylk5chz (cloudinary id)"
 }
 ```
 ## Delete RFQ

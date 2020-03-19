@@ -34,7 +34,7 @@ module.exports.remove = async request => {
     if (!category) throw new ResponseError(400, "You must provide the category you want to remove")
     const { categories } = await c.accounts.find({ _id: id })
     let index = categories.indexOf(category)
-    delete categories[index]
+    categories.splice(i, 1)
     await c.accounts.update({ _id: id }, { categories: [...categories] })
     c.business_vendor_rel.update({ businessId: id }, { businessCategory: null })
     return new Response(200, {
