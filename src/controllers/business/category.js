@@ -52,6 +52,8 @@ module.exports.addVendor = async request => {
     V.allExist("You must add an existing vendor account", vendor)
     const { categories = [] } = await c.accounts.find({ _id: id })
     V.expr(`'${category}' is not a valid category`, categories.includes(category))
+    const rel = await c.business_vendor_rel.find({ businessId: id, vendorId: vendor.id })
+    V.expr("Vendor is already a part of your business", rel.business_category === category)
     const bvr = await c.business_vendor_rel.update({ businessId: id, vendorId: vendor.id }, { business_category: category })
     V.allExist("The vendor is not a part of your business yet", bvr)
 
