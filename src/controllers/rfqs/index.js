@@ -55,7 +55,8 @@ module.exports.create = async request => {
   const data = await c.rfq.insert(rfq_data);
   return new Response(201, {
     error: false,
-    ...data
+    ...data,
+    message: "RFQ has been created successfully"
   });
 };
 
@@ -77,7 +78,7 @@ module.exports.destroy = async request => {
 module.exports.retrieveAll = async request => {
   const { id } = request.payload;
 
-  const rfqs = await c.rfq.findAll({ business: id });
+  const rfqs = await c.rfq.findAll({ initiator: id });
 
   const data = rfqs.map(({ title, quantity, id }) => ({ title, quantity, id }));
 
