@@ -34,7 +34,6 @@ module.exports.create = async request => {
     quantity,
     initiator: id
   };
-  console.log(request.file)
   if (request.file) {
     if (request.file.mimetype != "application/pdf")
       throw new ResponseError(400, "You must provide only pdf files");

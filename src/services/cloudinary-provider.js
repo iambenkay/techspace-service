@@ -1,5 +1,5 @@
 const cloudinary = require("cloudinary").v2;
-
+require("dotenv").config()
 module.exports = {
   upload(file_data, folder, resource_type = "raw") {
     return cloudinary.uploader
