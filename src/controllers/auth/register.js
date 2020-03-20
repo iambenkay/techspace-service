@@ -9,7 +9,7 @@ require("dotenv").config();
 
 const gen_vendor_id = () =>
   `VEN${require("crypto")
-    .randomButes(3)
+    .randomBytes(3)
     .toString("hex")
     .toUpperCase()}`;
 
