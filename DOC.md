@@ -462,76 +462,6 @@ Example Result:
 }
 ```
 
-## Fetch requirements
-
-```js
-GET /api/v1/accounts/requirements
-
-Authorization
-
-Example result:
-{
-  "error": false,
-  "requirements": [
-    "ID Card"
-  ]
-}
-```
-
-## Set requirements
-
-```js
-POST /api/v1/accounts/requirements
-
-Authorization
-
-{
-	"requirement": "Identification Document"
-}
-
-Example result:
-{
-  "error": false,
-  "message": "Requirement has been set"
-}
-```
-
-## Update requirements
-
-```js
-PUT /api/v1/accounts/requirements
-
-Authorization
-
-{
-	"new_requirement": "ID Card",
-	"old_requirement": "Identification Document"
-}
-
-Example result:
-{
-  "error": false,
-  "message": "Requirement has been updated"
-}
-```
-
-## Delete requirements
-
-```js
-DELETE /api/v1/accounts/requirements
-Authorization
-
-{
-	"requirement": "ID Card"
-}
-
-Example result:
-{
-  "error": false,
-  "message": "Requirement has been removed"
-}
-```
-
 ## Fetch data for vendor dashboard
 
 ```js
@@ -706,5 +636,81 @@ Example result:
     "service_category": "Industry and Housing",
     "service_location": "Nigeria"
   }
+}
+```
+
+## Fetch requirements
+
+```js
+GET /api/v1/accounts/requirements
+
+Authorization
+
+Example result:
+{
+  "error": false,
+  "requirements": {
+    "document": {},
+    "statutory": {
+      "ck82167ao0001kacuhoez8j8v": "Passport"
+    }
+  }
+}
+```
+
+## Set requirements
+
+```js
+POST /api/v1/accounts/requirements
+
+Authorization
+
+{
+	"requirement": "Passport",
+	"type": "statutory"
+}
+
+Example result:
+{
+  "error": false,
+  "message": "Requirement has been set"
+}
+```
+
+## Update requirements
+
+```js
+PUT /api/v1/accounts/requirements
+
+Authorization
+
+{
+	"new_requirement": "ID Cards",
+	"requirement_id": "ck8204ypr0000dtcu26xh15ix",
+	"type": "document"
+}
+
+Example result:
+{
+  "error": false,
+  "message": "Requirement has been updated"
+}
+```
+
+## Delete requirements
+
+```js
+DELETE /api/v1/accounts/requirements
+Authorization
+
+{
+	"requirement_id": "ck82167ao0001kacuhoez8j8v",
+	"type": "statutory"
+}
+
+Example result:
+{
+  "error": false,
+  "message": "Requirement has been removed"
 }
 ```
