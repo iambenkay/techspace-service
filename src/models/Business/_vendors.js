@@ -5,7 +5,7 @@ module.exports = (category, except, objects) => {
     businessId: objects.id
   };
   if (category) match_query.business_category = category;
-  if (except) match_query.business_category = { $not: { $eq: category } };
+  if (except) match_query.business_category = { $not: { $eq: except } };
   if (category || except) match_query.accepted = true;
   return c.business_vendor_rel
     .aggregate([
