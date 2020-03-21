@@ -44,11 +44,11 @@ module.exports = collection => {
         }))
     }
 
-    const update = async (query = {}, update = {}) => {
+    const update = async (query = {}, update = {}, unset = false) => {
         const db = await DB()
         const result = await db
             .collection(collection)
-            .updateOne(query, { $set: { updatedAt: Date.now(), ...update } })
+            .updateOne(query, { [unset ? "$unset" : "$set"]: { updatedAt: Date.now(), ...update } })
         return result.modifiedCount > 0 ? update : null
     }
 
