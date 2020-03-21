@@ -10,6 +10,7 @@ const inviteVendor = require("../controllers/business/invite")
 const applyToBusiness = require("../controllers/vendors/apply")
 const searchBusiness = require("../controllers/search/business")
 const searchUser = require("../controllers/search/user")
+const search = require("../controllers/search")
 const searchVendor = require("../controllers/search/vendor")
 const docUpload = require("../controllers/vendors/upload")
 const inventory = require("../controllers/vendors/inventory")
@@ -34,11 +35,16 @@ router.post("/accounts/invite-vendor", isAuthenticated, isAccountType("business"
 // For vendors to upload their certificates
 router.post("/accounts/doc-upload", isAuthenticated, isAccountType("vendor"), upload.single("document"), handler(docUpload))
 
+router.get("/search", isAuthenticated, handler(search))
+
 // Search through the list of businesses
 router.get("/accounts/business-search", isAuthenticated, handler(searchBusiness))
 
 // Search through the list of users
 router.get("/accounts/user-search", isAuthenticated, handler(searchUser))
+
+// For searching through products available
+router.get("/accounts/product-search", isAuthenticated, handler(inventorySearch))
 
 // Search through the list of vendors
 router.get("/accounts/vendor-search", isAuthenticated, handler(searchVendor))
@@ -66,9 +72,6 @@ router.delete("/accounts/vendors/inventory", isAuthenticated, isAccountType("ven
 
 // For fetching a list of all products by a vendor
 router.get("/accounts/vendors/inventory", isAuthenticated, isAccountType("vendor"), handler(inventory.retrieveAll))
-
-// For searching through products available
-router.get("/accounts/product-search", isAuthenticated, handler(inventorySearch))
 
 // For managing business authored vendor categories
 router.post("/accounts/business/category", isAuthenticated, isAccountType("business"), handler(category.add))

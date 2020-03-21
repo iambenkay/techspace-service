@@ -1,6 +1,6 @@
 const express = require("express");
 const c = require("../../data/collections");
-const { Response, ResponseError } = require("../../utils");
+const { Response } = require("../../utils");
 
 /**
  * @param {express.request} request

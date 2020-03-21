@@ -557,3 +557,31 @@ Example result:
   "message": "Your quote has been successfully sent"
 }
 ```
+## Search through general
+```js
+POST /api/v1/search?q=<query>
+
+Authorization
+
+Example result:
+{
+  "error": false,
+  "data": {
+    "no_of_searched_vendors": 0,
+    "no_of_searched_products": 0,
+    "no_of_searched_services": 1
+  }
+}
+```
+## Search through products
+```js
+POST /api/v1/accounts/product-search?q=<query>
+
+Authorization
+
+Example result:
+{
+  "error": false,
+  "products": []
+}
+```
