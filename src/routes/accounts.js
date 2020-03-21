@@ -1,93 +1,218 @@
-const router = require("express").Router()
-const handler = require("../services/request-injector")
-const { isAuthenticated, isAccountType } = require("../middleware")
-const upload = require("multer")()
-const register = require("../controllers/auth/register")
-const account_details = require("../controllers/accounts/details")
-const { create: addAdmin, destroy: delistAdmin, retrieve: getAdmins } = require("../controllers/business/admins")
-const { destroy: delistVendor, retrieve: getVendors } = require("../controllers/business/vendors")
-const inviteVendor = require("../controllers/business/invite")
-const applyToBusiness = require("../controllers/vendors/apply")
-const searchBusiness = require("../controllers/search/business")
-const searchUser = require("../controllers/search/user")
-const search = require("../controllers/search")
-const searchVendor = require("../controllers/search/vendor")
-const docUpload = require("../controllers/vendors/upload")
-const inventory = require("../controllers/vendors/inventory")
-const inventorySearch = require("../controllers/search/product")
-const category = require("../controllers/business/category")
-const vendorBusiness = require("../controllers/vendors/business")
-const requirements = require("../controllers/business/requirements")
-
+const router = require("express").Router();
+const handler = require("../services/request-injector");
+const { isAuthenticated, isAccountType } = require("../middleware");
+const upload = require("multer")();
+const register = require("../controllers/auth/register");
+const account_details = require("../controllers/accounts/details");
+const {
+  create: addAdmin,
+  destroy: delistAdmin,
+  retrieve: getAdmins
+} = require("../controllers/business/admins");
+const {
+  destroy: delistVendor,
+  retrieve: getVendors
+} = require("../controllers/business/vendors");
+const inviteVendor = require("../controllers/business/invite");
+const applyToBusiness = require("../controllers/vendors/apply");
+const searchBusiness = require("../controllers/search/business");
+const searchUser = require("../controllers/search/user");
+const search = require("../controllers/search");
+const searchVendor = require("../controllers/search/vendor");
+const docUpload = require("../controllers/vendors/upload");
+const inventory = require("../controllers/vendors/inventory");
+const inventorySearch = require("../controllers/search/product");
+const category = require("../controllers/business/category");
+const vendorBusiness = require("../controllers/vendors/business");
+const requirements = require("../controllers/business/requirements");
 
 // Get Account details
-router.get("/accounts", isAuthenticated, handler(account_details))
+router.get("/accounts", isAuthenticated, handler(account_details));
 
 // Delist a vendor from a business
-router.delete("/accounts/vendors", isAuthenticated, isAccountType("business"), handler(delistVendor))
+router.delete(
+  "/accounts/vendors",
+  isAuthenticated,
+  isAccountType("business"),
+  handler(delistVendor)
+);
 
 // For vendors to apply business
-router.post("/accounts/apply-to-business", isAuthenticated, isAccountType("vendor"), handler(applyToBusiness))
+router.post(
+  "/accounts/apply-to-business",
+  isAuthenticated,
+  isAccountType("vendor"),
+  handler(applyToBusiness)
+);
 
 // For businesses to invite vendors
-router.post("/accounts/invite-vendor", isAuthenticated, isAccountType("business"), handler(inviteVendor))
+router.post(
+  "/accounts/invite-vendor",
+  isAuthenticated,
+  isAccountType("business"),
+  handler(inviteVendor)
+);
 
 // For vendors to upload their certificates
-router.post("/accounts/doc-upload", isAuthenticated, isAccountType("vendor"), upload.single("document"), handler(docUpload))
+router.post(
+  "/accounts/doc-upload",
+  isAuthenticated,
+  isAccountType("vendor"),
+  upload.single("document"),
+  handler(docUpload)
+);
 
-router.get("/search", isAuthenticated, handler(search))
+router.get("/search", isAuthenticated, handler(search));
 
 // Search through the list of businesses
-router.get("/accounts/business-search", isAuthenticated, handler(searchBusiness))
+router.get(
+  "/accounts/business-search",
+  isAuthenticated,
+  handler(searchBusiness)
+);
 
 // Search through the list of users
-router.get("/accounts/user-search", isAuthenticated, handler(searchUser))
+router.get("/accounts/user-search", isAuthenticated, handler(searchUser));
 
 // For searching through products available
-router.get("/accounts/product-search", isAuthenticated, handler(inventorySearch))
+router.get(
+  "/accounts/product-search",
+  isAuthenticated,
+  handler(inventorySearch)
+);
 
 // Search through the list of vendors
-router.get("/accounts/vendor-search", isAuthenticated, handler(searchVendor))
+router.get("/accounts/vendor-search", isAuthenticated, handler(searchVendor));
 
 // For businesses to remove admins
-router.delete("/accounts/admins", isAuthenticated, isAccountType("business"), handler(delistAdmin))
+router.delete(
+  "/accounts/admins",
+  isAuthenticated,
+  isAccountType("business"),
+  handler(delistAdmin)
+);
 
 // for businesses to add admins
-router.post("/accounts/admins", isAuthenticated, isAccountType("business"), handler(addAdmin))
+router.post(
+  "/accounts/admins",
+  isAuthenticated,
+  isAccountType("business"),
+  handler(addAdmin)
+);
 
 // for businesses to fetch vendors
-router.get("/accounts/vendors", isAuthenticated, isAccountType("business"), handler(getVendors))
+router.get(
+  "/accounts/vendors",
+  isAuthenticated,
+  isAccountType("business"),
+  handler(getVendors)
+);
 
 // for businessses to fetch admins
-router.get("/accounts/admins", isAuthenticated, isAccountType("business"), handler(getAdmins))
+router.get(
+  "/accounts/admins",
+  isAuthenticated,
+  isAccountType("business"),
+  handler(getAdmins)
+);
 
 // For creating one of business, vendor or regular accounts
-router.post("/accounts", handler(register))
+router.post("/accounts", handler(register));
 
 // For adding a product to vendor inventory
-router.post("/accounts/vendors/inventory", isAuthenticated, isAccountType("vendor"), handler(inventory.add))
+router.post(
+  "/accounts/vendors/inventory",
+  isAuthenticated,
+  isAccountType("vendor"),
+  handler(inventory.add)
+);
 
 // For deleting a product from vendor inventory
-router.delete("/accounts/vendors/inventory", isAuthenticated, isAccountType("vendor"), handler(inventory.remove))
+router.delete(
+  "/accounts/vendors/inventory",
+  isAuthenticated,
+  isAccountType("vendor"),
+  handler(inventory.remove)
+);
 
 // For fetching a list of all products by a vendor
-router.get("/accounts/vendors/inventory", isAuthenticated, isAccountType("vendor"), handler(inventory.retrieveAll))
+router.get(
+  "/accounts/vendors/inventory",
+  isAuthenticated,
+  isAccountType("vendor"),
+  handler(inventory.retrieveAll)
+);
 
 // For managing business authored vendor categories
-router.post("/accounts/business/category", isAuthenticated, isAccountType("business"), handler(category.add))
-router.delete("/accounts/business/category", isAuthenticated, isAccountType("business"), handler(category.remove))
-router.get("/accounts/business/category", isAuthenticated, isAccountType("business"), handler(category.getCategories))
+router.post(
+  "/accounts/business/category",
+  isAuthenticated,
+  isAccountType("business"),
+  handler(category.add)
+);
+router.delete(
+  "/accounts/business/category",
+  isAuthenticated,
+  isAccountType("business"),
+  handler(category.remove)
+);
+router.get(
+  "/accounts/business/category",
+  isAuthenticated,
+  isAccountType("business"),
+  handler(category.getCategories)
+);
 
-router.post("/accounts/business/add-vendor-to-category", isAuthenticated, isAccountType("business"), handler(category.addVendor))
-router.post("/accounts/business/remove-vendor-from-category", isAuthenticated, isAccountType("business"), handler(category.removeVendor))
+router.post(
+  "/accounts/business/add-vendor-to-category",
+  isAuthenticated,
+  isAccountType("business"),
+  handler(category.addVendor)
+);
+router.post(
+  "/accounts/business/remove-vendor-from-category",
+  isAuthenticated,
+  isAccountType("business"),
+  handler(category.removeVendor)
+);
 
-router.get("/accounts/vendors/businesses", isAuthenticated, isAccountType("vendor"), handler(vendorBusiness.retrieveAll))
-router.get("/accounts/vendors/businesses/:id", isAuthenticated, isAccountType("vendor"), handler(vendorBusiness.retrieve))
+router.get(
+  "/accounts/vendors/businesses",
+  isAuthenticated,
+  isAccountType("vendor"),
+  handler(vendorBusiness.retrieveAll)
+);
+router.get(
+  "/accounts/vendors/businesses/:id",
+  isAuthenticated,
+  isAccountType("vendor"),
+  handler(vendorBusiness.retrieve)
+);
 
 // For managing requirements
-router.post("/accounts/requirements", isAuthenticated, isAccountType("business"), handler(requirements.set))
-router.put("/accounts/requirements", isAuthenticated, isAccountType("business"), handler(requirements.edit))
-router.get("/accounts/requirements", isAuthenticated, isAccountType("business", "vendor"), handler(requirements.get))
-router.delete("/accounts/requirements", isAuthenticated, isAccountType("business"), handler(requirements.remove))
+router.post(
+  "/accounts/requirements",
+  isAuthenticated,
+  isAccountType("business"),
+  handler(requirements.set)
+);
+router.put(
+  "/accounts/requirements",
+  isAuthenticated,
+  isAccountType("business"),
+  handler(requirements.edit)
+);
+router.get(
+  "/accounts/requirements",
+  isAuthenticated,
+  isAccountType("business", "vendor"),
+  handler(requirements.get)
+);
+router.delete(
+  "/accounts/requirements",
+  isAuthenticated,
+  isAccountType("business"),
+  handler(requirements.remove)
+);
 
-module.exports = router
+module.exports = router;

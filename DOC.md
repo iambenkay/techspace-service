@@ -3,6 +3,7 @@
 Note: Home is https://voda-api.herokuapp.com
 
 ## Register
+
 ```js
 POST /api/v1/accounts
 
@@ -13,7 +14,9 @@ POST /api/v1/accounts
     phone: string
 }
 ```
+
 ## Login
+
 ```js
 POST /api/v1/login
 
@@ -22,23 +25,29 @@ POST /api/v1/login
     password: string
 }
 ```
+
 ## Get account details
+
 ```js
 GET /api/v1/accounts
 
 Authorization: Bearer <token>
 ```
+
 ## Assign admins
+
 ```js
-POST /api/v1/accounts/admins
+POST / api / v1 / accounts / admins;
 
-Authorization: Bearer <token>
-
-{
+Authorization: Bearer <
+  token >
+  {
     email: string
-}
+  };
 ```
+
 ## Upload vendor documents
+
 ```js
 POST /api/v1/accounts/doc-upload
 
@@ -50,86 +59,105 @@ Content-Type: multipart/form-data
     document: PDF file
 }
 ```
+
 ## Apply to business as vendor
+
 ```js
-POST /api/v1/accounts/apply-to-business
+POST / api / v1 / accounts / apply - to - business;
 
-Authorization: Bearer <token>
-
-{
+Authorization: Bearer <
+  token >
+  {
     email: string
-}
+  };
 ```
+
 ## Invite vendor to business
+
 ```js
-POST /api/v1/accounts/invite-vendor
+POST / api / v1 / accounts / invite - vendor;
 
-Authorization: Bearer <token>
-
-{
+Authorization: Bearer <
+  token >
+  {
     email: string
-}
+  };
 ```
+
 ## Delisting a vendor
+
 ```js
-DELETE /api/v1/accounts/vendors
+DELETE / api / v1 / accounts / vendors;
 
-Authorization: Bearer <token>
-
-{
+Authorization: Bearer <
+  token >
+  {
     email: string
-}
+  };
 ```
+
 ## Search businesses
+
 ```js
 GET /api/v1/accounts/business-search?q=<query>&by="name|email"
 
 Authorization: Bearer <token>
 ```
+
 ## Search vendors
+
 ```js
 GET /api/v1/accounts/vendor-search?q=<query>&by="name|email"
 
 Authorization: Bearer <token>
 ```
+
 ## Search users
+
 ```js
 GET /api/v1/accounts/user-search?q=<query>&by="name|email"
 
 Authorization: Bearer <token>
 ```
+
 ## Get vendors for a particular business
+
 ```js
 GET /api/v1/accounts/vendors
 
 Authorization: Bearer <token>
 ```
+
 ## Get admins of a business
+
 ```js
 GET /api/v1/accounts/admins
 
 Authorization: Bearer <token>
 ```
+
 ## Delisting admins
+
 ```js
-DELETE /api/v1/accounts/admins
+DELETE / api / v1 / accounts / admins;
 
-Authorization: Bearer <token>
-
-{
+Authorization: Bearer <
+  token >
+  {
     email: string
-}
+  };
 ```
+
 ## Read a notification
+
 ```js
-POST /api/v1/notifications
+POST / api / v1 / notifications;
 
-Authorization: Bearer  <token>
-{
-
-}
+Authorization: Bearer < token > {};
 ```
+
 ## Create RFQ
+
 ```js
 POST /api/v1/rfqs
 
@@ -162,35 +190,45 @@ Example result:
   "full_description_document (optional)": "rfq_description_documents/l8efonlj1sghvylk5chz (cloudinary id)"
 }
 ```
+
 ## Delete RFQ
+
 ```js
-DELETE /api/v1/rfqs
+DELETE / api / v1 / rfqs;
 
-Authorization: Bearer <token>
-
-{
+Authorization: Bearer <
+  token >
+  {
     id: "ck23131mkd1313425225"
-}
+  };
 ```
+
 ## Retrieve all RFQs
+
 ```js
 GET /api/v1/rfqs
 
 Authorization: Bearer <token>
 ```
+
 ## Retrieve an RFQ
+
 ```js
 GET /api/v1/rfqs/<id>
 
 Authorization: Bearer <token>
 ```
+
 ## Get all notifications
+
 ```js
 GET /api/v1/notifications
 
 Authorization: Bearer <token>
 ```
+
 ## Add product to vendor inventory
+
 ```js
 POST /api/v1/accounts/vendors/inventory
 
@@ -217,7 +255,9 @@ Example result:
   }
 }
 ```
+
 ## Remove product from vendor inventory
+
 ```js
 DELETE /api/v1/accounts/vendors/inventory
 
@@ -231,7 +271,9 @@ Example result:
   "message": "Product has been succesfully removed from Inventory"
 }
 ```
+
 ## Fetch all products from inventory
+
 ```js
 GET /api/v1/accounts/vendors/inventory
 
@@ -254,7 +296,9 @@ Example result:
   ]
 }
 ```
+
 ## Add vendor category (business)
+
 ```js
 POST /api/v1/accounts/business/category
 
@@ -270,7 +314,9 @@ Example result:
   "message": "New category has been added"
 }
 ```
+
 ## Remove vendor category (business)
+
 ```js
 DELETE /api/v1/accounts/business/category
 
@@ -286,7 +332,9 @@ Example result:
   "message": "Category has been removed"
 }
 ```
+
 ## Get vendor categories (business)
+
 ```js
 GET /api/v1/accounts/business/category
 
@@ -300,7 +348,9 @@ Example result:
   ]
 }
 ```
+
 ## Add vendor to category
+
 ```js
 POST /api/v1/accounts/business/add-vendor-to-category
 
@@ -317,7 +367,9 @@ Example result:
   "message": "You have added the vendor cement@dangote.com to the category building materials"
 }
 ```
+
 ## Remove vendor from category
+
 ```js
 POST /api/v1/accounts/business/remove-vendor-from-category
 
@@ -334,7 +386,9 @@ Example result:
   "message": "You have removed the vendor benjamincath@gmail.com from the category building materials"
 }
 ```
+
 ## Fetch businesses tied to a vendor
+
 ```js
 GET /api/v1/accounts/vendors/businesses
 
@@ -356,7 +410,9 @@ Example result:
   ]
 }
 ```
+
 ## Fetch a business tied to a vendor
+
 ```js
 GET /api/v1/accounts/vendors/businesses/<id>
 
@@ -375,7 +431,9 @@ Example result:
   }
 }
 ```
+
 ## Fetch data for business dashboard
+
 ```js
 GET /api/v1/ui/business-dashboard-data
 
@@ -403,7 +461,9 @@ Example Result:
   }
 }
 ```
+
 ## Fetch requirements
+
 ```js
 GET /api/v1/accounts/requirements
 
@@ -417,7 +477,9 @@ Example result:
   ]
 }
 ```
+
 ## Set requirements
+
 ```js
 POST /api/v1/accounts/requirements
 
@@ -433,7 +495,9 @@ Example result:
   "message": "Requirement has been set"
 }
 ```
+
 ## Update requirements
+
 ```js
 PUT /api/v1/accounts/requirements
 
@@ -450,7 +514,9 @@ Example result:
   "message": "Requirement has been updated"
 }
 ```
+
 ## Delete requirements
+
 ```js
 DELETE /api/v1/accounts/requirements
 Authorization
@@ -465,7 +531,9 @@ Example result:
   "message": "Requirement has been removed"
 }
 ```
+
 ## Fetch data for vendor dashboard
+
 ```js
 GET /api/v1/ui/vendor-dashboard-data
 
@@ -484,7 +552,9 @@ Example Result:
   }
 }
 ```
+
 ## Explore existing RFQs (vendor)
+
 ```js
 GET /api/v1/rfqs/explore
 
@@ -496,7 +566,9 @@ Example result:
   "data": []
 }
 ```
+
 ## Get business details
+
 ```js
 GET /api/v1/details/business/<id>
 
@@ -516,7 +588,9 @@ Example result:
   }
 }
 ```
+
 ## Get vendor details
+
 ```js
 GET /api/v1/details/vendor/<id>
 
@@ -537,7 +611,9 @@ Example result:
   }
 }
 ```
+
 ## Send quote for RFQ
+
 ```js
 POST /api/v1/quotes
 
@@ -557,9 +633,11 @@ Example result:
   "message": "Your quote has been successfully sent"
 }
 ```
+
 ## Search through general
+
 ```js
-POST /api/v1/search?q=<query>
+GET /api/v1/search?q=<query>
 
 Authorization
 
@@ -573,7 +651,9 @@ Example result:
   }
 }
 ```
+
 ## Search through products
+
 ```js
 POST /api/v1/accounts/product-search?q=<query>
 
@@ -583,5 +663,48 @@ Example result:
 {
   "error": false,
   "products": []
+}
+```
+
+## Get business details
+
+```js
+GET /api/v1/details/business/<id>
+
+Authorization
+
+Example result:
+{
+  "error": false,
+  "business": {
+    "id": "ck7uj5f5400004wcu2rqmcgke",
+    "name": "Vodacom",
+    "email": "support@voda.com",
+    "userType": "business",
+    "phone": "+2349080450821",
+    "location": "Nigeria"
+  }
+}
+```
+
+## Get vendor details
+
+```js
+GET /api/v1/details/vendor/<id>
+
+Authorization
+
+Example result:
+{
+  "error": false,
+  "vendor": {
+    "id": "ck7uj7xlq00014wcu2z17a94e",
+    "name": "Dangote Inc.",
+    "email": "cement@dangote.com",
+    "userType": "vendor",
+    "phone": "+2349080450822",
+    "service_category": "Industry and Housing",
+    "service_location": "Nigeria"
+  }
 }
 ```
