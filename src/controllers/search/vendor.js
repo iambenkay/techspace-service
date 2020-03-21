@@ -1,5 +1,5 @@
 const Collection = require("../../data/orm");
-const { Response, ResponseError, removeDuplicates } = require("../../utils");
+const { Response, ResponseError } = require("../../utils");
 
 const Account = Collection("accounts");
 
@@ -13,12 +13,12 @@ module.exports = async request => {
       userType: "vendor",
       registration_completed: true
     })
-  ).map(({ id, name, email, service_category, phone, location }) => ({
+  ).map(({ id, name, email, service_category, phone, service_location }) => ({
     id,
     name,
     email,
     service_category,
-    location,
+    service_location,
     phone
   }));
 

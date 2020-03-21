@@ -29,7 +29,7 @@ module.exports = async request => {
         "vendor.name": true,
         "vendor._id": true,
         "vendor.service_category": true,
-        "vendor.location": true,
+        "vendor.service_location": true,
         "vendor.email": true,
         "vendor.phone": true
       }
