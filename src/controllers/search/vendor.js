@@ -1,16 +1,29 @@
-const Collection = require("../../data/orm")
-const { Response, ResponseError, removeDuplicates } = require("../../utils")
+const Collection = require("../../data/orm");
+const { Response, ResponseError, removeDuplicates } = require("../../utils");
 
-const Account = Collection("accounts")
+const Account = Collection("accounts");
 
 module.exports = async request => {
-    const { q: searchQuery, by = "name" } = request.query
-    if (!searchQuery) throw new ResponseError(400, "You must send a query")
+  const { q: searchQuery, by = "name" } = request.query;
+  if (!searchQuery) throw new ResponseError(400, "You must send a query");
 
-    const vendors = await (await Account.findAll({ [by]: new RegExp(searchQuery, "i"), userType: "vendor" })).map(({ id, name = "", email }) => ({ id, name, email }))
-
-    return new Response(200, {
-        error: false,
-        vendors
+  const vendors = await (
+    await Account.findAll({
+      [by]: new RegExp(searchQuery, "i"),
+      userType: "vendor",
+      registration_completed: true
     })
-}
+  ).map(({ id, name, email, service_category, phone, location }) => ({
+    id,
+    name,
+    email,
+    service_category,
+    location,
+    phone
+  }));
+
+  return new Response(200, {
+    error: false,
+    vendors
+  });
+};
