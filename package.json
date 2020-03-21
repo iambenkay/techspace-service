@@ -5,7 +5,9 @@
   "main": "src/index.js",
   "scripts": {
     "start": "node src",
-    "dev": "./dev"
+    "dev": "./dev",
+    "commit": "git add . && git commit",
+    "push": "git add . && git commit && git push origin master"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
