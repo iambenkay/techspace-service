@@ -8,7 +8,7 @@ module.exports.retrieveAll = async request => {
   const { id } = request.payload;
   const { pending } = request.query;
   const q = { vendorId: id };
-  if (pending) q.accepted = pending === "0" ? false : true;
+  if (pending) q.accepted = pending === "1" ? false : true;
   const businesses = await Business_Vendor_Rel.aggregate(
     {
       $match: q
