@@ -76,14 +76,14 @@ module.exports.get = async request => {
   const {id, userType} = request.payload
   const {businessId, vendorId} = request.query
   let match;
-  if(userType !== "vendor"){
+  if(userType === "vendor"){
     if(!businessId) throw new ResponseError(400, "You must provide businessId")
     match = {
       vendorId: id,
       businessId: businessId
     }
   }
-  if(userType !== "business"){
+  if(userType === "business"){
     if(!vendorId) throw new ResponseError(400, "You must provide vendorId")
     match = {
       vendorId: vendorId,
