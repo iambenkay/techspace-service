@@ -14,11 +14,11 @@ module.exports.get = async request => {
   }));
   if (!business)
     throw new ResponseError(400, "There is no business with that id");
-  const document = Object.keys(requirements.document).map(i => ({
+  const document = Object.keys(requirements.document || {}).map(i => ({
     id: i,
     name: requirements.document[i]
   }));
-  const statutory = Object.keys(requirements.statutory).map(i => ({
+  const statutory = Object.keys(requirements.statutory || {}).map(i => ({
     id: i,
     name: requirements.statutory[i]
   }));
