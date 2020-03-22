@@ -7,7 +7,10 @@ module.exports = (category, except, pending, objects) => {
   if (category) match_query.business_category = category;
   if (except) match_query.business_category = { $not: { $eq: except } };
   if (category || except) match_query.accepted = true;
-  if (pending) match_query.accepted = pending === "1" ? false : true;
+  if (pending) {
+    if (pending === "0") match_query.accepted = true;
+    if (pending === "1") match_query.accepted = false;
+  }
   return c.business_vendor_rel
     .aggregate([
       {
