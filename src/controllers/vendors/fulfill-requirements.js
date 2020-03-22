@@ -6,7 +6,6 @@ module.exports = async request => {
   const { id: vId } = request.payload;
 
   const { businessId, type, id, value } = request.body;
-  console.log(request.body)
   request.V.allExist(
     "You must provide: businessId, type and id",
     businessId,
