@@ -16,11 +16,11 @@ module.exports.get = async request => {
     throw new ResponseError(400, "There is no business with that id");
   const document = Object.keys(requirements.document).map(i => ({
     id: i,
-    name: requirements.document[id]
+    name: requirements.document[i]
   }));
   const statutory = Object.keys(requirements.statutory).map(i => ({
     id: i,
-    name: requirements.statutory[id]
+    name: requirements.statutory[i]
   }));
   return new Response(200, {
     error: false,
