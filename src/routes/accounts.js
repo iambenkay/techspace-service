@@ -25,6 +25,7 @@ const inventorySearch = require("../controllers/search/product");
 const category = require("../controllers/business/category");
 const vendorBusiness = require("../controllers/vendors/business");
 const requirements = require("../controllers/business/requirements");
+const fulfill = require("../controllers/vendors/fulfill-requirements");
 
 // Get Account details
 router.get("/accounts", isAuthenticated, handler(account_details));
@@ -213,6 +214,14 @@ router.delete(
   isAuthenticated,
   isAccountType("business"),
   handler(requirements.remove)
+);
+
+router.post(
+  "/vendors/fulfill-requirements",
+  isAuthenticated,
+  isAccountType("vendor"),
+  upload.single("document"),
+  handler(fulfill)
 );
 
 module.exports = router;

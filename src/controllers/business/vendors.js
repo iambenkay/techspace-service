@@ -4,13 +4,13 @@ const { ResponseError, Response } = require("../../utils");
 
 module.exports.retrieve = async request => {
   const { id } = request.payload;
-  const { category, except } = request.query;
+  const { category, except, pending } = request.query;
   const business_data = await c.accounts.find({ _id: id });
   const business = new Business(business_data);
 
   return new Response(200, {
     error: false,
-    vendors: await business.vendors(category, except)
+    vendors: await business.vendors(category, except, pending)
   });
 };
 

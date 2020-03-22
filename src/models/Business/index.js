@@ -17,7 +17,7 @@ module.exports = class Business extends Model {
   invite_vendor(email){
     return _invite_vendor(email, this.objects)
   }
-  vendors(category, except){
-    return _vendors(category, except, this.objects)
+  vendors(category, except, pending){
+    return _vendors(category, except, pending, this.objects)
   }
 };

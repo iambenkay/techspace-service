@@ -714,3 +714,20 @@ Example result:
   "message": "Requirement has been removed"
 }
 ```
+
+## Fulfill business requirements
+
+```js
+POST /api/v1/vendors/fulfill-requirements
+
+Authorization
+Content-Type: multipart/form-data
+
+{
+  "businessId": "ck7vwsa560001mocu175uagdn",
+  "type": "document|statutory",
+  "id": "ck82y1y550000hkcudqcdcgrw",
+  "document": "file-data" File(frontend) <- Only if type is document,
+  "value": "0|1" File(frontend) <- Only if type is statutory
+}
+```

@@ -1,12 +1,13 @@
 const c = require("../../data/collections");
 
-module.exports = (category, except, objects) => {
+module.exports = (category, except, pending, objects) => {
   const match_query = {
     businessId: objects.id
   };
   if (category) match_query.business_category = category;
   if (except) match_query.business_category = { $not: { $eq: except } };
   if (category || except) match_query.accepted = true;
+  if (pending) match_query.accepted = false;
   return c.business_vendor_rel
     .aggregate([
       {
