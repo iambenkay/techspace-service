@@ -17,6 +17,7 @@ module.exports.business = async request => {
             userType: business.userType,
             phone: business.phone,
             location: business.location,
+            requirements: business.requirements || {}
         }
     })
 }
