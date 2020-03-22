@@ -49,7 +49,7 @@ module.exports.remove = async request => {
 
 module.exports.retrieveAll = async request => {
   let { id, userType } = request.payload;
-  if (userType === "business") id = request.body.id;
+  if (userType === "business") id = request.query.id;
   if (!id) throw new ResponseError(400, "There is no vendor with that ID");
   const data = await c.inventory.findAll({ vendorId: id });
 
