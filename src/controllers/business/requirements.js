@@ -3,9 +3,12 @@ const { Response, ResponseError } = require("../../utils");
 const { Id } = require("../../services/provider");
 
 module.exports.get = async request => {
-  const { id } = request.payload;
-
-  const business = await c.accounts.find({ _id: id });
+  let { id, userType } = request.payload;
+  if (userType === "vendor") id = request.body.id;
+  if (!id) throw new ResponseError(400, "you must provide id of business");
+  const business = await c.accounts.find({ _id: id, userType: "business" });
+  if (!business)
+    throw new ResponseError(400, "There is no business with that id");
   return new Response(200, {
     error: false,
     requirements: business.requirements || {}
