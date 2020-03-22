@@ -19,7 +19,7 @@ module.exports = async request => {
     businessId
   });
   let result;
-  if (!bvr) throw new ResponseError("You are not available for consideration.");
+  if (!bvr) throw new ResponseError(400, "You are not available for consideration.");
   if (type === "statutory") {
     request.V.expr(
       "You must provide value (0 or 1) for statutory requirements",
