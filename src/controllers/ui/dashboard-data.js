@@ -59,10 +59,12 @@ module.exports.business = async request => {
   const no_of_accepted_vendors_linked_to = (
     await c.business_vendor_rel.findAll({ businessId: id, accepted: true })
   ).length;
-  const no_of_pending_admins = (await c.business_admin_rel.findAll({ businessId: id, accepted: false }))
-    .length;
-  const no_of_approved_admins = (await c.business_admin_rel.findAll({ businessId: id, accepted: true }))
-    .length;
+  const no_of_pending_admins = (
+    await c.business_admin_rel.findAll({ businessId: id, accepted: false })
+  ).length;
+  const no_of_approved_admins = (
+    await c.business_admin_rel.findAll({ businessId: id, accepted: true })
+  ).length;
   const no_of_rfqs = (await c.rfq.findAll({ initiator: id })).length;
 
   delete account.password;
@@ -78,7 +80,7 @@ module.exports.business = async request => {
       no_of_unread_notifications,
       no_of_pending_vendors_linked_to,
       no_of_accepted_vendors_linked_to,
-      no_of_rfqs,
+      no_of_rfqs
     }
   });
 };
