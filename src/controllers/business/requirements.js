@@ -6,12 +6,28 @@ module.exports.get = async request => {
   let { id, userType } = request.payload;
   if (userType === "vendor") id = request.body.id;
   if (!id) throw new ResponseError(400, "you must provide id of business");
-  const business = await c.accounts.find({ _id: id, userType: "business" });
+  const business = ({
+    requirements = { document: {}, statutory: {} }
+  } = await c.accounts.find({
+    _id: id,
+    userType: "business"
+  }));
   if (!business)
     throw new ResponseError(400, "There is no business with that id");
+  const document = Object.keys(requirements.document).map(i => ({
+    id: i,
+    name: requirements.document[id]
+  }));
+  const statutory = Object.keys(requirements.statutory).map(i => ({
+    id: i,
+    name: requirements.statutory[id]
+  }));
   return new Response(200, {
     error: false,
-    requirements: business.requirements || {}
+    requirements: {
+      document,
+      statutory
+    }
   });
 };
 

@@ -60,8 +60,6 @@ module.exports.retrieveAll = async request => {
 };
 
 module.exports.retrieve = async request => {
-  const { id } = request.payload;
-
   const { id: productId } = request.body;
   const data = await c.inventory.find({ _id: productId });
 };
