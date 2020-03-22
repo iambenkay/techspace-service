@@ -2,7 +2,7 @@ const c = require("../../data/collections");
 const { Response, ResponseError } = require("../../utils");
 const store = require("../../services/cloudinary-provider");
 
-module.exports = async request => {
+module.exports.set = async request => {
   const { id: vId } = request.payload;
 
   const { businessId, type, id, value } = request.body;
@@ -18,13 +18,14 @@ module.exports = async request => {
     businessId
   });
   let result;
-  if (!bvr) throw new ResponseError(400, "You are not available for consideration.");
+  if (!bvr)
+    throw new ResponseError(400, "You are not available for consideration.");
   if (type === "statutory") {
     request.V.expr(
       "You must provide value (0 or 1) for statutory requirements",
       [0, 1].includes(parseInt(value))
     );
-    result = value === 0 ? false : true
+    result = value === 0 ? false : true;
   }
   if (type === "document") {
     request.V.allExist(
@@ -35,10 +36,12 @@ module.exports = async request => {
       throw new ResponseError(400, "You must provide only pdf files");
     const file_data = request.file.buffer.toString("base64");
     try {
-      result = await store.upload(
-        `data:${request.file.mimetype};base64,${file_data}`,
-        "vendor_requirements"
-      );
+      result = (
+        await store.upload(
+          `data:${request.file.mimetype};base64,${file_data}`,
+          "vendor_requirements"
+        )
+      ).public_url;
     } catch (error) {
       throw new ResponseError(400, error.message);
     }
@@ -53,11 +56,44 @@ module.exports = async request => {
 
   await c.business_vendor_rel.update(
     { _id: bvr.id },
-    { [`requirements.${type}.${id}`]: result.public_id }
+    {
+      [`requirements.${type}.${id}`]: {
+        id,
+        value: result,
+        accepted: false,
+      }
+    }
   );
-  await c.business_vendor_rel.find({_id: bvr.id})
+  const re = await c.business_vendor_rel.find({ _id: bvr.id });
   return new Response(200, {
-      error: false,
-      message: "Requirement has been met."
-  })
+    error: false,
+    message: "Requirement has been met.",
+    result: re
+  });
 };
+
+module.exports.get = async request => {
+  const {id, userType} = request.payload
+  const {businessId, vendorId} = request.query
+  let match;
+  if(userType !== "vendor"){
+    if(!businessId) throw new ResponseError(400, "You must provide businessId")
+    match = {
+      vendorId: id,
+      businessId: businessId
+    }
+  }
+  if(userType !== "business"){
+    if(!vendorId) throw new ResponseError(400, "You must provide vendorId")
+    match = {
+      vendorId: vendorId,
+      businessId: id
+    }
+  }
+  const bvr = await c.business_vendor_rel.find(match)
+
+  return new Response(200, {
+    error: false,
+    data: bvr
+  })
+}

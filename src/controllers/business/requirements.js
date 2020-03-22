@@ -52,7 +52,12 @@ module.exports.set = async request => {
   const req_id = Id();
   await c.accounts.update(
     { _id: id },
-    { [`requirements.${type}.${req_id}`]: requirement }
+    {
+      [`requirements.${type}.${req_id}`]: {
+        id: req_id,
+        name: requirement
+      }
+    }
   );
 
   return new Response(200, {
@@ -110,7 +115,7 @@ module.exports.edit = async request => {
     throw new ResponseError(400, "There are no requirements by that id");
   await c.accounts.update(
     { _id: id },
-    { [`requirements.${type}.${requirement_id}`]: new_requirement }
+    { [`requirements.${type}.${requirement_id}.${name}`]: new_requirement }
   );
 
   return new Response(200, {

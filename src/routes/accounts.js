@@ -221,7 +221,13 @@ router.post(
   isAuthenticated,
   isAccountType("vendor"),
   upload.single("document"),
-  handler(fulfill)
+  handler(fulfill.set)
+);
+router.get(
+  "/vendors/see-fulfillments",
+  isAuthenticated,
+  isAccountType("vendor", "business"),
+  handler(fulfill.get)
 );
 
 module.exports = router;
