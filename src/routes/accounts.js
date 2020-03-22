@@ -224,7 +224,7 @@ router.post(
   handler(fulfill.set)
 );
 router.get(
-  "/vendors/see-fulfillments",
+  "/see-fulfillments",
   isAuthenticated,
   isAccountType("vendor", "business"),
   handler(fulfill.get)
