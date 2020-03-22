@@ -53,9 +53,9 @@ module.exports = async request => {
 
   await c.business_vendor_rel.update(
     { _id: bvr.id },
-    { [`requirements.${type}.${id}`]: result }
+    { [`requirements.${type}.${id}`]: result.public_id }
   );
-
+  await c.business_vendor_rel.find({_id: bvr.id})
   return new Response(200, {
       error: false,
       message: "Requirement has been met."
