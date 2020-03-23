@@ -60,7 +60,7 @@ module.exports.set = async request => {
       [`requirements.${type}.${id}`]: {
         id,
         value: result,
-        accepted: false,
+        accepted: null,
       }
     }
   );
@@ -95,5 +95,26 @@ module.exports.get = async request => {
   return new Response(200, {
     error: false,
     data: bvr
+  })
+}
+
+module.exports.approve = async request => {
+  const {id, type} = request.body
+  if(!id || !type) throw new ResponseError(400, "You must provide id and type")
+  await c.business_vendor_rel.update({[`requirements.${type}.${id}.accepted`]: true})
+
+  return new Response(200, {
+    error: false,
+    message: "Requirement was approved"
+  })
+}
+module.exports.reject = async request => {
+  const {id, type} = request.body
+  if(!id || !type) throw new ResponseError(400, "You must provide id and type")
+  await c.business_vendor_rel.update({[`requirements.${type}.${id}.accepted`]: false})
+
+  return new Response(200, {
+    error: false,
+    message: "Requirement was rejected"
   })
 }
