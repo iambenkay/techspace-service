@@ -1,6 +1,10 @@
 const router = require("express").Router();
 const handler = require("../services/request-injector");
-const { isAuthenticated, isAccountType, mustHaveRequirement } = require("../middleware");
+const {
+  isAuthenticated,
+  isAccountType,
+  mustHaveRequirement
+} = require("../middleware");
 const upload = require("multer")();
 const register = require("../controllers/auth/register");
 const account_details = require("../controllers/accounts/details");
@@ -23,6 +27,7 @@ const docUpload = require("../controllers/vendors/upload");
 const inventory = require("../controllers/vendors/inventory");
 const inventorySearch = require("../controllers/search/product");
 const category = require("../controllers/business/category");
+const approve = require("../controllers/business/approveVendor");
 const vendorBusiness = require("../controllers/vendors/business");
 const requirements = require("../controllers/business/requirements");
 const fulfill = require("../controllers/vendors/fulfill-requirements");
@@ -38,6 +43,12 @@ router.delete(
   handler(delistVendor)
 );
 
+router.post(
+  "/accounts/business/approve",
+  isAuthenticated,
+  isAccountType("business"),
+  handler(approve)
+);
 // For vendors to apply business
 router.post(
   "/accounts/apply-to-business",
