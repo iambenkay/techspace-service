@@ -229,13 +229,13 @@ router.get(
   isAccountType("vendor", "business"),
   handler(fulfill.get)
 );
-router.get(
+router.post(
   "/fulfillments/approve",
   isAuthenticated,
   isAccountType("business"),
   handler(fulfill.approve)
 );
-router.get(
+router.post(
   "/fulfillments/reject",
   isAuthenticated,
   isAccountType("business"),
