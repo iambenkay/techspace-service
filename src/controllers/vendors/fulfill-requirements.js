@@ -60,7 +60,7 @@ module.exports.set = async request => {
       [`requirements.${type}.${id}`]: {
         id,
         value: result,
-        accepted: null,
+        accepted: null
       }
     }
   );
@@ -73,48 +73,57 @@ module.exports.set = async request => {
 };
 
 module.exports.get = async request => {
-  const {id, userType} = request.payload
-  const {businessId, vendorId} = request.query
+  const { id, userType } = request.payload;
+  const { businessId, vendorId } = request.query;
   let match;
-  if(userType === "vendor"){
-    if(!businessId) throw new ResponseError(400, "You must provide businessId")
+  if (userType === "vendor") {
+    if (!businessId)
+      throw new ResponseError(400, "You must provide businessId");
     match = {
       vendorId: id,
       businessId: businessId
-    }
+    };
   }
-  if(userType === "business"){
-    if(!vendorId) throw new ResponseError(400, "You must provide vendorId")
+  if (userType === "business") {
+    if (!vendorId) throw new ResponseError(400, "You must provide vendorId");
     match = {
       vendorId: vendorId,
       businessId: id
-    }
+    };
   }
-  const bvr = await c.business_vendor_rel.find(match)
+  const bvr = await c.business_vendor_rel.find(match);
 
   return new Response(200, {
     error: false,
     data: bvr
-  })
-}
+  });
+};
 
 module.exports.approve = async request => {
-  const {id, type} = request.body
-  if(!id || !type) throw new ResponseError(400, "You must provide id and type")
-  await c.business_vendor_rel.update({[`requirements.${type}.${id}.accepted`]: true})
+  const { id, type } = request.body;
+  if (!id || !type)
+    throw new ResponseError(400, "You must provide id and type");
+  await c.business_vendor_rel.update(
+    { [`requirements.${type}.${id}.accepted`]: { $exists: true } },
+    { [`requirements.${type}.${id}.accepted`]: true }
+  );
 
   return new Response(200, {
     error: false,
     message: "Requirement was approved"
-  })
-}
+  });
+};
 module.exports.reject = async request => {
-  const {id, type} = request.body
-  if(!id || !type) throw new ResponseError(400, "You must provide id and type")
-  await c.business_vendor_rel.update({[`requirements.${type}.${id}.accepted`]: false})
+  const { id, type } = request.body;
+  if (!id || !type)
+    throw new ResponseError(400, "You must provide id and type");
+  await c.business_vendor_rel.update(
+    { [`requirements.${type}.${id}.accepted`]: { $exists: true } },
+    { [`requirements.${type}.${id}.accepted`]: false }
+  );
 
   return new Response(200, {
     error: false,
     message: "Requirement was rejected"
-  })
-}
+  });
+};
