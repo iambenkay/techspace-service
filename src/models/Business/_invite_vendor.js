@@ -38,7 +38,11 @@ module.exports = async (email, objects) => {
       dateJoined: null,
       business_category: null,
       invite_token,
-      initiator: objects.id
+      initiator: objects.id,
+      requirements: {
+        document: {},
+        statutory: {}
+      }
     });
     return invite_token;
   }
