@@ -38,5 +38,25 @@ function isAccountType(...type) {
 
 module.exports = Object.freeze({
     isAuthenticated,
-    isAccountType
+    isAccountType,
+    mustHaveRequirement
 })
+
+async function mustHaveRequirement(req, res, next){
+    const {id} = req.payload
+
+    const business = await c.accounts.find({_id: id})
+
+    if(!business.requirements) return res.status(400).send({
+        error: true,
+        message: "You must have set one business requirement"
+    })
+    const noDocumentReq = !Object.keys(business.requirements.document || {}).length
+    const noStatutoryReq = !Object.keys(business.requirements.statutory | {}).length
+    if(noDocumentReq && noStatutoryReq) return res.status(400).send({
+        error: true,
+        message: "You must set at least one business requirements"
+    })
+
+    return next();
+}

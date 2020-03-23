@@ -1,6 +1,6 @@
 const router = require("express").Router();
 const handler = require("../services/request-injector");
-const { isAuthenticated, isAccountType } = require("../middleware");
+const { isAuthenticated, isAccountType, mustHaveRequirement } = require("../middleware");
 const upload = require("multer")();
 const register = require("../controllers/auth/register");
 const account_details = require("../controllers/accounts/details");
@@ -51,6 +51,7 @@ router.post(
   "/accounts/invite-vendor",
   isAuthenticated,
   isAccountType("business"),
+  mustHaveRequirement,
   handler(inviteVendor)
 );
 

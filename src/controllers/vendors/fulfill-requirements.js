@@ -36,12 +36,12 @@ module.exports.set = async request => {
       throw new ResponseError(400, "You must provide only pdf files");
     const file_data = request.file.buffer.toString("base64");
     try {
-      result = (
-        await store.upload(
+      result = await store
+        .upload(
           `data:${request.file.mimetype};base64,${file_data}`,
           "vendor_requirements"
         )
-      ).public_url;
+        .then(result => result.secure_url);
     } catch (error) {
       throw new ResponseError(400, error.message);
     }
@@ -53,7 +53,6 @@ module.exports.set = async request => {
   });
   if (!validReq)
     throw new ResponseError(400, "The requirement is not on the business");
-
   await c.business_vendor_rel.update(
     { _id: bvr.id },
     {
