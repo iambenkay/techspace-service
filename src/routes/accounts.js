@@ -229,5 +229,17 @@ router.get(
   isAccountType("vendor", "business"),
   handler(fulfill.get)
 );
+router.get(
+  "/fulfillments/approve",
+  isAuthenticated,
+  isAccountType("business"),
+  handler(fulfill.approve)
+);
+router.get(
+  "/fulfillments/reject",
+  isAuthenticated,
+  isAccountType("business"),
+  handler(fulfill.reject)
+);
 
 module.exports = router;
