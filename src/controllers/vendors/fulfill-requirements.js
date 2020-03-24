@@ -25,7 +25,7 @@ module.exports.set = async request => {
       "You must provide value (0 or 1) for statutory requirements",
       [0, 1].includes(parseInt(value))
     );
-    result = value === 0 ? false : true;
+    result = parseInt(value) === 0 ? false : true;
   }
   if (type === "document") {
     request.V.allExist(
