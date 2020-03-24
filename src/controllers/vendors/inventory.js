@@ -14,7 +14,11 @@ module.exports.add = async request => {
     oem,
     type
   );
-  request.V.expr("type must be product or service", /^(product|service)$/i.test(type))
+  console.log(type);
+  request.V.expr(
+    "type must be product or service",
+    /^(product|service)$/i.test(type)
+  );
   const data = await c.inventory.insert({
     name,
     description,
@@ -25,7 +29,9 @@ module.exports.add = async request => {
   });
   return new Response(200, {
     error: false,
-    message: "Product has been succesfully added to Inventory",
+    message: `${type[0].toUpperCase()}${type.sloice(
+      1
+    )} has been succesfully added to Inventory`,
     data
   });
 };
@@ -44,7 +50,7 @@ module.exports.remove = async request => {
   await c.inventory.remove({ _id: productId });
   return new Response(200, {
     error: false,
-    message: "Product has been succesfully removed from Inventory"
+    message: `Product has been succesfully removed from Inventory`
   });
 };
 
