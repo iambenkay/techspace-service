@@ -731,3 +731,11 @@ Content-Type: multipart/form-data
   "value": "0|1" File(frontend) <- Only if type is statutory
 }
 ```
+
+## Rate a vendor
+
+```js
+POST /accounts/business/rate?vendorId=<vId>&rating=<rating>
+
+Authorization
+```

@@ -31,7 +31,14 @@ const approve = require("../controllers/business/approveVendor");
 const vendorBusiness = require("../controllers/vendors/business");
 const requirements = require("../controllers/business/requirements");
 const fulfill = require("../controllers/vendors/fulfill-requirements");
-  
+const rate = require("../controllers/business/rate");
+
+router.post(
+  "/accounts/business/rate",
+  isAuthenticated,
+  isAccountType("business"),
+  handler(rate)
+);
 
 // Get Account details
 router.get("/accounts", isAuthenticated, handler(account_details));
