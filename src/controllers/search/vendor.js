@@ -13,14 +13,25 @@ module.exports = async request => {
       userType: "vendor",
       registration_completed: true
     })
-  ).map(({ id, name, email, service_category, phone, service_location }) => ({
-    id,
-    name,
-    email,
-    service_category,
-    service_location,
-    phone
-  }));
+  ).map(
+    ({
+      id,
+      name,
+      email,
+      service_category,
+      phone,
+      service_location,
+      rating = 0
+    }) => ({
+      id,
+      name,
+      email,
+      service_category,
+      service_location,
+      phone,
+      rating
+    })
+  );
 
   return new Response(200, {
     error: false,
