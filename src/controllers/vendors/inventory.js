@@ -4,24 +4,25 @@ const V = require("../../services/validator");
 
 module.exports.add = async request => {
   const { id } = request.payload;
-  const { name, description, price, oem } = request.body;
+  const { name, description, price, oem, type } = request.body;
 
   V.allExist(
-    "You must provide name, description, price and oem",
+    "You must provide name, description, price and oem, type",
     name,
     description,
     price,
-    oem
+    oem,
+    type
   );
-
+  request.V.expr("type must be product or service", /^(product|service)$/i.test(type))
   const data = await c.inventory.insert({
     name,
     description,
     price,
     oem,
-    vendorId: id
+    vendorId: id,
+    type
   });
-  delete data;
   return new Response(200, {
     error: false,
     message: "Product has been succesfully added to Inventory",
