@@ -31,7 +31,7 @@ module.exports.add = async request => {
   const data = await c.inventory.insert(a);
   return new Response(200, {
     error: false,
-    message: `${type[0].toUpperCase()}${type[0].sloice(
+    message: `${type[0].toUpperCase()}${type[0].slice(
       1
     )} has been succesfully added to Inventory`,
     data
