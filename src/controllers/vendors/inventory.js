@@ -7,29 +7,31 @@ module.exports.add = async request => {
   const { name, description, price, oem, type } = request.body;
 
   V.allExist(
-    "You must provide name, description, price and oem, type",
+    "You must provide name, description, price oem and type",
     name,
     description,
     price,
-    oem,
     type
   );
-  console.log(type);
   request.V.expr(
     "type must be product or service",
     /^(product|service)$/i.test(type)
   );
-  const data = await c.inventory.insert({
+  if (type === "product") {
+    request.V.allExist("You must provide oem for product", oem);
+  }
+  const a = {
     name,
     description,
     price,
-    oem,
     vendorId: id,
     type
-  });
+  };
+  if (oem) a.oem = oem;
+  const data = await c.inventory.insert(a);
   return new Response(200, {
     error: false,
-    message: `${type[0].toUpperCase()}${type.sloice(
+    message: `${type[0].toUpperCase()}${type[0].sloice(
       1
     )} has been succesfully added to Inventory`,
     data
