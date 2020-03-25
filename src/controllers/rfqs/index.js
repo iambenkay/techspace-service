@@ -14,6 +14,7 @@ module.exports.create = async request => {
     location,
     quantity
   } = request.body;
+  console.log(request.body);
 
   V.allExist(
     "You must provide title, description, category, type, deadline, location, quantity",
