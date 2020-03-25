@@ -8,19 +8,20 @@ module.exports.create = async request => {
   const {
     title,
     description,
-    business_category,
-    service_category,
+    category,
+    type,
     deadline,
     location,
     quantity
   } = request.body;
 
   V.allExist(
-    "You must provide title, description, service_category, deadline, location, quantity",
+    "You must provide title, description, category, type, deadline, location, quantity",
     title,
     deadline,
     description,
-    service_category,
+    type,
+    category,
     location,
     quantity
   );
@@ -29,11 +30,12 @@ module.exports.create = async request => {
     title,
     deadline,
     description,
-    service_category,
     location,
     quantity,
     initiator: id
   };
+  if (type === "service") rfq_data.service_category = category;
+  if (type === "business") rfq_data.business_category = category;
   if (request.file) {
     if (request.file.mimetype != "application/pdf")
       throw new ResponseError(400, "You must provide only pdf files");
@@ -50,7 +52,6 @@ module.exports.create = async request => {
     console.log(result);
     rfq_data.full_description_document = result.public_id;
   }
-  if (business_category) rfq_data.business_category = business_category;
 
   const data = await c.rfq.insert(rfq_data);
   return new Response(201, {
@@ -103,7 +104,7 @@ module.exports.explore = async request => {
   const { id } = request.payload;
   const vendor = await c.accounts.find({ _id: id });
   const data = await c.rfq.aggregate([
-    { $match: { category: vendor.service_category } },
+    { $match: { service_category: vendor.service_category } },
     {
       $lookup: {
         from: "accounts",
@@ -118,7 +119,8 @@ module.exports.explore = async request => {
     {
       $project: { "business.name": true, title: true, "business._id": true }
     }
-  ]);  return new Response(200, {
+  ]);
+  return new Response(200, {
     error: false,
     data
   });
