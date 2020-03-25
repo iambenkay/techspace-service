@@ -14,7 +14,6 @@ module.exports.create = async request => {
     location,
     quantity
   } = request.body;
-  console.log(request.body);
 
   V.allExist(
     "You must provide title, description, category, type, deadline, location, quantity",
@@ -118,7 +117,7 @@ module.exports.explore = async request => {
       $unwind: "$business"
     },
     {
-      $project: { "business.name": true, title: true, "business._id": true }
+      $project: { description: true, service_category: true, "business.name": true, title: true, "business._id": true }
     }
   ]);
   return new Response(200, {
