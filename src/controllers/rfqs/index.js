@@ -103,7 +103,7 @@ module.exports.explore = async request => {
   const { id } = request.payload;
   const vendor = await c.accounts.find({ _id: id });
   const data = await c.rfq.aggregate([
-    { $match: { service_category: vendor.service_category } },
+    { $match: { category: vendor.service_category } },
     {
       $lookup: {
         from: "accounts",
@@ -119,7 +119,6 @@ module.exports.explore = async request => {
       $project: { "business.name": true, title: true, "business._id": true }
     }
   ]);
-  const a = await c.rfq.findAll({ service_category: vendor.service_category });
   return new Response(200, {
     error: false,
     data

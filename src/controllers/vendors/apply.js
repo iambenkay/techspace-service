@@ -5,7 +5,7 @@ const { Response, ResponseError } = require("../../utils");
 
 module.exports = async request => {
   const { id } = request.payload;
-  const { email, requirements = {} } = request.body;
+  const { email } = request.body;
   if (!email)
     throw new ResponseError(
       400,
@@ -14,7 +14,7 @@ module.exports = async request => {
   const vendor_data = await c.accounts.find({ _id: id });
   const vendor = new m.Vendor(vendor_data);
 
-  const invite_token = await vendor.apply_to_business(email, requirements);
+  const invite_token = await vendor.apply_to_business(email);
 
   const host = request.get("host");
   const scheme = process.env.STATE === "development" ? "http" : "https";

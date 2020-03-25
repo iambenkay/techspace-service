@@ -8,7 +8,7 @@ module.exports = class Vendor extends Model {
   get objects() {
     return this._data;
   }
-  apply_to_business(email, requirements = {}) {
-    return _apply_to_business(email, requirements, this.objects);
+  apply_to_business(email) {
+    return _apply_to_business(email, this.objects);
   }
 };
