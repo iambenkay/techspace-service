@@ -118,8 +118,7 @@ module.exports.explore = async request => {
     {
       $project: { "business.name": true, title: true, "business._id": true }
     }
-  ]);
-  return new Response(200, {
+  ]);  return new Response(200, {
     error: false,
     data
   });
