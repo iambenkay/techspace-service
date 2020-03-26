@@ -63,12 +63,12 @@ module.exports.remove = async request => {
 module.exports.retrieveAll = async request => {
   let { id, userType } = request.payload;
   const { type } = request.query;
-  const q = { vendorId: id };
+  const q = {};
   if (type) q.type = type;
   if (userType === "business") id = request.query.id;
-  if (!id) throw new ResponseError(400, "There is no vendor with that ID");
+  if (id) q._id = id;
   const data = await c.inventory.aggregate([
-    { $match: { _id: id } },
+    { $match: q },
     {
       $lookup: {
         from: "accounts",
