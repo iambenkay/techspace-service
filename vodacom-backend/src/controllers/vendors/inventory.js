@@ -67,7 +67,26 @@ module.exports.retrieveAll = async request => {
   if (type) q.type = type;
   if (userType === "business") id = request.query.id;
   if (!id) throw new ResponseError(400, "There is no vendor with that ID");
-  const data = await c.inventory.findAll(q);
+  const data = await c.inventory.aggregate([
+    { $match: { _id: id } },
+    {
+      $lookup: {
+        from: "accounts",
+        localField: "vendorId",
+        foreignField: "_id",
+        as: "vendor"
+      }
+    },
+    { $unwind: "$vendor" },
+    {
+      $project: {
+        price: true,
+        name: true,
+        "vendor.name": true,
+        "vendor._id": true
+      }
+    }
+  ]);
 
   return new Response(200, {
     error: false,
