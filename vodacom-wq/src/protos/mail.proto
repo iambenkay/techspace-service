@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+service MailService {
+    rpc SendMail (Mail) returns (Empty) {}
+}
+
+message Empty {}
+
+message Mail {
+    required string to = 1;
+    required string subject = 2;
+    required string text = 3;
+    required string html = 4;
+}
