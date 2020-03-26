@@ -77,15 +77,15 @@ module.exports.retrieveAll = async request => {
         as: "vendor"
       }
     },
-    { $unwind: "$vendor" },
-    {
-      $project: {
-        price: true,
-        name: true,
-        "vendor.name": true,
-        "vendor._id": true
-      }
-    }
+    { $unwind: "$vendor" }
+    // {
+    //   $project: {
+    //     price: true,
+    //     name: true,
+    //     "vendor.name": true,
+    //     "vendor._id": true
+    //   }
+    // }
   ]);
   console.log(data);
 
