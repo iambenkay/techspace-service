@@ -2,12 +2,12 @@ const c = require("../../data/collections");
 const { Response, ResponseError } = require("../../utils");
 
 module.exports = async request => {
-  const { q: searchQuery, by = "name" } = request.query;
+  const { q: searchQuery, by = "name", type = "product" } = request.query;
   if (!searchQuery) throw new ResponseError(400, "You must send a query");
 
   const products = await c.inventory.aggregate([
     {
-      $match: { [by]: new RegExp(searchQuery, "i") }
+      $match: { [by]: new RegExp(searchQuery, "i"), type }
     },
     {
       $lookup: {

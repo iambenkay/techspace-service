@@ -103,7 +103,7 @@ router.get(
 );
 
 // Search through the list of vendors
-router.get("/accounts/vendor-search", isAuthenticated, handler(searchVendor));
+router.get("/accounts/vendor-search", handler(searchVendor));
 
 // For businesses to remove admins
 router.delete(

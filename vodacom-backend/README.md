@@ -1,1 +1,0 @@
-# Vodacom Vendor Mgmt System
