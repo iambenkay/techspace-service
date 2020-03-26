@@ -65,9 +65,8 @@ module.exports.retrieveAll = async request => {
   const { type } = request.query;
   const q = {};
   if (type) q.type = type;
-  if (userType === "business") id = request.query.id;
+  if (userType !== "vendor") id = request.query.id;
   if (id) q._id = id;
-  console.log(type, q);
   const data = await c.inventory.aggregate([
     { $match: q },
     {
@@ -88,6 +87,7 @@ module.exports.retrieveAll = async request => {
       }
     }
   ]);
+  console.log(data);
 
   return new Response(200, {
     error: false,
