@@ -272,31 +272,6 @@ Example result:
 }
 ```
 
-## Fetch all products from inventory
-
-```js
-GET /api/v1/accounts/vendors/inventory
-
-Authorization: Bearer <token>
-
-Example result:
-{
-  "error": false,
-  "data": [
-    {
-      "id": "ck7ldc43h0000m7cu50kg1ki1",
-      "createdAt": 1583812948157,
-      "updatedAt": 1583812948157,
-      "name": "Cement",
-      "description": "Well granulated cement for housing needs",
-      "price": "34",
-      "oem": "Dangote",
-      "vendorId": "ck7g99r3j0001tqcugfj1a2o6"
-    }
-  ]
-}
-```
-
 ## Add vendor category (business)
 
 ```js
@@ -738,4 +713,29 @@ Content-Type: multipart/form-data
 POST /accounts/business/rate?vendorId=<vId>&rating=<rating>
 
 Authorization
+```
+
+## Fetch all products from inventory
+
+```js
+GET /api/v1/accounts/vendors/inventory?type=<service|business>
+
+Authorization: Bearer <token>
+
+Example result:
+{
+  "error": false,
+  "data": [
+    {
+      "id": "ck7ldc43h0000m7cu50kg1ki1",
+      "createdAt": 1583812948157,
+      "updatedAt": 1583812948157,
+      "name": "Cement",
+      "description": "Well granulated cement for housing needs",
+      "price": "34",
+      "oem": "Dangote",
+      "vendorId": "ck7g99r3j0001tqcugfj1a2o6"
+    }
+  ]
+}
 ```

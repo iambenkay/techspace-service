@@ -4,14 +4,16 @@ const V = require("../../services/validator");
 
 module.exports.add = async request => {
   const { id } = request.payload;
-  const { name, description, price, oem, type } = request.body;
+  const { name, description, price, oem, type, moq, sku } = request.body;
 
   V.allExist(
     "You must provide name, description, price oem and type",
     name,
     description,
     price,
-    type
+    type,
+    moq,
+    sku
   );
   request.V.expr(
     "type must be product or service",
@@ -25,7 +27,9 @@ module.exports.add = async request => {
     description,
     price,
     vendorId: id,
-    type
+    type,
+    moq,
+    sku
   };
   if (oem) a.oem = oem;
   const data = await c.inventory.insert(a);
@@ -58,9 +62,12 @@ module.exports.remove = async request => {
 
 module.exports.retrieveAll = async request => {
   let { id, userType } = request.payload;
+  const { type } = request.query;
+  const q = { vendorId: id };
+  if (type) q.type = type;
   if (userType === "business") id = request.query.id;
   if (!id) throw new ResponseError(400, "There is no vendor with that ID");
-  const data = await c.inventory.findAll({ vendorId: id });
+  const data = await c.inventory.findAll(q);
 
   return new Response(200, {
     error: false,

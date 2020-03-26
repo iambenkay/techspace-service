@@ -160,7 +160,6 @@ router.delete(
 router.get(
   "/accounts/vendors/inventory",
   isAuthenticated,
-  isAccountType("vendor", "business"),
   handler(inventory.retrieveAll)
 );
 
