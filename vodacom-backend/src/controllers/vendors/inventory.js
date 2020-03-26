@@ -62,11 +62,11 @@ module.exports.remove = async request => {
 
 module.exports.retrieveAll = async request => {
   let { id, userType } = request.payload;
-  const { type } = request.query;
+  const { type, explore } = request.query;
   const q = {};
   if (type) q.type = type;
   if (userType !== "vendor") id = request.query.id;
-  if (id) q._id = id;
+  if (id && !explore) q.vendorId = id;
   const data = await c.inventory.aggregate([
     { $match: q },
     {
@@ -77,15 +77,15 @@ module.exports.retrieveAll = async request => {
         as: "vendor"
       }
     },
-    { $unwind: "$vendor" }
-    // {
-    //   $project: {
-    //     price: true,
-    //     name: true,
-    //     "vendor.name": true,
-    //     "vendor._id": true
-    //   }
-    // }
+    { $unwind: "$vendor" },
+    {
+      $project: {
+        price: true,
+        name: true,
+        "vendor.name": true,
+        "vendor._id": true
+      }
+    }
   ]);
   console.log(data);
 
