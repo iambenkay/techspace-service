@@ -67,6 +67,7 @@ module.exports.retrieveAll = async request => {
   if (type) q.type = type;
   if (userType === "business") id = request.query.id;
   if (id) q._id = id;
+  console.log(product, q);
   const data = await c.inventory.aggregate([
     { $match: q },
     {
