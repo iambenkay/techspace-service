@@ -82,6 +82,11 @@ module.exports.retrieveAll = async request => {
       $project: {
         price: true,
         name: true,
+        type: true,
+        oem: true,
+        moq: true,
+        sku: true,
+        description: true,
         "vendor.name": true,
         "vendor._id": true
       }
