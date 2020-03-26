@@ -718,7 +718,7 @@ Authorization
 ## Fetch all products from inventory
 
 ```js
-GET /api/v1/accounts/vendors/inventory?type=<service|business>
+GET /api/v1/accounts/vendors/inventory?type=<service|product>
 
 Authorization: Bearer <token>
 

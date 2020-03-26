@@ -22,6 +22,7 @@ module.exports.create = async request => {
     description,
     type,
     category,
+    vendor,
     location,
     quantity
   );
@@ -36,6 +37,7 @@ module.exports.create = async request => {
   };
   if (type === "service") rfq_data.service_category = category;
   if (type === "business") rfq_data.business_category = category;
+  if (type === "single") rfq_data.vendor = category
   if (request.file) {
     if (request.file.mimetype != "application/pdf")
       throw new ResponseError(400, "You must provide only pdf files");
@@ -104,7 +106,7 @@ module.exports.explore = async request => {
   const { id } = request.payload;
   const vendor = await c.accounts.find({ _id: id });
   const data = await c.rfq.aggregate([
-    { $match: { [`service_category`]: vendor.service_category } },
+    { $match: { service_category: vendor.service_category } },
     {
       $lookup: {
         from: "accounts",
