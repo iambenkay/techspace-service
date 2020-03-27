@@ -76,7 +76,7 @@ module.exports.fetchHead = async request => {
             from: "accounts",
             localField: "vendorId",
             foreignField: "_id",
-            as: "vendor"
+            as: "account"
           }
         },
         { $unwind: "$account" },
