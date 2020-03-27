@@ -55,10 +55,17 @@ module.exports.create = async request => {
     receiver,
     head_id
   });
-  pubnub.publish({
-    message: msg,
-    channel: receiver
-  });
+  pubnub
+    .publish({
+      message: msg,
+      channel: receiver
+    })
+    .then(x => {
+      console.log(x.timetoken);
+    })
+    .catch(x => {
+      console.error(x.message);
+    });
   return new Response(200, {
     error: false
   });
