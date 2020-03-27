@@ -104,12 +104,13 @@ module.exports.retrieve = async request => {
 module.exports.explore = async request => {
   const { id } = request.payload;
   const vendor = await c.accounts.find({ _id: id });
-
+  const { type = "public" } = request.query;
+  const q = {};
+  if (type === "private") q.vendor = vendor.id;
+  if (type === "public") q.service_category = vendor.service_category;
   const data = await c.rfq.aggregate([
     {
-      $match: {
-        service_category: vendor.service_category
-      }
+      $match: {}
     },
     {
       $lookup: {
@@ -121,6 +122,14 @@ module.exports.explore = async request => {
     },
     {
       $unwind: "$business"
+    },
+    {
+      $project: {
+        description: true,
+        "business.name": true,
+        title: true,
+        "business._id": true
+      }
     }
   ]);
   return new Response(200, {
