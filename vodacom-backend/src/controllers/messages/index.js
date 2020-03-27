@@ -123,6 +123,7 @@ module.exports.fetchHead = async request => {
     { $match: { [`${userType}Id`]: id } },
     ...query
   ]);
+  console.log(heads);
   const data = [];
   for (let head of heads) {
     const last_message = await c.messages.find_latest({ head_id: head.id });
