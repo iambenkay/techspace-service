@@ -79,11 +79,11 @@ module.exports.fetchHead = async request => {
             as: "vendor"
           }
         },
-        { $unwind: "$vendor" },
+        { $unwind: "$account" },
         {
           $project: {
-            "vendor.name": true,
-            "vendor._id": true
+            "account.name": true,
+            "account._id": true
           }
         }
       ];
@@ -95,14 +95,14 @@ module.exports.fetchHead = async request => {
             from: "accounts",
             localField: "businessId",
             foreignField: "_id",
-            as: "business"
+            as: "account"
           }
         },
-        { $unwind: "$business" },
+        { $unwind: "$account" },
         {
           $project: {
-            "business.name": true,
-            "business._id": true
+            "account.name": true,
+            "account._id": true
           }
         }
       ];
