@@ -107,7 +107,10 @@ module.exports.explore = async request => {
   const data = await c.rfq.aggregate([
     {
       $match: {
-        $or: { service_category: vendor.service_category, vendor: vendor.id }
+        $or: [
+          { service_category: vendor.service_category },
+          { vendor: vendor.id }
+        ]
       }
     },
     {
