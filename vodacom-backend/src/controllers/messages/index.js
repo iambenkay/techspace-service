@@ -99,22 +99,10 @@ module.exports.fetchHead = async request => {
           }
         },
         { $unwind: "$business" },
-        { $match: { [`${userType}Id`]: id } },
-        {
-          $lookup: {
-            from: "accounts",
-            localField: "regularId",
-            foreignField: "_id",
-            as: "regular"
-          }
-        },
-        { $unwind: "$regular" },
         {
           $project: {
             "business.name": true,
-            "business._id": true,
-            "regular.name": true,
-            "regular._id": true
+            "business._id": true
           }
         }
       ];
