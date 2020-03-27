@@ -104,10 +104,11 @@ module.exports.retrieve = async request => {
 module.exports.explore = async request => {
   const { id } = request.payload;
   const vendor = await c.accounts.find({ _id: id });
+  const bvr = await c.business_vendor_rel.find({ vendorId: vendor.id });
   const { type = "public" } = request.query;
   const q = {};
   if (type === "private") q.vendor = vendor.id;
-  if (type === "private-group") q.business_category = vendor.business_category;
+  if (type === "private-group") q.business_category = bvr.business_category;
   if (type === "public") q.service_category = vendor.service_category;
   console.log(type, q);
   const data = await c.rfq.aggregate([
