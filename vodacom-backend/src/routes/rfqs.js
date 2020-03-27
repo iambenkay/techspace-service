@@ -13,21 +13,16 @@ router.get(
 router.post(
   "/rfqs",
   isAuthenticated,
-  isAccountType("business"),
+  isAccountType("business", "regular"),
   upload.single("document"),
   handler(rfqs.create)
 );
 router.get("/rfqs", isAuthenticated, handler(rfqs.retrieveAll));
-router.get(
-  "/rfqs/:id",
-  isAuthenticated,
-  isAccountType("business"),
-  handler(rfqs.retrieve)
-);
+router.get("/rfqs/:id", isAuthenticated, handler(rfqs.retrieve));
 router.delete(
   "/rfqs",
   isAuthenticated,
-  isAccountType("business"),
+  isAccountType("business", "regular"),
   handler(rfqs.destroy)
 );
 
