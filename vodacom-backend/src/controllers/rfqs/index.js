@@ -109,6 +109,7 @@ module.exports.explore = async request => {
   if (type === "private") q.vendor = vendor.id;
   if (type === "private-group") q.business_category = vendor.business_category;
   if (type === "public") q.service_category = vendor.service_category;
+  console.log(q);
   const data = await c.rfq.aggregate([
     {
       $match: q
