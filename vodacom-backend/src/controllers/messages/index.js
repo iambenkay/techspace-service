@@ -16,10 +16,16 @@ module.exports.createHead = async request => {
     throw new ResponseError(
       "You can't setup a chat with a regular user asa vendor"
     );
-  const head = await c.message_head.insert({
+  const exists = await c.message_head.find({
     [`${type}Id`]: id,
     [`${userType}Id`]: accountId
   });
+  if (!exists) {
+    await c.message_head.insert({
+      [`${type}Id`]: id,
+      [`${userType}Id`]: accountId
+    });
+  }
   return new Response(200, {
     error: false,
     message: "Message head created sucessfully"
