@@ -60,33 +60,56 @@ module.exports.create = async request => {
 
 module.exports.fetchHead = async request => {
   const { id, userType } = request.payload;
-
+  let query;
+  switch (userType) {
+    case "business":
+    case "regular":
+      query = [
+        {
+          $lookup: {
+            from: "accounts",
+            localField: "vendorId",
+            foreignField: "_id",
+            as: "vendor"
+          }
+        },
+        { $unwind: "$vendor" }
+      ];
+      break;
+    case "vendor":
+      query = [
+        {
+          $lookup: {
+            from: "accounts",
+            localField: "businessId",
+            foreignField: "_id",
+            as: "business"
+          }
+        },
+        { $unwind: "$business" },
+        {
+          $lookup: {
+            from: "accounts",
+            localField: "regularId",
+            foreignField: "_id",
+            as: "regular"
+          }
+        },
+        { $unwind: "$regular" }
+      ];
+      break;
+  }
   const heads = await c.message_head.aggregate([
     { $match: { [`${userType}Id`]: id } },
-    {
-      $lookup: {
-        from: "accounts",
-        localField: "businessId",
-        foreignField: "_id",
-        as: "business"
-      }
-    },
-    { $unwind: "$business" },
-    {
-      $lookup: {
-        from: "accounts",
-        localField: "regularId",
-        foreignField: "_id",
-        as: "regular"
-      }
-    },
-    { $unwind: "$regular" },
+
     {
       $project: {
         "business.name": true,
         "business._id": true,
         "regular.name": true,
-        "regular._id": true
+        "regular._id": true,
+        "vendor.name": true,
+        "vendor._id": true
       }
     }
   ]);
