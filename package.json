@@ -5,6 +5,7 @@
   "main": "src/index.js",
   "scripts": {
     "start": "node vodacom-backend/src",
+    "start-worker": "node vodacom-wq/src",
     "dev": "./vodacom-backend/dev & nodemon vodacom-wq/src",
     "commit": "git add . ; git commit",
     "push": "git add . ; git commit ; git push origin master",
