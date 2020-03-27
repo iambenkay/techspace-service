@@ -1,7 +1,7 @@
 const c = require("../../data/collections");
 const m = require("../../models");
 const { ResponseError, Response } = require("../../utils");
-const Mail = require("../../services/mailer");
+const SendMail = require("../../services/mailer");
 
 module.exports.create = async request => {
   const { id } = request.payload;
@@ -21,14 +21,14 @@ module.exports.create = async request => {
   const scheme = process.env.STATE === "development" ? "http" : "https";
   const email_ver_link = `${scheme}://${host}/admin-invite?token=${invite_token}`;
   if (process.env.STATE === "development") console.log(email_ver_link);
-  new Mail(
+  SendMail(
     [email],
     `Invitation to be an admin at ${business.objects.name}!`,
     `You have been invited by ${business.objects.name} (${business.objects.email}) to be an admin.` +
       `Click the link to accept the offer: ${email_ver_link}`,
     `<div>You have been invited by ${business.objects.name} (${business.objects.email}) to be an admin.` +
       `Click the link to accept the offer: <a href="${email_ver_link}">${email_ver_link}</a></div>`
-  ).send();
+  );
   return new Response(
     200,
     {

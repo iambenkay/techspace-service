@@ -2,7 +2,7 @@ const c = require("../../data/collections");
 const bcrypt = require("bcryptjs");
 const { ResponseError, Response } = require("../../utils");
 const V = require("../../services/validator");
-const Mail = require("../../services/mailer");
+const SendMail = require("../../services/mailer");
 const hash = require("../../services/hash-injector");
 const express = require("express");
 require("dotenv").config();

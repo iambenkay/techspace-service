@@ -1,6 +1,6 @@
 const c = require("../../data/collections");
 const m = require("../../models");
-const Mail = require("../../services/mailer");
+const SendMail = require("../../services/mailer");
 const { Response, ResponseError } = require("../../utils");
 
 module.exports = async request => {
@@ -20,14 +20,14 @@ module.exports = async request => {
   const scheme = process.env.STATE === "development" ? "http" : "https";
   const email_ver_link = `${scheme}://${host}/vendor-application?token=${invite_token}`;
   if (process.env.STATE === "development") console.log(email_ver_link);
-  new Mail(
+  SendMail(
     [email],
     `Application from ${vendor.objects.name} to be a part of your business!`,
     `${vendor.objects.name} (${vendor.objects.email}) applied to be a vendor at your business.` +
       `Click the link to review the application: ${email_ver_link}`,
     `${vendor.objects.name} (${vendor.objects.email}) applied to be a vendor at your business.` +
       `Click the link to review the application: <a href="${email_ver_link}">${email_ver_link}</a></div>`
-  ).send();
+  );
   return new Response(200, {
     error: false,
     message: "Vendor added to business"

@@ -1,15 +1,15 @@
 const MailService = require("../services/grpc-provider");
 
-module.exports = ({ to, text, html, subject }) => {
+module.exports = (to, subject, text, html) => {
   MailService.sendMail(
     {
       to,
-      text,
+      subject,
       html,
-      subject
+      text
     },
     (error, _) => {
-        console.log("Mail sent");
+      console.log("Mail sent");
     }
   );
 };
