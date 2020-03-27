@@ -126,7 +126,7 @@ module.exports.fetchHead = async request => {
   console.log(heads);
   const data = heads.map(async head => {
     const last_message = await c.messages.find_latest({ head_id: head.id });
-    console.log(message);
+    console.log(last_message);
     return {
       last_message,
       ...head
