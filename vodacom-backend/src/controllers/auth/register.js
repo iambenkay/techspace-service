@@ -97,7 +97,7 @@ module.exports = async request => {
   )}&email=${email}`;
   if (process.env.STATE === "development") console.log(email_ver_link);
   delete data.password;
-  new Mail(
+  (
     [email],
     "Verify your email address!",
     `Your account was created successfully. Click this link to verify your account: ${email_ver_link}`,
