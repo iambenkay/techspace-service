@@ -7,5 +7,7 @@ module.exports = {
   business_admin_rel: C("business-admin-rel"),
   inventory: C("inventory"),
   rfq: C("rfqs"),
-  vendor_rfq_rel: C("vendor-rfq-rel")
+  vendor_rfq_rel: C("vendor-rfq-rel"),
+  message_head : C("message-head"),
+  messages: C("messages")
 };

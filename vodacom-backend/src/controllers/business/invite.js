@@ -1,6 +1,7 @@
 const c = require("../../data/collections");
 const { Response, ResponseError } = require("../../utils");
 const SendMail = require("../../services/mailer");
+const Notification = require("../../services/notifier");
 const m = require("../../models");
 
 module.exports = async request => {
@@ -32,12 +33,19 @@ module.exports = async request => {
       error: false,
       message: "Invitation has been sent to vendor"
     },
-    {
-      content: {
-        [id]: `You invited the vendor ${vendor.name} to your business`,
-        [vendor.id]: `You were invited to the business run by ${business.objects.name}`
-      },
-      type: "accounts"
-    }
+    [
+      new Notification(
+        `You invited the vendor ${vendor.name} to your business`,
+        id,
+        "accounts",
+        null
+      ),
+      new Notification(
+        `You were invited to the business run by ${business.objects.name}`,
+        vendor.id,
+        "accounts",
+        null
+      )
+    ]
   );
 };

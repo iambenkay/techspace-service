@@ -1,5 +1,6 @@
 const c = require("../../data/collections");
 const m = require("../../models");
+const Notification = require("../../services/notifier");
 const { ResponseError, Response } = require("../../utils");
 const SendMail = require("../../services/mailer");
 
@@ -35,13 +36,20 @@ module.exports.create = async request => {
       error: false,
       message: "User was added to admins"
     },
-    {
-      content: {
-        [id]: `You added the user ${email} to your business`,
-        [user.id]: `You were added to the business run by ${business.email}`
-      },
-      type: "accounts"
-    }
+    [
+      new Notification(
+        `You added the user ${email} to your business`,
+        id,
+        "accounts",
+        null
+      ),
+      new Notification(
+        `You were added to the business run by ${business.email}`,
+        user.id,
+        "accounts",
+        null
+      )
+    ]
   );
 };
 
@@ -105,12 +113,19 @@ module.exports.destroy = async request => {
       error: false,
       message: "Admin has been delisted"
     },
-    {
-      content: {
-        [id]: `You removed the user ${email} from your business`,
-        [user.id]: `You were removed from the business run by ${businessEmail}`
-      },
-      type: "accounts"
-    }
+    [
+      new Notification(
+        `You removed the user ${email} from your business`,
+        id,
+        "accounts",
+        null
+      ),
+      new Notification(
+        `You were removed from the business run by ${businessEmail}`,
+        user.id,
+        "accounts",
+        null
+      )
+    ]
   );
 };

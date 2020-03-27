@@ -1,0 +1,99 @@
+const c = require("../../data/collections");
+const { ResponseError, Response } = require("../../utils");
+const { pubnub } = require("../../services/provider");
+
+module.exports.createHead = async request => {
+  const { id: accountId, userType } = request.payload;
+  const { id, type } = request.body;
+  request.V.matchesRegex(
+    "type must be one of regular, admin and vendor",
+    type,
+    /^(business|regular|vendor)$/
+  );
+  if (type === userType)
+    throw new ResponseError(400, "Can't be the same account type");
+  if (type === "regular" && userType === "vendor")
+    throw new ResponseError(
+      "You can't setup a chat with a regular user asa vendor"
+    );
+  const head = await c.message_head.insert({
+    [`${type}Id`]: id,
+    [`${userType}Id`]: accountId
+  });
+  return new Response(200, {
+    error: false,
+    message: "Message head created sucessfully"
+  });
+};
+
+module.exports.create = async request => {
+  const { message, sender, receiver, head_id } = request.body;
+
+  request.V.allExist(
+    "You must provide message, sender, receiver and head_id",
+    message,
+    sender,
+    receiver,
+    head_id
+  );
+  const exists = await c.message_head.find({ _id: head_id });
+  if (!exists)
+    throw new ResponseError(400, "The messagehead you provided does not exist");
+  [sender, receiver].forEach(x => {
+    if (![exists.vendorId, exists.businessId, exists.regularId].includes(x))
+      throw new ResponseError();
+  });
+  const message = await c.messages.insert({
+    message,
+    sender,
+    receiver,
+    head_id
+  });
+  pubnub.publish({
+    message,
+    channel: receiver
+  });
+  return new Response(200, {
+    error: false
+  });
+};
+
+module.exports.fetchHead = async request => {
+  const { id, userType } = request.payload;
+
+  const heads = await c.message_head.aggregate([
+    { $match: { [`${userType}Id`]: id } },
+    {
+      $lookup: {
+        from: "accounts",
+        localField: "businessId",
+        foreignField: "_id",
+        as: "business"
+      }
+    },
+    { $unwind: "$business" },
+    { $project: { "business.name": true, "business._id": true } }
+  ]);
+  const data = heads.map(head => {
+    const message = await c.messages.find_latest({ head_id: head.id }, );
+    return {
+      message,
+      ...head
+    }
+  })
+  return new Response(200, {
+    error: false,
+    data
+  });
+};
+
+module.exports.fetch = async request => {
+  const {head_id} = request.query
+
+  const messages = await c.messages.findAll({head_id})
+
+  return new Response(200, {
+    error: false,
+    messages
+  });
+}

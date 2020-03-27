@@ -8,7 +8,7 @@ class ResponseError extends Error {
 }
 
 class Response {
-    constructor(status, data, notifications = null) {
+    constructor(status, data, notifications = []) {
         this.status = status
         this.data = data
         this.notifications = notifications

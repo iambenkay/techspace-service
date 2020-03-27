@@ -1,5 +1,6 @@
 const c = require("../../data/collections");
 const { Business } = require("../../models");
+const Notification = require("../../services/notifier");
 const { ResponseError, Response } = require("../../utils");
 
 module.exports.retrieve = async request => {
@@ -39,12 +40,19 @@ module.exports.destroy = async request => {
       error: false,
       message: "You have delisted this vendor"
     },
-    {
-      content: {
-        [id]: `You removed the vendor ${vendorEmail} from your business`,
-        [vendor.id]: `You were removed from the business run by ${email}`
-      },
-      type: "accounts"
-    }
+    [
+      new Notification(
+        `You removed the vendor ${vendorEmail} from your business`,
+        id,
+        "accounts",
+        null
+      ),
+      new Notification(
+        `You were removed from the business run by ${email}`,
+        vendor.id,
+        "accounts",
+        null
+      )
+    ]
   );
 };

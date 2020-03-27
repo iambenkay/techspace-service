@@ -1,4 +1,5 @@
 const Collection = require("../../data/orm");
+const Notification = require("../../services/notifier");
 const { ResponseError, Response } = require("../../utils");
 
 const Account = Collection("accounts");
@@ -119,12 +120,19 @@ module.exports.destroy = async request => {
       error: false,
       message: "You have detached from this business"
     },
-    {
-      content: {
-        [business.id]: `The vendor ${email} detached from your business account`,
-        [id]: `You desociated from the business run by ${businessEmail}`
-      },
-      type: "accounts"
-    }
+    [
+      new Notification(
+        `The vendor ${email} detached from your business account`,
+        business.id,
+        "accounts",
+        null
+      ),
+      new Notification(
+        `You dissociated from the business run by ${businessEmail}`,
+        id,
+        "accounts",
+        null
+      )
+    ]
   );
 };
