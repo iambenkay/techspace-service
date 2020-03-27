@@ -8,8 +8,8 @@ class Notification {
     this.type = type;
     this.action = action;
   }
-  static async create(notifications) {
-      notifications.forEach(({message, user, type, action}) => {
+  static create(notifications) {
+      notifications.forEach(async ({message, user, type, action}) => {
          const a = await c.notifications.insert({
               message,
               user,

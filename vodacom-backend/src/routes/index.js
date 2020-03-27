@@ -7,5 +7,6 @@ router.use(require("./rfqs"))
 router.use(require("./ui"))
 router.use(require("./details"))
 router.use(require("./quotes"))
+router.use(require("./messages"))
 
 module.exports = router

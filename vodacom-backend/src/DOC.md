@@ -739,3 +739,43 @@ Example result:
   ]
 }
 ```
+
+## Create message head
+
+```js
+POST /api/v1/messages/heads
+Authorization
+
+{
+  id: ...,
+  type: business|regular|vendor
+}
+```
+
+## Get message heads
+
+```js
+GET / api / v1 / messages / heads;
+Authorization;
+```
+
+## Create message
+
+```js
+POST /api/v1/messages
+Authorization
+
+{
+  message: ...,
+  sender: ...,
+  receiver: ...,
+  head_id: ...,
+}
+```
+
+## Get messages for a particular chat head
+
+```js
+GET /api/v1/messages?head_id=<...>
+Authorization
+```

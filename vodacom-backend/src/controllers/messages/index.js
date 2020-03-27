@@ -6,7 +6,7 @@ module.exports.createHead = async request => {
   const { id: accountId, userType } = request.payload;
   const { id, type } = request.body;
   request.V.matchesRegex(
-    "type must be one of regular, admin and vendor",
+    "type must be one of regular, business and vendor",
     type,
     /^(business|regular|vendor)$/
   );
@@ -43,14 +43,14 @@ module.exports.create = async request => {
     if (![exists.vendorId, exists.businessId, exists.regularId].includes(x))
       throw new ResponseError();
   });
-  const message = await c.messages.insert({
+  const msg = await c.messages.insert({
     message,
     sender,
     receiver,
     head_id
   });
   pubnub.publish({
-    message,
+    message: msg,
     channel: receiver
   });
   return new Response(200, {
@@ -72,15 +72,31 @@ module.exports.fetchHead = async request => {
       }
     },
     { $unwind: "$business" },
-    { $project: { "business.name": true, "business._id": true } }
+    {
+      $lookup: {
+        from: "accounts",
+        localField: "regularId",
+        foreignField: "_id",
+        as: "regular"
+      }
+    },
+    { $unwind: "$regular" },
+    {
+      $project: {
+        "business.name": true,
+        "business._id": true,
+        "regular.name": true,
+        "regular._id": true
+      }
+    }
   ]);
-  const data = heads.map(head => {
-    const message = await c.messages.find_latest({ head_id: head.id }, );
+  const data = heads.map(async head => {
+    const message = await c.messages.find_latest({ head_id: head.id });
     return {
       message,
       ...head
-    }
-  })
+    };
+  });
   return new Response(200, {
     error: false,
     data
@@ -88,12 +104,12 @@ module.exports.fetchHead = async request => {
 };
 
 module.exports.fetch = async request => {
-  const {head_id} = request.query
+  const { head_id } = request.query;
 
-  const messages = await c.messages.findAll({head_id})
+  const messages = await c.messages.findAll({ head_id });
 
   return new Response(200, {
     error: false,
     messages
   });
-}
+};
