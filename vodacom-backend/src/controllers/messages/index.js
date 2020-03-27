@@ -125,9 +125,10 @@ module.exports.fetchHead = async request => {
   ]);
   console.log(heads);
   const data = heads.map(async head => {
-    const message = await c.messages.find_latest({ head_id: head.id });
+    const last_message = await c.messages.find_latest({ head_id: head.id });
+    console.log(message);
     return {
-      message,
+      last_message,
       ...head
     };
   });
