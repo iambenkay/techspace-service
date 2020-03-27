@@ -110,7 +110,7 @@ module.exports.explore = async request => {
   if (type === "public") q.service_category = vendor.service_category;
   const data = await c.rfq.aggregate([
     {
-      $match: {}
+      $match: q
     },
     {
       $lookup: {
