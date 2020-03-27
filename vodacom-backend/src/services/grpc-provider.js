@@ -1,5 +1,5 @@
 const grpc = require("grpc");
-const MailService = require("../../../vodacom-wq/src/services/mailer");
+const MailService = require("../../../vodacom-wq/src/rpcs/mailer");
 
 const mail_service = new MailService.package(
   "localhost:60021",
