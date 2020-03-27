@@ -79,7 +79,13 @@ module.exports.fetchHead = async request => {
             as: "vendor"
           }
         },
-        { $unwind: "$vendor" }
+        { $unwind: "$vendor" },
+        {
+          $project: {
+            "vendor.name": true,
+            "vendor._id": true
+          }
+        }
       ];
       break;
     case "vendor":
@@ -101,24 +107,23 @@ module.exports.fetchHead = async request => {
             as: "regular"
           }
         },
-        { $unwind: "$regular" }
+        { $unwind: "$regular" },
+        {
+          $project: {
+            "business.name": true,
+            "business._id": true,
+            "regular.name": true,
+            "regular._id": true
+          }
+        }
       ];
       break;
   }
   const heads = await c.message_head.aggregate([
     { $match: { [`${userType}Id`]: id } },
-    ...query,
-    {
-      $project: {
-        "business.name": true,
-        "business._id": true,
-        "regular.name": true,
-        "regular._id": true,
-        "vendor.name": true,
-        "vendor._id": true
-      }
-    }
+    ...query
   ]);
+  console.log(heads);
   const data = heads.map(async head => {
     const message = await c.messages.find_latest({ head_id: head.id });
     return {
