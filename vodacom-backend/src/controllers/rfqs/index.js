@@ -25,7 +25,7 @@ module.exports.create = async request => {
     location,
     quantity
   );
-
+  console.log(request.body);
   const rfq_data = {
     title,
     deadline,
