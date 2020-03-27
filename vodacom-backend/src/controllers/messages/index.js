@@ -107,7 +107,7 @@ module.exports.fetchHead = async request => {
   }
   const heads = await c.message_head.aggregate([
     { $match: { [`${userType}Id`]: id } },
-
+    ...query,
     {
       $project: {
         "business.name": true,
