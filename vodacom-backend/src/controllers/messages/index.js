@@ -99,6 +99,7 @@ module.exports.fetchHead = async request => {
           }
         },
         { $unwind: "$business" },
+        { $match: { [`${userType}Id`]: id } },
         {
           $lookup: {
             from: "accounts",
