@@ -2,7 +2,7 @@ const grpc = require("grpc");
 const MailService = require("../../../vodacom-wq/src/rpcs/mailer");
 
 const mail_service = new MailService.package(
-  "localhost:60021",
+  process.env.VODACOM_WORKER,
   grpc.credentials.createInsecure()
 );
 
