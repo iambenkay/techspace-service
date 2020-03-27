@@ -104,10 +104,7 @@ module.exports.retrieve = async request => {
 module.exports.explore = async request => {
   const { id } = request.payload;
   const vendor = await c.accounts.find({ _id: id });
-  console.log(
-    { service_category: vendor.service_category },
-    { vendor: vendor.id }
-  );
+
   const data = await c.rfq.aggregate([
     {
       $match: {
@@ -124,14 +121,6 @@ module.exports.explore = async request => {
     },
     {
       $unwind: "$business"
-    },
-    {
-      $project: {
-        description: true,
-        "business.name": true,
-        title: true,
-        "business._id": true
-      }
     }
   ]);
   return new Response(200, {
