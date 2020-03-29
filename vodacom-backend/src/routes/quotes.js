@@ -14,7 +14,7 @@ router.post(
   "/business/quotes",
   isAuthenticated,
   isAccountType("business"),
-  handler(businessQuotes.create)
+  handler(businessQuotes.accept)
 );
 router.get(
   "/business/quotes/:quote_id",
