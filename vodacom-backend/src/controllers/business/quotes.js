@@ -32,7 +32,7 @@ module.exports.getOne = async request => {
 
 module.exports.get = async request => {
   const { id } = request.payload;
-  const { flag } = request.query;
+  let { flag } = request.query;
   if (flag === "accepted") flag = true;
   else flag === false;
   const quotes = await c.vendor_rfq_rel.aggregate([
