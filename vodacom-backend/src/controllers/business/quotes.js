@@ -58,7 +58,7 @@ module.exports.get = async request => {
         price: true,
         quantity: true,
         delivery_date: true,
-        "rfq.name": true,
+        "rfq.title": true,
         location: true,
         description: true,
         "vendor.name": true,
