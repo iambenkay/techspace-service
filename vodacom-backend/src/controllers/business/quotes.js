@@ -4,13 +4,13 @@ const { Response, ResponseError } = require("../../utils");
 module.exports.accept = async request => {
   const { id } = request.payload;
   const { id: quote_id } = request.body;
-  if (!quote_id) throw new ResponseError(400, "You must provide quote_id");
+  if (!quote_id) throw new ResponseError(400, "You must provide id");
   const quote = await c.vendor_rfq_rel.find({ _id: quote_id, business_id: id });
   if (!quote) throw new ResponseError(404, "There is no quote with that id");
 
   await c.vendor_rfq_rel.update({ _id: quote_id }, { accepted: true });
   await c.vendor_rfq_rel.update(
-    { _id: { $not: quote_id } },
+    { _id: { $not: new RegExp(`^${quote_id}$`, "i") } },
     { accepted: false }
   );
   return new Response(200);
