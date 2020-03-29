@@ -779,3 +779,21 @@ Authorization
 GET /api/v1/messages?head_id=<...>
 Authorization
 ```
+## Get quotes (business)
+```js
+GET /api/v1/business
+Authorization
+```
+## Get specific quote (business)
+```js
+GET /api/v1/business/<quote_id>
+Authorization
+```
+## Accept quote (business)
+```js
+POST /api/v1/business/quotes
+Authorization
+{
+  quote_id: ...
+}
+```

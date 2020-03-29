@@ -34,9 +34,10 @@ module.exports.create = async request => {
     quantity,
     initiator: id
   };
+  let vendor;
   if (type === "service") rfq_data.service_category = category;
   if (type === "business") rfq_data.business_category = category;
-  if (type === "single") rfq_data.vendor = category;
+  if (type === "single") vendor = category
   if (request.file) {
     if (request.file.mimetype != "application/pdf")
       throw new ResponseError(400, "You must provide only pdf files");
@@ -50,11 +51,17 @@ module.exports.create = async request => {
     } catch (error) {
       throw new ResponseError(400, error.message);
     }
-    console.log(result);
     rfq_data.full_description_document = result.public_id;
   }
-
-  const data = await c.rfq.insert(rfq_data);
+  let data;
+  if(vendor){
+    vendor.forEach(v => {
+      rfq_data.vendor = v
+      data = await c.rfq.insert(rfq_data);
+    })
+  } else {
+    data = await c.rfq.insert(rfq_data);
+  }
   return new Response(201, {
     error: false,
     ...data,
