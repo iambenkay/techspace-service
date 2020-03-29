@@ -44,7 +44,7 @@ module.exports.get = async request => {
       }
     },
     { $unwind: "$vendor" },
-    { $project: { "vendor.name": true } }
+    { $project: { description: true, "vendor.name": true, "vendor._id": true } }
   ]);
 
   return new Response(200, {
