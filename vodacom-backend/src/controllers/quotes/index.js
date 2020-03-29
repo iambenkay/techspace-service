@@ -4,7 +4,7 @@ const { Response, ResponseError } = require("../../utils");
 module.exports.create = async request => {
   const { id } = request.payload;
 
-  const { price, description, quantity, delivery_date, rfq_id } = request.body;
+  const { price, title, description, quantity, delivery_date, rfq_id } = request.body;
 
   request.V.allExist(
     "You must provide price, description, quantity, rfq_id and delivery_date",

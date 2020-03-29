@@ -33,8 +33,19 @@ module.exports.getOne = async request => {
 module.exports.get = async request => {
   const { id } = request.payload;
 
-  const quotes = await c.vendor_rfq_rel.findAll({ business_id: id });
-  console.log(quotes);
+  const quotes = await c.vendor_rfq_rel.aggregate([
+    { $match: { business_id: id } },
+    {
+      $lookup: {
+        from: "accounts",
+        localField: "vendor_id",
+        foreignField: "_id",
+        as: "vendor"
+      }
+    },
+    { $unwind: "$vendor" },
+    { $project: { "vendor.name": true } }
+  ]);
 
   return new Response(200, {
     error: false,
