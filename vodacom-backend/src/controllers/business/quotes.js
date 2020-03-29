@@ -34,7 +34,7 @@ module.exports.get = async request => {
   const { id } = request.payload;
   let { flag } = request.query;
   if (flag === "accepted") flag = true;
-  else flag === false;
+  else flag = false;
   const quotes = await c.vendor_rfq_rel.aggregate([
     { $match: { business_id: id, accepted: flag } },
     {
