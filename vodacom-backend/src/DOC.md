@@ -781,7 +781,7 @@ Authorization
 ```
 ## Get quotes (business)
 ```js
-GET /api/v1/business
+GET /api/v1/business/quotes
 Authorization
 ```
 ## Get specific quote (business)
