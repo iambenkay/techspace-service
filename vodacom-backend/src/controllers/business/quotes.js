@@ -60,6 +60,7 @@ module.exports.get = async request => {
         delivery_date: true,
         "rfq.title": true,
         location: true,
+        oem: true,
         description: true,
         "vendor.name": true,
         "vendor._id": true

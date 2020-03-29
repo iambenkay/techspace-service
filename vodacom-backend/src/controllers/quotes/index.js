@@ -4,7 +4,14 @@ const { Response, ResponseError } = require("../../utils");
 module.exports.create = async request => {
   const { id } = request.payload;
 
-  const { price, title, description, quantity, delivery_date, rfq_id } = request.body;
+  const {
+    price,
+    description,
+    quantity,
+    delivery_date,
+    oem,
+    rfq_id
+  } = request.body;
 
   request.V.allExist(
     "You must provide price, description, quantity, rfq_id and delivery_date",
@@ -12,7 +19,8 @@ module.exports.create = async request => {
     price,
     description,
     quantity,
-    delivery_date
+    delivery_date,
+    oem
   );
 
   const quote = await c.vendor_rfq_rel.find({
@@ -28,6 +36,7 @@ module.exports.create = async request => {
     quantity,
     delivery_date,
     rfq_id,
+    oem,
     accepted: false,
     vendor_id: id,
     business_id: (await c.rfq.find({ _id: rfq_id })).initiator
