@@ -18,7 +18,7 @@ module.exports.uploadImage = async request => {
   const { id } = request.payload;
   const { file: image } = request;
 
-  if (["image/jpeg", "image/png"].includes(image.mimetype))
+  if (!["image/jpeg", "image/png"].includes(image.mimetype))
     throw new ResponseError(400, "You must provide only jpeg or png images");
 
   const file_data = image.buffer.toString("base64");
@@ -37,21 +37,17 @@ module.exports.uploadImage = async request => {
   return new Response(200, {
     error: false,
     message: "Image has been uploaded"
-  })
+  });
 };
 
 /**
  * @param {express.response} request
  */
 module.exports.update = async request => {
-  const {id} = request.payload
+  const { id } = request.payload;
   const { name, email, userType, phone } = request.body;
 
-  V.allExist(
-    "You need to provide name, email, userType, phone",
-    email,
-    phone
-  )
+  V.allExist("You need to provide name, email, userType, phone", email, phone)
     .matchesRegex(
       "userType must be one of business, regular, vendor",
       userType,
@@ -62,11 +58,16 @@ module.exports.update = async request => {
       phone,
       /^\+234\ ?\d{3}\ ?\d{3}\ ?\d{4}$/
     )
-    .isEmail("email is not valid", email).expr("The passwords do not match", opassword === npassword);
+    .isEmail("email is not valid", email)
+    .expr("The passwords do not match", opassword === npassword);
   const hashedPassword = bcrypt.hashSync(password);
 
   const emailExists = await c.accounts.find({ email });
-  if(emailExists.password !== opassword) throw new ResponseError(400, "Password provided does not match existing password");
+  if (emailExists.password !== opassword)
+    throw new ResponseError(
+      400,
+      "Password provided does not match existing password"
+    );
 
   let data = {};
   await c.accounts.remove({ email });
@@ -75,7 +76,7 @@ module.exports.update = async request => {
     name,
     userType,
     password: hashedPassword,
-    phone,
+    phone
   };
   if (userType === "vendor") {
     const { service_category, service_location } = request.body;
@@ -98,7 +99,7 @@ module.exports.update = async request => {
     V.allExist("You must provide location", location);
     userData.location = location;
   }
-  await c.accounts.update({_id: id}, {userData});
+  await c.accounts.update({ _id: id }, { userData });
 
   return new Response(201, {
     error: false,
