@@ -1,5 +1,6 @@
 const c = require("../../data/collections");
 const { Response, ResponseError } = require("../../utils");
+const Notification = require("../../services/notifier");
 
 module.exports.accept = async request => {
   const { id } = request.payload;
@@ -13,7 +14,21 @@ module.exports.accept = async request => {
     { _id: { $not: new RegExp(`^${quote_id}$`, "i") } },
     { accepted: false }
   );
-  return new Response(200);
+  const business = await c.accounts.find({ _id: id });
+  return new Response(
+    200,
+    {
+      error: false
+    },
+    [
+      new Notification(
+        `${(business.name || "").toUpperCase()} has accepted your quote.`,
+        quote.vendor_id,
+        "rfq",
+        null
+      )
+    ]
+  );
 };
 
 module.exports.getOne = async request => {
@@ -23,7 +38,6 @@ module.exports.getOne = async request => {
 
   const quote = await c.vendor_rfq_rel.find({ _id: quote_id, business_id: id });
   if (!quote) throw new ResponseError(404, "There is no quote with that id");
-
   return new Response(200, {
     error: false,
     quote: quote

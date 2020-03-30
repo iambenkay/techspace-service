@@ -18,6 +18,7 @@ const {
   retrieve: getVendors
 } = require("../controllers/business/vendors");
 const inviteVendor = require("../controllers/business/invite");
+const user = require("../controllers/user");
 const applyToBusiness = require("../controllers/vendors/apply");
 const searchBusiness = require("../controllers/search/business");
 const searchUser = require("../controllers/search/user");
@@ -81,6 +82,12 @@ router.post(
   isAccountType("vendor"),
   upload.single("document"),
   handler(docUpload)
+);
+router.post(
+  "/accounts/upload-avatar",
+  isAuthenticated,
+  upload.single("image"),
+  handler(user.uploadImage)
 );
 
 router.get("/search", isAuthenticated, handler(search));

@@ -51,7 +51,7 @@ module.exports.create = async request => {
     } catch (error) {
       throw new ResponseError(400, error.message);
     }
-    rfq_data.full_description_document = result.public_id;
+    rfq_data.full_description_document = result.secure_url;
   }
   let data;
   data = await c.rfq.insert(rfq_data);

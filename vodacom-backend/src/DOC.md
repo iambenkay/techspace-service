@@ -797,3 +797,11 @@ Authorization
   quote_id: ...
 }
 ```
+## Upload Avatar
+```js
+POST /api/v1/accounts/upload-avatar
+Authorization
+{
+  quote_id: ...
+}
+```
