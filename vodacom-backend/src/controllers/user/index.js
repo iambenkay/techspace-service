@@ -17,7 +17,7 @@ const gen_vendor_id = () =>
 module.exports.uploadImage = async request => {
   const { id } = request.payload;
   const { file: image } = request;
-
+  console.log(image);
   if (!["image/jpeg", "image/png"].includes(image.mimetype))
     throw new ResponseError(400, "You must provide only jpeg or png images");
 
@@ -36,7 +36,8 @@ module.exports.uploadImage = async request => {
 
   return new Response(200, {
     error: false,
-    message: "Image has been uploaded"
+    message: "Image has been uploaded",
+    result: result.public_url
   });
 };
 
