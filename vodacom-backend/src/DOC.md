@@ -779,17 +779,23 @@ Authorization
 GET /api/v1/messages?head_id=<...>
 Authorization
 ```
+
 ## Get quotes (business)
+
 ```js
-GET /api/v1/business/quotes
-Authorization
+GET / api / v1 / business / quotes;
+Authorization;
 ```
+
 ## Get specific quote (business)
+
 ```js
 GET /api/v1/business/<quote_id>
 Authorization
 ```
+
 ## Accept quote (business)
+
 ```js
 POST /api/v1/business/quotes
 Authorization
@@ -797,11 +803,13 @@ Authorization
   quote_id: ...
 }
 ```
+
 ## Upload Avatar
+
 ```js
 POST /api/v1/accounts/upload-avatar
 Authorization
-{
-  quote_id: ...
-}
+Content-Type: multipart/form-data
+
+image=file
 ```
