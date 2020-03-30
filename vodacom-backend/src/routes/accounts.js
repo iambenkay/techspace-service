@@ -80,13 +80,13 @@ router.post(
   "/accounts/doc-upload",
   isAuthenticated,
   isAccountType("vendor"),
-  // upload.single("document"),
+  upload.single("document"),
   handler(docUpload)
 );
 router.post(
   "/accounts/upload-avatar",
   isAuthenticated,
-  upload.single("image"),
+  // upload.single("image"),
   handler(user.uploadImage)
 );
 
