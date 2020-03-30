@@ -80,7 +80,7 @@ router.post(
   "/accounts/doc-upload",
   isAuthenticated,
   isAccountType("vendor"),
-  upload.single("document"),
+  // upload.single("document"),
   handler(docUpload)
 );
 router.post(
