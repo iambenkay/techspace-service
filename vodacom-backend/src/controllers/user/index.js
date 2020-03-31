@@ -26,6 +26,7 @@ module.exports.uploadImage = async request => {
     result = await store.upload(
       `data:${image.mimetype};base64,${file_data}`,
       "avatars",
+      undefined,
       id
     );
   } catch (error) {

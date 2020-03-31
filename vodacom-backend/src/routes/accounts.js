@@ -86,7 +86,7 @@ router.post(
 router.post(
   "/accounts/upload-avatar",
   isAuthenticated,
-  // upload.single("image"),
+  upload.single("image"),
   handler(user.uploadImage)
 );
 
