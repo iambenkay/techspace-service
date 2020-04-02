@@ -14,5 +14,14 @@ module.exports = {
         console.error(error);
         throw error;
       });
+  },
+  remove(public_id) {
+    return cloudinary.uploader
+      .destroy(public_id)
+      .then(result => result)
+      .catch(error => {
+        console.error(error);
+        throw error;
+      });
   }
 };

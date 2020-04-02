@@ -39,7 +39,12 @@ module.exports.set = async request => {
       result = await store
         .upload(
           `data:${request.file.mimetype};base64,${file_data}`,
-          "vendor_requirements"
+          "vendor_requirements",
+          undefined,
+          bvr &&
+            bvr.requirements[type] &&
+            bvr.requirements[type][id] &&
+            bvr.requirements[type][id].id
         )
         .then(result => result.secure_url);
     } catch (error) {
