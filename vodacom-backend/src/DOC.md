@@ -813,3 +813,35 @@ Content-Type: multipart/form-data
 
 image=file
 ```
+
+## Add to archive
+
+```js
+POST /api/v1/archive
+Authorization
+Content-Type: multipart/form-data
+
+document=file
+name=string
+```
+## Fetch from archive
+
+```js
+GET /api/v1/archive
+Authorization
+```
+## Fetch single item from archive
+
+```js
+GET /api/v1/archive/<arch_id>
+Authorization
+```
+## Delete from archive
+
+```js
+DELETE /api/v1/archive
+Authorization
+{
+  arch_id: string,
+}
+```
