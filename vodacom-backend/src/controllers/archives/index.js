@@ -35,6 +35,7 @@ module.exports.fetch = async (request) => {
 
 module.exports.fetchAll = async (request) => {
   const { id } = request.payload;
+  console.log(id);
   const arch_items = c.archives.findAll({ owner: id });
   return new Response(200, {
     error: false,
