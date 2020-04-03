@@ -65,7 +65,7 @@ module.exports.add = async request => {
   } catch (error) {
     throw new ResponseError(400, error.message);
   }
-  await c.archives.insert({ owner: id, name, link: result });
+  await c.archives.insert({ _id: doc_id, owner: id, name, link: result });
 
   return new Response(201, {
     error: false,
