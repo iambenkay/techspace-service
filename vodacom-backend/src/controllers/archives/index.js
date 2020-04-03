@@ -2,7 +2,7 @@ const c = require("../../data/collections");
 const { Response, ResponseError } = require("../../utils");
 const store = require("../../services/cloudinary-provider");
 const { Id } = require("../../services/provider");
-module.exports.remove = async request => {
+module.exports.remove = async (request) => {
   const { id } = request.payload;
   const { id: arch_id } = request.body;
   request.V.allExist("You must provide id", arch_id);
@@ -16,11 +16,11 @@ module.exports.remove = async request => {
   }
   return new Response(200, {
     error: false,
-    message: "Document has been deleted"
+    message: "Document has been deleted",
   });
 };
 
-module.exports.fetch = async request => {
+module.exports.fetch = async (request) => {
   const { id } = request.payload;
   const { arch_id } = request.params;
   request.V.allExist("You must provide id", arch_id);
@@ -29,22 +29,20 @@ module.exports.fetch = async request => {
     throw new ResponseError(404, "The archive item was not found");
   return new Response(200, {
     error: false,
-    data: arch_item
+    data: arch_item,
   });
 };
 
-module.exports.fetchAll = async request => {
+module.exports.fetchAll = async (request) => {
   const { id } = request.payload;
-  const { id: arch_id } = request.body;
-  request.V.allExist("You must provide id", arch_id);
   const arch_items = c.archives.findAll({ owner: id });
   return new Response(200, {
     error: false,
-    data: arch_items
+    data: arch_items,
   });
 };
 
-module.exports.add = async request => {
+module.exports.add = async (request) => {
   const { id } = request.payload;
   const { name } = request.body;
   const { file: doc } = request;
@@ -61,7 +59,7 @@ module.exports.add = async request => {
         undefined,
         doc_id
       )
-      .then(result => result.secure_url);
+      .then((result) => result.secure_url);
   } catch (error) {
     throw new ResponseError(400, error.message);
   }
@@ -69,6 +67,6 @@ module.exports.add = async request => {
 
   return new Response(201, {
     error: false,
-    message: "Document has been added to archive"
+    message: "Document has been added to archive",
   });
 };
