@@ -24,7 +24,7 @@ module.exports.fetch = async (request) => {
   const { id } = request.payload;
   const { arch_id } = request.params;
   request.V.allExist("You must provide id", arch_id);
-  const arch_item = c.archives.find({ _id: arch_id, owner: id });
+  const arch_item = await c.archives.find({ _id: arch_id, owner: id });
   if (!arch_item)
     throw new ResponseError(404, "The archive item was not found");
   return new Response(200, {
@@ -35,8 +35,7 @@ module.exports.fetch = async (request) => {
 
 module.exports.fetchAll = async (request) => {
   const { id } = request.payload;
-  console.log(id);
-  const arch_items = c.archives.findAll({ owner: id });
+  const arch_items = await c.archives.findAll({ owner: id });
   return new Response(200, {
     error: false,
     data: arch_items,
