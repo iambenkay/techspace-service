@@ -3,7 +3,7 @@ const { Response, ResponseError } = require("../../utils");
 const V = require("../../services/validator");
 const store = require("../../services/cloudinary-provider");
 
-module.exports.create = async request => {
+module.exports.create = async (request) => {
   const { id } = request.payload;
   const {
     title,
@@ -12,7 +12,7 @@ module.exports.create = async request => {
     type,
     deadline,
     location,
-    quantity
+    quantity,
   } = request.body;
 
   V.allExist(
@@ -32,15 +32,15 @@ module.exports.create = async request => {
     description,
     location,
     quantity,
-    initiator: id
+    initiator: id,
   };
   let vendor;
   if (type === "service") rfq_data.service_category = category;
   if (type === "business") rfq_data.business_category = category;
   if (type === "single") rfq_data.vendor = category;
   if (request.file) {
-    if (request.file.mimetype != "application/pdf")
-      throw new ResponseError(400, "You must provide only pdf files");
+    // if (request.file.mimetype != "application/pdf")
+    //   throw new ResponseError(400, "You must provide only pdf files");
     const file_data = request.file.buffer.toString("base64");
     let result;
     try {
@@ -58,11 +58,11 @@ module.exports.create = async request => {
   return new Response(201, {
     error: false,
     ...data,
-    message: "RFQ has been created successfully"
+    message: "RFQ has been created successfully",
   });
 };
 
-module.exports.destroy = async request => {
+module.exports.destroy = async (request) => {
   const { id: rfqId } = request.body;
 
   const rfq = await c.rfq.find({ _id: rfqId });
@@ -73,11 +73,11 @@ module.exports.destroy = async request => {
 
   return new Response(200, {
     error: false,
-    message: "The RFQ has been deleted"
+    message: "The RFQ has been deleted",
   });
 };
 
-module.exports.retrieveAll = async request => {
+module.exports.retrieveAll = async (request) => {
   const { id } = request.payload;
 
   const rfqs = await c.rfq.findAll({ initiator: id });
@@ -86,22 +86,22 @@ module.exports.retrieveAll = async request => {
 
   return new Response(200, {
     error: false,
-    data
+    data,
   });
 };
 
-module.exports.retrieve = async request => {
+module.exports.retrieve = async (request) => {
   const { id } = request.params;
 
   const data = await c.rfq.find({ _id: id });
 
   return new Response(200, {
     error: false,
-    data
+    data,
   });
 };
 
-module.exports.explore = async request => {
+module.exports.explore = async (request) => {
   const { id } = request.payload;
   const vendor = await c.accounts.find({ _id: id });
   const bvr = await c.business_vendor_rel.find({ vendorId: vendor.id });
@@ -113,30 +113,30 @@ module.exports.explore = async request => {
   console.log(type, q);
   const data = await c.rfq.aggregate([
     {
-      $match: q
+      $match: q,
     },
     {
       $lookup: {
         from: "accounts",
         localField: "initiator",
         foreignField: "_id",
-        as: "business"
-      }
+        as: "business",
+      },
     },
     {
-      $unwind: "$business"
+      $unwind: "$business",
     },
     {
       $project: {
         description: true,
         "business.name": true,
         title: true,
-        "business._id": true
-      }
-    }
+        "business._id": true,
+      },
+    },
   ]);
   return new Response(200, {
     error: false,
-    data
+    data,
   });
 };
