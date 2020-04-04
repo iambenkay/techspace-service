@@ -170,6 +170,13 @@ router.get(
   handler(inventory.retrieveAll)
 );
 
+// For fetching a list of all products by a vendor
+router.get(
+  "/accounts/vendors/inventory/explore",
+  isAuthenticated,
+  handler(inventory.explore)
+);
+
 // For managing business authored vendor categories
 router.post(
   "/accounts/business/category",

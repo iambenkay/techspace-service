@@ -42,7 +42,7 @@ POST / api / v1 / accounts / admins;
 Authorization: Bearer <
   token >
   {
-    email: string
+    email: string,
   };
 ```
 
@@ -68,7 +68,7 @@ POST / api / v1 / accounts / apply - to - business;
 Authorization: Bearer <
   token >
   {
-    email: string
+    email: string,
   };
 ```
 
@@ -80,7 +80,7 @@ POST / api / v1 / accounts / invite - vendor;
 Authorization: Bearer <
   token >
   {
-    email: string
+    email: string,
   };
 ```
 
@@ -92,7 +92,7 @@ DELETE / api / v1 / accounts / vendors;
 Authorization: Bearer <
   token >
   {
-    email: string
+    email: string,
   };
 ```
 
@@ -144,7 +144,7 @@ DELETE / api / v1 / accounts / admins;
 Authorization: Bearer <
   token >
   {
-    email: string
+    email: string,
   };
 ```
 
@@ -199,7 +199,7 @@ DELETE / api / v1 / rfqs;
 Authorization: Bearer <
   token >
   {
-    id: "ck23131mkd1313425225"
+    id: "ck23131mkd1313425225",
   };
 ```
 
@@ -718,7 +718,7 @@ Authorization
 ## Fetch all products from inventory
 
 ```js
-GET /api/v1/accounts/vendors/inventory?type=<service|product>
+GET /api/v1/accounts/vendors/inventory
 
 Authorization: Bearer <token>
 
@@ -824,18 +824,21 @@ Content-Type: multipart/form-data
 document=file
 name=string
 ```
+
 ## Fetch from archive
 
 ```js
-GET /api/v1/archive
-Authorization
+GET / api / v1 / archive;
+Authorization;
 ```
+
 ## Fetch single item from archive
 
 ```js
 GET /api/v1/archive/<arch_id>
 Authorization
 ```
+
 ## Delete from archive
 
 ```js
@@ -843,5 +846,30 @@ DELETE /api/v1/archive
 Authorization
 {
   arch_id: string,
+}
+```
+
+## Explore products and services
+
+```js
+GET /api/v1/accounts/vendors/inventory/explore?type=<prodict|service>
+
+Authorization: Bearer <token>
+
+Example result:
+{
+  "error": false,
+  "data": [
+    {
+      "id": "ck7ldc43h0000m7cu50kg1ki1",
+      "createdAt": 1583812948157,
+      "updatedAt": 1583812948157,
+      "name": "Cement",
+      "description": "Well granulated cement for housing needs",
+      "price": "34",
+      "oem": "Dangote",
+      "vendorId": "ck7g99r3j0001tqcugfj1a2o6"
+    }
+  ]
 }
 ```

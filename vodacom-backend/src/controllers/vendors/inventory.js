@@ -99,7 +99,43 @@ module.exports.retrieveAll = async (request) => {
   });
 };
 
-module.exports.explore = async (request) => {};
+module.exports.explore = async (request) => {
+  let { id } = request.payload;
+  const { type } = request.query;
+  const q = {};
+  if (type) q.type = type;
+  const data = await c.inventory.aggregate([
+    { $match: q },
+    {
+      $lookup: {
+        from: "accounts",
+        localField: "vendorId",
+        foreignField: "_id",
+        as: "vendor",
+      },
+    },
+    { $unwind: "$vendor" },
+    {
+      $project: {
+        price: true,
+        name: true,
+        type: true,
+        oem: true,
+        moq: true,
+        sku: true,
+        description: true,
+        "vendor.name": true,
+        "vendor._id": true,
+      },
+    },
+  ]);
+  console.log(data);
+
+  return new Response(200, {
+    error: false,
+    data,
+  });
+};
 
 module.exports.retrieve = async (request) => {
   const { id: productId } = request.body;
