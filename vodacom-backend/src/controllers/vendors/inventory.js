@@ -1,20 +1,40 @@
 const c = require("../../data/collections");
 const { Response, ResponseError } = require("../../utils");
 const V = require("../../services/validator");
+const { Id } = require("../../services/provider");
 
 module.exports.add = async (request) => {
   const { id } = request.payload;
   const { name, description, price, oem, type, moq, sku } = request.body;
+  const { file: picture } = request;
 
   V.allExist(
-    "You must provide name, description, price oem and type",
+    "You must provide name, description, price, picture, oem and type",
     name,
     description,
     price,
     type,
     moq,
-    sku
+    sku,
+    picture
   );
+  const product_id = Id();
+  if (!["image/jpeg", "image/png"].includes(picture.mimetype))
+    throw new ResponseError(400, "You must provide only jpeg or png files");
+  let result;
+  const file_data = request.file.buffer.toString("base64");
+  try {
+    result = await store
+      .upload(
+        `data:${request.file.mimetype};base64,${file_data}`,
+        "product_images",
+        undefined,
+        product_id
+      )
+      .then((result) => result.secure_url);
+  } catch (error) {
+    throw new ResponseError(400, error.message);
+  }
   request.V.expr(
     "type must be product or service",
     /^(product|service)$/i.test(type)
@@ -23,6 +43,8 @@ module.exports.add = async (request) => {
     request.V.allExist("You must provide oem for product", oem);
   }
   const a = {
+    _id: product_id,
+    image: result,
     name,
     description,
     price,
