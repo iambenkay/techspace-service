@@ -9,7 +9,7 @@ module.exports.add = async (request) => {
   const { file: picture } = request;
 
   V.allExist(
-    "You must provide name, description, price, picture, oem and type",
+    "You must provide name, description, price, picture and type",
     name,
     description,
     price,
@@ -22,11 +22,11 @@ module.exports.add = async (request) => {
   if (!["image/jpeg", "image/png"].includes(picture.mimetype))
     throw new ResponseError(400, "You must provide only jpeg or png files");
   let result;
-  const file_data = request.file.buffer.toString("base64");
+  const file_data = picture.buffer.toString("base64");
   try {
     result = await store
       .upload(
-        `data:${request.file.mimetype};base64,${file_data}`,
+        `data:${picture.mimetype};base64,${file_data}`,
         "product_images",
         undefined,
         product_id

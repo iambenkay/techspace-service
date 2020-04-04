@@ -152,6 +152,7 @@ router.post(
   "/accounts/vendors/inventory",
   isAuthenticated,
   isAccountType("vendor", "business"),
+  upload.single("picture"),
   handler(inventory.add)
 );
 
