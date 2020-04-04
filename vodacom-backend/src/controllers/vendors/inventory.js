@@ -2,7 +2,7 @@ const c = require("../../data/collections");
 const { Response, ResponseError } = require("../../utils");
 const V = require("../../services/validator");
 
-module.exports.add = async request => {
+module.exports.add = async (request) => {
   const { id } = request.payload;
   const { name, description, price, oem, type, moq, sku } = request.body;
 
@@ -29,7 +29,7 @@ module.exports.add = async request => {
     vendorId: id,
     type,
     moq,
-    sku
+    sku,
   };
   if (oem) a.oem = oem;
   const data = await c.inventory.insert(a);
@@ -38,11 +38,11 @@ module.exports.add = async request => {
     message: `${type[0].toUpperCase()}${type[0].slice(
       1
     )} has been succesfully added to Inventory`,
-    data
+    data,
   });
 };
 
-module.exports.remove = async request => {
+module.exports.remove = async (request) => {
   const { id } = request.payload;
   const { productId } = request.body;
   const product = await c.inventory.find({ _id: productId });
@@ -56,17 +56,16 @@ module.exports.remove = async request => {
   await c.inventory.remove({ _id: productId });
   return new Response(200, {
     error: false,
-    message: `Product has been succesfully removed from Inventory`
+    message: `Product has been succesfully removed from Inventory`,
   });
 };
 
-module.exports.retrieveAll = async request => {
-  let { id, userType } = request.payload;
-  const { type, explore } = request.query;
+module.exports.retrieveAll = async (request) => {
+  let { id } = request.payload;
+  const { type } = request.query;
   const q = {};
   if (type) q.type = type;
-  if (userType !== "vendor") id = request.query.id;
-  if (id && !explore) q.vendorId = id;
+  q.vendorId = id;
   const data = await c.inventory.aggregate([
     { $match: q },
     {
@@ -74,8 +73,8 @@ module.exports.retrieveAll = async request => {
         from: "accounts",
         localField: "vendorId",
         foreignField: "_id",
-        as: "vendor"
-      }
+        as: "vendor",
+      },
     },
     { $unwind: "$vendor" },
     {
@@ -88,19 +87,25 @@ module.exports.retrieveAll = async request => {
         sku: true,
         description: true,
         "vendor.name": true,
-        "vendor._id": true
-      }
-    }
+        "vendor._id": true,
+      },
+    },
   ]);
   console.log(data);
 
   return new Response(200, {
     error: false,
-    data
+    data,
   });
 };
 
-module.exports.retrieve = async request => {
+module.exports.explore = async (request) => {};
+
+module.exports.retrieve = async (request) => {
   const { id: productId } = request.body;
   const data = await c.inventory.find({ _id: productId });
+  return new Response(200, {
+    error: false,
+    data,
+  });
 };
