@@ -7,7 +7,7 @@ const businessQuotes = require("../controllers/business/quotes");
 router.post(
   "/quotes",
   isAuthenticated,
-  isAccountType("vendor"),
+  isAccountType("vendor", "business"),
   handler(quotes.create)
 );
 router.post(
