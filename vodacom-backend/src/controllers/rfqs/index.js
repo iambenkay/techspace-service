@@ -25,7 +25,6 @@ module.exports.create = async (request) => {
     location,
     quantity
   );
-  console.log(request.body);
   const rfq_data = {
     title,
     deadline,
@@ -39,8 +38,8 @@ module.exports.create = async (request) => {
   if (type === "business") rfq_data.business_category = category;
   if (type === "single") rfq_data.vendor = category;
   if (request.file) {
-    // if (request.file.mimetype != "application/pdf")
-    //   throw new ResponseError(400, "You must provide only pdf files");
+    if (request.file.mimetype != "application/pdf")
+      throw new ResponseError(400, "You must provide only pdf files");
     const file_data = request.file.buffer.toString("base64");
     let result;
     try {

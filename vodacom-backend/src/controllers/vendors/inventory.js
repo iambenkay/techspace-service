@@ -7,6 +7,7 @@ module.exports.add = async (request) => {
   const { id } = request.payload;
   const { name, description, price, oem, type, moq, sku } = request.body;
   const { file: picture } = request;
+  console.log(picture);
 
   V.allExist(
     "You must provide name, description, price, picture and type",
