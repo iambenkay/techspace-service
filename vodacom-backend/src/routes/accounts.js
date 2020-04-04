@@ -3,7 +3,7 @@ const handler = require("../services/request-injector");
 const {
   isAuthenticated,
   isAccountType,
-  mustHaveRequirement
+  mustHaveRequirement,
 } = require("../middleware");
 const upload = require("multer")();
 const register = require("../controllers/auth/register");
@@ -11,11 +11,11 @@ const account_details = require("../controllers/accounts/details");
 const {
   create: addAdmin,
   destroy: delistAdmin,
-  retrieve: getAdmins
+  retrieve: getAdmins,
 } = require("../controllers/business/admins");
 const {
   destroy: delistVendor,
-  retrieve: getVendors
+  retrieve: getVendors,
 } = require("../controllers/business/vendors");
 const inviteVendor = require("../controllers/business/invite");
 const user = require("../controllers/user");
@@ -151,7 +151,7 @@ router.post("/accounts", handler(register));
 router.post(
   "/accounts/vendors/inventory",
   isAuthenticated,
-  isAccountType("vendor"),
+  isAccountType("vendor", "business"),
   handler(inventory.add)
 );
 
@@ -159,7 +159,7 @@ router.post(
 router.delete(
   "/accounts/vendors/inventory",
   isAuthenticated,
-  isAccountType("vendor"),
+  isAccountType("vendor", "business"),
   handler(inventory.remove)
 );
 
