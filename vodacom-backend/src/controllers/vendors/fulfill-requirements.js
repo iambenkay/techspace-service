@@ -2,8 +2,9 @@ const c = require("../../data/collections");
 const { Response, ResponseError } = require("../../utils");
 const store = require("../../services/cloudinary-provider");
 
-module.exports.set = async request => {
+module.exports.set = async (request) => {
   const { id: vId } = request.payload;
+  const { existing } = request.query;
 
   const { businessId, type, id, value } = request.body;
   request.V.allExist(
@@ -15,7 +16,7 @@ module.exports.set = async request => {
   const bvr = await c.business_vendor_rel.find({
     accepted: false,
     vendorId: vId,
-    businessId
+    businessId,
   });
   let result;
   if (!bvr)
@@ -28,33 +29,41 @@ module.exports.set = async request => {
     result = parseInt(value) === 0 ? false : true;
   }
   if (type === "document") {
-    request.V.allExist(
-      "You must provide document for document requirements",
-      request.file
-    );
-    if (request.file.mimetype != "application/pdf")
-      throw new ResponseError(400, "You must provide only pdf files");
-    const file_data = request.file.buffer.toString("base64");
-    try {
-      result = await store
-        .upload(
-          `data:${request.file.mimetype};base64,${file_data}`,
-          "vendor_requirements",
-          undefined,
-          bvr &&
-            bvr.requirements[type] &&
-            bvr.requirements[type][id] &&
-            bvr.requirements[type][id].id
-        )
-        .then(result => result.secure_url);
-    } catch (error) {
-      throw new ResponseError(400, error.message);
+    if (!existing) {
+      request.V.allExist(
+        "You must provide document for document requirements",
+        request.file
+      );
+      if (request.file.mimetype != "application/pdf")
+        throw new ResponseError(400, "You must provide only pdf files");
+      const file_data = request.file.buffer.toString("base64");
+      try {
+        result = await store
+          .upload(
+            `data:${request.file.mimetype};base64,${file_data}`,
+            "vendor_requirements",
+            undefined,
+            bvr &&
+              bvr.requirements[type] &&
+              bvr.requirements[type][id] &&
+              bvr.requirements[type][id].id
+          )
+          .then((result) => result.secure_url);
+      } catch (error) {
+        throw new ResponseError(400, error.message);
+      }
+    } else {
+      request.V.allExist(
+        "You must provide document for document requirements",
+        request.body.document
+      );
+      result = request.body.document;
     }
   }
   const validReq = await c.accounts.find({
     _id: businessId,
     userType: "business",
-    [`requirements.${type}.${id}`]: { $exists: true }
+    [`requirements.${type}.${id}`]: { $exists: true },
   });
   if (!validReq)
     throw new ResponseError(400, "The requirement is not on the business");
@@ -64,19 +73,19 @@ module.exports.set = async request => {
       [`requirements.${type}.${id}`]: {
         id,
         value: result,
-        accepted: null
-      }
+        accepted: null,
+      },
     }
   );
   const re = await c.business_vendor_rel.find({ _id: bvr.id });
   return new Response(200, {
     error: false,
     message: "Requirement has been met.",
-    result: re
+    result: re,
   });
 };
 
-module.exports.get = async request => {
+module.exports.get = async (request) => {
   const { id, userType } = request.payload;
   const { businessId, vendorId } = request.query;
   let match;
@@ -85,25 +94,25 @@ module.exports.get = async request => {
       throw new ResponseError(400, "You must provide businessId");
     match = {
       vendorId: id,
-      businessId: businessId
+      businessId: businessId,
     };
   }
   if (userType === "business") {
     if (!vendorId) throw new ResponseError(400, "You must provide vendorId");
     match = {
       vendorId: vendorId,
-      businessId: id
+      businessId: id,
     };
   }
   const bvr = await c.business_vendor_rel.find(match);
 
   return new Response(200, {
     error: false,
-    data: bvr
+    data: bvr,
   });
 };
 
-module.exports.approve = async request => {
+module.exports.approve = async (request) => {
   const { id, type } = request.body;
   if (!id || !type)
     throw new ResponseError(400, "You must provide id and type");
@@ -114,10 +123,10 @@ module.exports.approve = async request => {
 
   return new Response(200, {
     error: false,
-    message: "Requirement was approved"
+    message: "Requirement was approved",
   });
 };
-module.exports.reject = async request => {
+module.exports.reject = async (request) => {
   const { id, type } = request.body;
   if (!id || !type)
     throw new ResponseError(400, "You must provide id and type");
@@ -128,6 +137,6 @@ module.exports.reject = async request => {
 
   return new Response(200, {
     error: false,
-    message: "Requirement was rejected"
+    message: "Requirement was rejected",
   });
 };

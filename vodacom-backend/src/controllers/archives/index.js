@@ -6,7 +6,7 @@ module.exports.remove = async (request) => {
   const { id } = request.payload;
   const { id: arch_id } = request.body;
   request.V.allExist("You must provide id", arch_id);
-  const arch_item = c.archives.remove({ _id: arch_id, owner: id });
+  const arch_item = await c.archives.remove({ _id: arch_id, owner: id });
   if (!arch_item)
     throw new ResponseError(404, "The archive item was not found");
   try {
@@ -54,7 +54,7 @@ module.exports.add = async (request) => {
   try {
     result = await store
       .upload(
-        `data:${request.file.mimetype};base64,${file_data}`,
+        `data:${doc.mimetype};base64,${file_data}`,
         "vendor_requirements",
         undefined,
         doc_id
