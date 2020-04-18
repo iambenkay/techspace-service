@@ -215,13 +215,13 @@ router.post(
 router.get(
   "/accounts/vendors/businesses",
   isAuthenticated,
-  isAccountType("vendor"),
+  isAccountType("vendor", "business"),
   handler(vendorBusiness.retrieveAll)
 );
 router.get(
   "/accounts/vendors/businesses/:id",
   isAuthenticated,
-  isAccountType("vendor"),
+  isAccountType("vendor", "business"),
   handler(vendorBusiness.retrieve)
 );
 
@@ -254,7 +254,7 @@ router.delete(
 router.post(
   "/vendors/fulfill-requirements",
   isAuthenticated,
-  isAccountType("vendor"),
+  isAccountType("vendor", "business"),
   upload.single("document"),
   handler(fulfill.set)
 );

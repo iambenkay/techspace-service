@@ -31,13 +31,13 @@ router.get(
 router.get(
   "/quotes",
   isAuthenticated,
-  isAccountType("vendor"),
+  isAccountType("vendor", "business"),
   handler(quotes.get)
 );
 router.get(
   "/quotes/:id",
   isAuthenticated,
-  isAccountType("vendor"),
+  isAccountType("vendor", "business"),
   handler(quotes.getOne)
 );
 

@@ -1,14 +1,14 @@
 const DB = require("./db");
 const { Id } = require("../services/provider");
 
-module.exports = collection => {
+module.exports = (collection) => {
   const insert = async ({ _id = Id(), ...data }) => {
     const db = await DB();
     const record = {
       _id,
       createdAt: Date.now(),
       updatedAt: Date.now(),
-      ...data
+      ...data,
     };
     const result = await db.collection(collection).insertOne(record);
 
@@ -16,7 +16,7 @@ module.exports = collection => {
 
     return {
       id,
-      ...insertedData
+      ...insertedData,
     };
   };
   const findFactory = async (query = {}, sort = null, limit = null) => {
@@ -25,12 +25,12 @@ module.exports = collection => {
       .collection(collection)
       .find(query)
       .sort(sort)
-      .limit(null);
+      .limit(limit);
     const found = await result.toArray();
-    if (found.length === 0) return null;
-    const { _id: id, ...data } = found[0];
-
-    return { id, ...data };
+    return found.map(({ _id: id, ...data }) => ({
+      id,
+      ...data,
+    }));
   };
   const find_latest = async (query = {}) => {
     const db = await DB();
@@ -51,7 +51,7 @@ module.exports = collection => {
     const found = await result.toArray();
     return found.map(({ _id: id, ...data }) => ({
       id,
-      ...data
+      ...data,
     }));
   };
   const find = async (query = {}) => {
@@ -66,7 +66,7 @@ module.exports = collection => {
   const update = async (query = {}, update = {}, unset = false) => {
     const db = await DB();
     const result = await db.collection(collection).updateOne(query, {
-      [unset ? "$unset" : "$set"]: { updatedAt: Date.now(), ...update }
+      [unset ? "$unset" : "$set"]: { updatedAt: Date.now(), ...update },
     });
     return result.modifiedCount > 0 ? update : null;
   };
@@ -77,12 +77,9 @@ module.exports = collection => {
 
     return result.deletedCount;
   };
-  const aggregate = async (...query) => {
+  const aggregate = async (query) => {
     const db = await DB();
-    const result = await db
-      .collection(collection)
-      .aggregate(...query)
-      .toArray();
+    const result = await db.collection(collection).aggregate(query).toArray();
     return result.map(({ _id: id, ...data }) => ({ id, ...data }));
   };
   return Object.freeze({
@@ -93,6 +90,6 @@ module.exports = collection => {
     update,
     aggregate,
     find_latest,
-    findFactory
+    findFactory,
   });
 };

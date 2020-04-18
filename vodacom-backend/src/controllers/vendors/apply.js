@@ -3,7 +3,7 @@ const m = require("../../models");
 const SendMail = require("../../services/mailer");
 const { Response, ResponseError } = require("../../utils");
 
-module.exports = async request => {
+module.exports = async (request) => {
   const { id } = request.payload;
   const { email } = request.body;
   if (!email)
@@ -30,6 +30,6 @@ module.exports = async request => {
   );
   return new Response(200, {
     error: false,
-    message: "Vendor added to business"
+    message: "Business has received application",
   });
 };

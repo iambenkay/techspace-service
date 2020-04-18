@@ -5,74 +5,72 @@ const { ResponseError, Response } = require("../../utils");
 const Account = Collection("accounts");
 const Business_Vendor_Rel = Collection("business-vendor-rel");
 
-module.exports.retrieveAll = async request => {
+module.exports.retrieveAll = async (request) => {
   const { id } = request.payload;
   const { pending } = request.query;
   const q = { vendorId: id };
   if (pending) q.accepted = pending === "1" ? false : true;
-  const businesses = await Business_Vendor_Rel.aggregate(
+  const businesses = await Business_Vendor_Rel.aggregate([
     {
-      $match: q
+      $match: q,
     },
     {
       $lookup: {
         from: "accounts",
         localField: "businessId",
         foreignField: "_id",
-        as: "business"
-      }
+        as: "business",
+      },
     },
     {
-      $unwind: "$business"
+      $unwind: "$business",
     },
-    {
-      $project: {}
-    }
-  );
+  ]);
   return new Response(200, {
     error: false,
     businesses: businesses.map(
       ({
-        business: { name, email, userType },
+        business: { name, email, userType, avatar },
         accepted,
         dateJoined,
         business_category,
-        businessId
+        businessId,
       }) => ({
         businessId,
         name,
         email,
         userType,
+        avatar,
         accepted,
         dateJoined,
-        business_category
+        business_category,
       })
-    )
+    ),
   });
 };
 
-module.exports.retrieve = async request => {
+module.exports.retrieve = async (request) => {
   const { id } = request.payload;
   const { id: businessId } = request.params;
-  const businesses = await Business_Vendor_Rel.aggregate(
+  const businesses = await Business_Vendor_Rel.aggregate([
     {
-      $match: { businessId, vendorId: id }
+      $match: { businessId, vendorId: id },
     },
     {
       $lookup: {
         from: "accounts",
         localField: "businessId",
         foreignField: "_id",
-        as: "business"
-      }
+        as: "business",
+      },
     },
     {
-      $unwind: "$business"
+      $unwind: "$business",
     },
     {
-      $project: {}
-    }
-  );
+      $project: {},
+    },
+  ]);
   request.V.expr(
     "The business is not tied to this vendor account",
     businesses.length
@@ -80,22 +78,23 @@ module.exports.retrieve = async request => {
   return new Response(200, {
     error: false,
     business: (({
-      business: { name, email, userType },
+      business: { name, email, userType, avatar },
       accepted,
       dateJoined,
-      businessId
+      businessId,
     }) => ({
       businessId,
       name,
       email,
+      avatar,
       userType,
       accepted,
-      dateJoined
-    }))(businesses[0])
+      dateJoined,
+    }))(businesses[0]),
   });
 };
 
-module.exports.destroy = async request => {
+module.exports.destroy = async (request) => {
   const { id } = request.payload;
   const { email } = await Account.find({ _id: id });
   const { email: businessEmail } = request.body;
@@ -109,7 +108,7 @@ module.exports.destroy = async request => {
     );
   const isATiedBusiness = await Business_Vendor_Rel.find({
     businessId: business.id,
-    vendorId: id
+    vendorId: id,
   });
   if (!isATiedBusiness)
     throw new ResponseError(400, "Business is not tied to your vendor account");
@@ -118,7 +117,7 @@ module.exports.destroy = async request => {
     200,
     {
       error: false,
-      message: "You have detached from this business"
+      message: "You have detached from this business",
     },
     [
       new Notification(
@@ -132,7 +131,7 @@ module.exports.destroy = async request => {
         id,
         "accounts",
         null
-      )
+      ),
     ]
   );
 };

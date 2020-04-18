@@ -2,12 +2,12 @@ const c = require("../../data/collections");
 const { Response, ResponseError } = require("../../utils");
 const V = require("../../services/validator");
 const { Id } = require("../../services/provider");
+const store = require("../../services/cloudinary-provider");
 
 module.exports.add = async (request) => {
   const { id } = request.payload;
   const { name, description, price, oem, type, moq, sku } = request.body;
   const { file: picture } = request;
-  console.log(picture);
 
   V.allExist(
     "You must provide name, description, price, picture and type",
@@ -15,8 +15,6 @@ module.exports.add = async (request) => {
     description,
     price,
     type,
-    moq,
-    sku,
     picture
   );
   const product_id = Id();
@@ -58,7 +56,7 @@ module.exports.add = async (request) => {
   const data = await c.inventory.insert(a);
   return new Response(200, {
     error: false,
-    message: `${type[0].toUpperCase()}${type[0].slice(
+    message: `${type[0].toUpperCase()}${type.slice(
       1
     )} has been succesfully added to Inventory`,
     data,
@@ -114,7 +112,6 @@ module.exports.retrieveAll = async (request) => {
       },
     },
   ]);
-  console.log(data);
 
   return new Response(200, {
     error: false,

@@ -46,6 +46,8 @@ module.exports.add = async (request) => {
   const { id } = request.payload;
   const { name } = request.body;
   const { file: doc } = request;
+  if (!name || !doc)
+    throw new ResponseError(400, "You must provide name and document");
   const doc_id = Id();
   if (doc.mimetype != "application/pdf")
     throw new ResponseError(400, "You must provide only pdf files");

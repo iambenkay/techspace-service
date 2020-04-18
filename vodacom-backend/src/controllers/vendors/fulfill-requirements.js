@@ -86,10 +86,10 @@ module.exports.set = async (request) => {
 };
 
 module.exports.get = async (request) => {
-  const { id, userType } = request.payload;
-  const { businessId, vendorId } = request.query;
+  const { id } = request.payload;
+  const { businessId, from, vendorId } = request.query;
   let match;
-  if (userType === "vendor") {
+  if (from === "vendor") {
     if (!businessId)
       throw new ResponseError(400, "You must provide businessId");
     match = {
@@ -97,7 +97,7 @@ module.exports.get = async (request) => {
       businessId: businessId,
     };
   }
-  if (userType === "business") {
+  if (from === "business") {
     if (!vendorId) throw new ResponseError(400, "You must provide vendorId");
     match = {
       vendorId: vendorId,

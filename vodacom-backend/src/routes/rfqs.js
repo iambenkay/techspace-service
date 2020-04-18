@@ -7,7 +7,7 @@ const upload = require("multer")();
 router.get(
   "/rfqs/explore",
   isAuthenticated,
-  isAccountType("vendor"),
+  isAccountType("vendor", "business"),
   handler(rfqs.explore)
 );
 router.post(

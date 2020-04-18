@@ -25,6 +25,7 @@ class Notification {
   static async read(id) {
     await Notifications.update({ _id: id }, { read: true });
   }
+  main(){}
 }
 
 module.exports = Notification;
