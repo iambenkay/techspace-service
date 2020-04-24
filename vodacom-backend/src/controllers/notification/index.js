@@ -2,7 +2,7 @@ const { Response } = require("../../utils");
 const Notification = require("../../services/notifier");
 const c = require("../../data/collections");
 
-exports.read = async (request) => {
+module.exports.read = async (request) => {
   const { id: accountId } = request.payload;
   const { id } = request.query;
   const isOwner = await c.notifications.find({ _id: id, user: accountId });
@@ -15,7 +15,7 @@ exports.read = async (request) => {
   });
 };
 
-exports.retrieve = async (request) => {
+module.exports.retrieve = async (request) => {
   const { id: accountId } = request.payload;
   const notifications = await c.notifications.findFactory(
     { user: accountId },

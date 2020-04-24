@@ -1,7 +1,7 @@
 const c = require("../../data/collections");
 const {Response, ResponseError} = require("../../utils");
 
-exports = async request => {
+module.exports = async request => {
   const {id} = request.payload;
   const {vendorId, review, comment} = request.body;
   if (review === true && !comment) throw new ResponseError(400, "You must send a comment for review");

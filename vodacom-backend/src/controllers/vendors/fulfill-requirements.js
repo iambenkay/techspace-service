@@ -2,7 +2,7 @@ const c = require("../../data/collections");
 const { Response, ResponseError } = require("../../utils");
 const store = require("../../services/cloudinary-provider");
 
-exports.set = async (request) => {
+module.exports.set = async (request) => {
   const { id: vId } = request.payload;
   const { existing } = request.query;
 
@@ -85,7 +85,7 @@ exports.set = async (request) => {
   });
 };
 
-exports.get = async (request) => {
+module.exports.get = async (request) => {
   const { id } = request.payload;
   const { businessId, from, vendorId } = request.query;
   let match;
@@ -112,7 +112,7 @@ exports.get = async (request) => {
   });
 };
 
-exports.approve = async (request) => {
+module.exports.approve = async (request) => {
   const { id, type } = request.body;
   if (!id || !type)
     throw new ResponseError(400, "You must provide id and type");
@@ -126,7 +126,7 @@ exports.approve = async (request) => {
     message: "Requirement was approved",
   });
 };
-exports.reject = async (request) => {
+module.exports.reject = async (request) => {
   const { id, type } = request.body;
   if (!id || !type)
     throw new ResponseError(400, "You must provide id and type");
