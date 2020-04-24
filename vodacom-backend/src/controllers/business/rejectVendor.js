@@ -19,6 +19,6 @@ module.exports = async request => {
 
   return new Response(200, {
     error: false,
-    message: "Vendor has been added to business"
+    message: "Application was " +  review ? "returned for review" : "rejected"
   });
 };
