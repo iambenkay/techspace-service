@@ -7,7 +7,7 @@ module.exports = async request => {
   if (review === true && !comment) throw new ResponseError(400, "You must send a comment for review");
   request.V.allExist("You must provide vendorId", vendorId);
   const update = {accepted: false, dateJoined: Date.now()};
-  if (review) {
+  if (review === true) {
     update.rejectComment = comment;
   } else {
     update.rejected = true;
@@ -19,6 +19,6 @@ module.exports = async request => {
 
   return new Response(200, {
     error: false,
-    message: "Application was " +  review ? "returned for review" : "rejected"
+    message: "Application was " +  review === true ? "returned for review" : "rejected"
   });
 };
