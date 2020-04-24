@@ -1,7 +1,7 @@
 const c = require("../../data/collections");
 const { Response, ResponseError } = require("../../utils");
 
-module.exports = async request => {
+exports = async request => {
   const { id } = request.payload;
   const { vendorId } = request.body;
   request.V.allExist("You must provide vendorId", vendorId);

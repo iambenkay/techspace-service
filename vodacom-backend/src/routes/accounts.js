@@ -29,6 +29,7 @@ const inventory = require("../controllers/vendors/inventory");
 const inventorySearch = require("../controllers/search/product");
 const category = require("../controllers/business/category");
 const approve = require("../controllers/business/approveVendor");
+const reject = require("../controllers/business/rejectVendor");
 const vendorBusiness = require("../controllers/vendors/business");
 const requirements = require("../controllers/business/requirements");
 const fulfill = require("../controllers/vendors/fulfill-requirements");
@@ -57,6 +58,12 @@ router.post(
   isAuthenticated,
   isAccountType("business"),
   handler(approve)
+);
+router.post(
+  "/accounts/business/reject",
+  isAuthenticated,
+  isAccountType("business"),
+  handler(reject)
 );
 // For vendors to apply business
 router.post(

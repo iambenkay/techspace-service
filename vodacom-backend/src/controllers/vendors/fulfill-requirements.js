@@ -2,7 +2,7 @@ const c = require("../../data/collections");
 const { Response, ResponseError } = require("../../utils");
 const store = require("../../services/cloudinary-provider");
 
-module.exports.set = async (request) => {
+exports.set = async (request) => {
   const { id: vId } = request.payload;
   const { existing } = request.query;
 
@@ -26,7 +26,7 @@ module.exports.set = async (request) => {
       "You must provide value (0 or 1) for statutory requirements",
       [0, 1].includes(parseInt(value))
     );
-    result = parseInt(value) === 0 ? false : true;
+    result = parseInt(value) !== 0;
   }
   if (type === "document") {
     if (!existing) {
@@ -34,7 +34,7 @@ module.exports.set = async (request) => {
         "You must provide document for document requirements",
         request.file
       );
-      if (request.file.mimetype != "application/pdf")
+      if (request.file.mimetype !== "application/pdf")
         throw new ResponseError(400, "You must provide only pdf files");
       const file_data = request.file.buffer.toString("base64");
       try {
@@ -85,7 +85,7 @@ module.exports.set = async (request) => {
   });
 };
 
-module.exports.get = async (request) => {
+exports.get = async (request) => {
   const { id } = request.payload;
   const { businessId, from, vendorId } = request.query;
   let match;
@@ -112,7 +112,7 @@ module.exports.get = async (request) => {
   });
 };
 
-module.exports.approve = async (request) => {
+exports.approve = async (request) => {
   const { id, type } = request.body;
   if (!id || !type)
     throw new ResponseError(400, "You must provide id and type");
@@ -126,7 +126,7 @@ module.exports.approve = async (request) => {
     message: "Requirement was approved",
   });
 };
-module.exports.reject = async (request) => {
+exports.reject = async (request) => {
   const { id, type } = request.body;
   if (!id || !type)
     throw new ResponseError(400, "You must provide id and type");

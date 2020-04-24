@@ -873,3 +873,14 @@ Example result:
   ]
 }
 ```
+## Reject vendor application
+```js
+GET /api/v1/accounts/business/reject
+Authorization
+
+{
+  vendorId: ...,
+  review: true | false
+  comment: (if review is true) ...
+}
+```
