@@ -18,18 +18,10 @@ services:
       - EMAIL_USER=$EMAIL_USER
       - EMAIL_USE_TLS=$EMAIL_USE_TLS
       - JWT_SECRET_KEY=$JWT_SECRET_KEY
+      - PUBNUB_PUB_KEY=$PUBNUB_PUB_KEY
+      - PUBNUB_SUB_KEY=$PUBNUB_SUB_KEY
     build:
       context: .
       dockerfile: Dockerfile
     ports:
       - "3000:3000"
-      - "60021:60021"
-    links:
-      - mongo
-  mongo:
-    container_name: mongo
-    image: mongo
-    volumes:
-      - ./data:/data/db
-    ports:
-      - "27017:27017"
