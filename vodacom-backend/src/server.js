@@ -18,7 +18,7 @@ app.use("/api/v1", require("./routes"));
 app.get("/verify", require("./routes/verify"));
 app.get("/vendor-invite", require("./routes/vendor-invite"));
 app.get("/admin-invite", require("./routes/admin-invite"));
-app.use(express.static("build"));
+app.use(express.static("static"));
 app.get("/*", (req, res) => {
   return res.sendFile(path.resolve("./build/index.html"));
 });
