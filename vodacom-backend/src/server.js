@@ -2,6 +2,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
 const V = require("./services/validator");
+const path = require("path");
 
 const app = express();
 
@@ -13,10 +14,13 @@ app.use((req, _, next) => {
   console.log(`${req.method} - ${req.url} ${_.statusCode}`);
   next();
 });
-
 app.use("/api/v1", require("./routes"));
 app.get("/verify", require("./routes/verify"));
 app.get("/vendor-invite", require("./routes/vendor-invite"));
 app.get("/admin-invite", require("./routes/admin-invite"));
+app.use(express.static("build"));
+app.get("/*", (req, res) => {
+  return res.sendFile(path.resolve("./build/index.html"));
+});
 
 module.exports = app;
