@@ -127,6 +127,9 @@ module.exports.explore = async (request) => {
       $project: {
         description: true,
         "business.name": true,
+        "business.avatar": true,
+        "business.email": true,
+        "business.location": true,
         title: true,
         "business._id": true,
       },

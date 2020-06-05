@@ -8,15 +8,12 @@ const express = require("express");
 require("dotenv").config();
 
 const gen_vendor_id = () =>
-  `VEN${require("crypto")
-    .randomBytes(3)
-    .toString("hex")
-    .toUpperCase()}`;
+  `VEN${require("crypto").randomBytes(3).toString("hex").toUpperCase()}`;
 
 /**
  * @param {express.response} request
  */
-module.exports = async request => {
+module.exports = async (request) => {
   const { name, email, userType, password, phone } = request.body;
 
   V.allExist(
@@ -40,10 +37,12 @@ module.exports = async request => {
     .isEmail("email is not valid", email);
   const hashedPassword = bcrypt.hashSync(password);
 
+  const nameExists = await c.accounts.find({ name });
+  if (nameExists) throw new ResponseError(400, "name is already in use");
   const emailExists = await c.accounts.find({ email });
   if (emailExists && emailExists.registration_completed)
     throw new ResponseError(400, "email is already in use");
-  const phoneExists = await c.accounts.find({ phone }).then(user => !!user);
+  const phoneExists = await c.accounts.find({ phone }).then((user) => !!user);
   if (phoneExists) throw new ResponseError(400, "phone is already in use");
   if (
     emailExists &&
@@ -63,7 +62,7 @@ module.exports = async request => {
     password: hashedPassword,
     phone,
     isVerified: false,
-    registration_completed: true
+    registration_completed: true,
   };
   if (userType === "vendor") {
     const { service_category, service_location } = request.body;
@@ -105,6 +104,6 @@ module.exports = async request => {
   );
   return new Response(201, {
     error: false,
-    ...data
+    ...data,
   });
 };

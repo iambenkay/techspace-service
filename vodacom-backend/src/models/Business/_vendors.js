@@ -43,18 +43,24 @@ module.exports = (category, except, pending, objects) => {
           dateJoined,
           business_category,
           vendorId,
-        }) => ({
-          vendorId,
-          name,
-          email,
-          userType,
-          accepted,
-          dateJoined,
-          business_category,
-          service_category,
-          service_location,
-          avatar,
-        })
+          requirements: { document, statutory },
+        }) => {
+          return {
+            has_fulfilled:
+              Object.keys(document).length > 0 ||
+              Object.keys(statutory).length > 0,
+            vendorId,
+            name,
+            email,
+            userType,
+            accepted,
+            dateJoined,
+            business_category,
+            service_category,
+            service_location,
+            avatar,
+          };
+        }
       )
     );
 };

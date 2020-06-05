@@ -2,7 +2,7 @@ const c = require("../../data/collections");
 const { Response, ResponseError } = require("../../utils");
 const Notification = require("../../services/notifier");
 
-module.exports.accept = async request => {
+module.exports.accept = async (request) => {
   const { id } = request.payload;
   const { id: quote_id } = request.body;
   if (!quote_id) throw new ResponseError(400, "You must provide id");
@@ -18,7 +18,7 @@ module.exports.accept = async request => {
   return new Response(
     200,
     {
-      error: false
+      error: false,
     },
     [
       new Notification(
@@ -26,12 +26,12 @@ module.exports.accept = async request => {
         quote.vendor_id,
         "rfq",
         null
-      )
+      ),
     ]
   );
 };
 
-module.exports.getOne = async request => {
+module.exports.getOne = async (request) => {
   const { id } = request.payload;
   const { id: quote_id } = request.params;
   if (!quote_id) throw new ResponseError(400, "You must provide quote_id");
@@ -40,11 +40,11 @@ module.exports.getOne = async request => {
   if (!quote) throw new ResponseError(404, "There is no quote with that id");
   return new Response(200, {
     error: false,
-    quote: quote
+    quote: quote,
   });
 };
 
-module.exports.get = async request => {
+module.exports.get = async (request) => {
   const { id } = request.payload;
   let { flag } = request.query;
   if (flag === "accepted") flag = true;
@@ -57,8 +57,8 @@ module.exports.get = async request => {
         from: "accounts",
         localField: "vendor_id",
         foreignField: "_id",
-        as: "vendor"
-      }
+        as: "vendor",
+      },
     },
     { $unwind: "$vendor" },
     {
@@ -66,27 +66,28 @@ module.exports.get = async request => {
         from: "rfqs",
         localField: "rfq_id",
         foreignField: "_id",
-        as: "rfq"
-      }
+        as: "rfq",
+      },
     },
     { $unwind: "$rfq" },
     {
       $project: {
         price: true,
         quantity: true,
+        rfq_id: true,
         delivery_date: true,
         "rfq.title": true,
         location: true,
         oem: true,
         description: true,
         "vendor.name": true,
-        "vendor._id": true
-      }
-    }
+        "vendor._id": true,
+      },
+    },
   ]);
 
   return new Response(200, {
     error: false,
-    quotes
+    quotes,
   });
 };

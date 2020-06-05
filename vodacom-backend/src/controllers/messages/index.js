@@ -5,17 +5,18 @@ const { pubnub } = require("../../services/provider");
 module.exports.createHead = async (request) => {
   const { id: accountId, userType } = request.payload;
   const { id, type } = request.body;
+  console.log(id);
   request.V.matchesRegex(
     "type must be one of regular, business and vendor",
     type,
     /^(business|regular|vendor)$/
   );
-  // if (type === userType)
-  //   throw new ResponseError(400, "Can't be the same account type");
-  // if (type === "regular" && userType === "vendor")
-  //   throw new ResponseError(
-  //     "You can't setup a chat with a regular user as a vendor"
-  //   );
+  if (type === userType)
+    throw new ResponseError(400, "Can't be the same account type");
+  if (type === "regular" && userType === "vendor")
+    throw new ResponseError(
+      "You can't setup a chat with a regular user as a vendor"
+    );
   const exists = await c.message_head.find({
     $or: [{ senderId: id }, { receiverId: id }],
   });
@@ -77,6 +78,7 @@ module.exports.fetchHead = async (request) => {
   });
   const data = [];
   for (let head of heads) {
+    console.log(head);
     const sender = await c.accounts.find({ _id: head.senderId });
     const receiver = await c.accounts.find({ _id: head.receiverId });
     const last_message = await c.messages.find_latest({ head_id: head.id });
