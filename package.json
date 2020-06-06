@@ -4,9 +4,6 @@
   "description": "Vodacom Vendor Mgmt System",
   "scripts": {
     "start": "node vodacom-backend/src",
-    "test": "jest --forceExit",
-    "pretest": "node vodacom-backend/initdb",
-    "start-worker": "node vodacom-wq/src",
     "dev": "./vodacom-backend/dev",
     "commit": "git add . ; git commit",
     "push": "git add . ; git commit ; git push origin master",
