@@ -1,6 +1,6 @@
 version: "3"
 services:
-  vodacom:
+  vodacom-backend:
     container_name: vodacom
     env_file: .env
     restart: always
@@ -20,8 +20,15 @@ services:
       - JWT_SECRET_KEY=$JWT_SECRET_KEY
       - PUBNUB_PUB_KEY=$PUBNUB_PUB_KEY
       - PUBNUB_SUB_KEY=$PUBNUB_SUB_KEY
-    build:
-      context: .
-      dockerfile: Dockerfile
+    build: .
     ports:
       - "3000:3000"
+    links:
+      - mongo
+  mongo:
+    container_name: mongo
+    image: mongo
+    volumes:
+      - ./mongodb:/data/db
+    ports:
+      - "27017:27017"

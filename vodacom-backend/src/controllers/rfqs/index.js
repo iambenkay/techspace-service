@@ -1,7 +1,8 @@
 const c = require("../../data/collections");
 const { Response, ResponseError } = require("../../utils");
 const V = require("../../services/validator");
-const store = require("../../services/cloudinary-provider");
+const Id = require("../../services/provider");
+const store = require("../../services/upload-provider");
 
 module.exports.create = async (request) => {
   const { id } = request.payload;
@@ -38,12 +39,11 @@ module.exports.create = async (request) => {
   if (request.file) {
     if (request.file.mimetype != "application/pdf")
       throw new ResponseError(400, "You must provide only pdf files");
-    const file_data = request.file.buffer.toString("base64");
     let result;
     try {
       result = await store.upload(
-        `data:${request.file.mimetype};base64,${file_data}`,
-        "rfq_description_documents"
+        request.file,
+        "rfq_description_documents/" + Id()
       );
     } catch (error) {
       throw new ResponseError(400, error.message);

@@ -1,25 +1,10 @@
-// const MailService = require("../services/grpc-provider");
-
-// module.exports = (to, subject, text, html) => {
-//   MailService.sendMail(
-//     {
-//       to,
-//       subject,
-//       html,
-//       text
-//     },
-//     (error, _) => {
-//       console.log("Mail sent");
-//     }
-//   );
-// };
 const nodemailer = require("nodemailer");
 const {
   EMAIL_HOST,
   EMAIL_USER,
   EMAIL_PASSWORD,
   EMAIL_PORT,
-  EMAIL_USE_TLS
+  EMAIL_USE_TLS,
 } = process.env;
 
 class Mail {
@@ -44,15 +29,15 @@ class Mail {
         secure: EMAIL_USE_TLS == 0 ? false : true,
         auth: {
           user: EMAIL_USER,
-          pass: EMAIL_PASSWORD
-        }
+          pass: EMAIL_PASSWORD,
+        },
       });
       transporter.sendMail({
         from: '"Vendor Alliance" <support@vodacomgroup.com>',
         to: this.to,
         subject: this.subject,
         text: this.text,
-        html: this.html
+        html: this.html,
       });
     } catch (e) {
       console.error(e.message);

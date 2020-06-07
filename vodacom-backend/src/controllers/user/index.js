@@ -3,32 +3,23 @@ const bcrypt = require("bcryptjs");
 const { ResponseError, Response } = require("../../utils");
 const V = require("../../services/validator");
 const SendMail = require("../../services/mailer");
-const store = require("../../services/cloudinary-provider");
+const store = require("../../services/upload-provider");
 const hash = require("../../services/hash-injector");
 const express = require("express");
 require("dotenv").config();
 
 const gen_vendor_id = () =>
-  `VEN${require("crypto")
-    .randomBytes(3)
-    .toString("hex")
-    .toUpperCase()}`;
+  `VEN${require("crypto").randomBytes(3).toString("hex").toUpperCase()}`;
 
-module.exports.uploadImage = async request => {
+module.exports.uploadImage = async (request) => {
   const { id } = request.payload;
   const { file: image } = request;
   if (!["image/jpeg", "image/png"].includes(image.mimetype))
     throw new ResponseError(400, "You must provide only jpeg or png images");
 
-  const file_data = image.buffer.toString("base64");
   let result;
   try {
-    result = await store.upload(
-      `data:${image.mimetype};base64,${file_data}`,
-      "avatars",
-      undefined,
-      id
-    );
+    result = await store.upload(image, "avatars/" + id);
   } catch (error) {
     throw new ResponseError(400, error.message);
   }
@@ -37,14 +28,14 @@ module.exports.uploadImage = async request => {
   return new Response(200, {
     error: false,
     message: "Image has been uploaded",
-    result: result.public_url
+    result: result.public_url,
   });
 };
 
 /**
  * @param {express.response} request
  */
-module.exports.update = async request => {
+module.exports.update = async (request) => {
   const { id } = request.payload;
   const { name, email, userType, phone } = request.body;
 
@@ -77,7 +68,7 @@ module.exports.update = async request => {
     name,
     userType,
     password: hashedPassword,
-    phone
+    phone,
   };
   if (userType === "vendor") {
     const { service_category, service_location } = request.body;
@@ -104,6 +95,6 @@ module.exports.update = async request => {
 
   return new Response(201, {
     error: false,
-    ...userData
+    ...userData,
   });
 };

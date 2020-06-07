@@ -1,6 +1,6 @@
 const c = require("../../data/collections");
 const { Response, ResponseError } = require("../../utils");
-const store = require("../../services/cloudinary-provider");
+const store = require("../../services/upload-provider");
 const { Id } = require("../../services/provider");
 module.exports.remove = async (request) => {
   const { id } = request.payload;
@@ -10,7 +10,7 @@ module.exports.remove = async (request) => {
   if (!arch_item)
     throw new ResponseError(404, "The archive item was not found");
   try {
-    await store.remove(arch_id);
+    await store.remove(`archives/${arch_id}`);
   } catch (error) {
     throw new ResponseError(400, error.message);
   }
@@ -51,16 +51,10 @@ module.exports.add = async (request) => {
   const doc_id = Id();
   if (doc.mimetype != "application/pdf")
     throw new ResponseError(400, "You must provide only pdf files");
-  const file_data = doc.buffer.toString("base64");
   let result;
   try {
     result = await store
-      .upload(
-        `data:${doc.mimetype};base64,${file_data}`,
-        "vendor_requirements",
-        undefined,
-        doc_id
-      )
+      .upload(doc, "archives/" + doc_id)
       .then((result) => result.secure_url);
   } catch (error) {
     throw new ResponseError(400, error.message);

@@ -2,7 +2,7 @@ const c = require("../../data/collections");
 const { Response, ResponseError } = require("../../utils");
 const V = require("../../services/validator");
 const { Id } = require("../../services/provider");
-const store = require("../../services/cloudinary-provider");
+const store = require("../../services/upload-provider");
 
 module.exports.add = async (request) => {
   const { id } = request.payload;
@@ -21,15 +21,9 @@ module.exports.add = async (request) => {
   if (!["image/jpeg", "image/png"].includes(picture.mimetype))
     throw new ResponseError(400, "You must provide only jpeg or png files");
   let result;
-  const file_data = picture.buffer.toString("base64");
   try {
     result = await store
-      .upload(
-        `data:${picture.mimetype};base64,${file_data}`,
-        "product_images",
-        undefined,
-        product_id
-      )
+      .upload(picture, "product_images/" + product_id)
       .then((result) => result.secure_url);
   } catch (error) {
     throw new ResponseError(400, error.message);
