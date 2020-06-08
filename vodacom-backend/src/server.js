@@ -20,8 +20,8 @@ app.get("/vendor-invite", require("./routes/vendor-invite"));
 app.get("/admin-invite", require("./routes/admin-invite"));
 app.use(express.static("static"));
 
-// app.get("/*", (req, res) => {
-//   return res.sendFile(path.resolve("./static/index.html"));
-// });
+app.get("/*", (req, res) => {
+  return res.sendFile(path.resolve("./static/index.html"));
+});
 
 module.exports = app;
