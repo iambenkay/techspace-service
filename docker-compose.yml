@@ -22,7 +22,7 @@ services:
       - AWS_BUCKET_NAME=$AWS_BUCKET_NAME
     build: .
     ports:
-      - "3000:3000"
+      - "80:3000"
     links:
       - mongo
   mongo:

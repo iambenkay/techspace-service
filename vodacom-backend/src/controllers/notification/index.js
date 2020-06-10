@@ -19,7 +19,7 @@ module.exports.retrieve = async (request) => {
   const { id: accountId } = request.payload;
   const notifications = await c.notifications.findFactory(
     { user: accountId },
-    (a, b) => b.createdAt - a.createdAt,
+    (a, b) => a.createdAt - b.createdAt,
     14
   );
   return new Response(200, {
