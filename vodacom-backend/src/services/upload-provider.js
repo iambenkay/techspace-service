@@ -1,18 +1,24 @@
 const AWS = require("aws-sdk");
 const { AWS_BUCKET_NAME } = process.env;
 
+AWS.config.update({ region: "eu-west-1" });
+
 const s3 = new AWS.S3({
   apiVersion: "2006-03-01",
 });
+
+const uploadParams = {
+  Bucket: AWS_BUCKET_NAME,
+};
 
 module.exports = {
   upload(file, key) {
     return s3
       .putObject({
-        Bucket: AWS_BUCKET_NAME,
         Key: `${key}`,
         Body: file.buffer,
         ContentType: file.mimetype,
+        ...uploadParams,
       })
       .promise()
       .then((data) => {
@@ -29,7 +35,7 @@ module.exports = {
     return s3
       .deleteObject({
         Key: key,
-        Bucket: AWS_BUCKET_NAME,
+        ...uploadParams,
       })
       .promise()
       .then(() => {
