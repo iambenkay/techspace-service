@@ -33,7 +33,7 @@ class Mail {
         },
       });
       transporter.sendMail({
-        from: '"Vendor Alliance" <support@vodacomgroup.com>',
+        from: '"TechSpace" <support@techspace.com>',
         to: this.to,
         subject: this.subject,
         text: this.text,

@@ -90,7 +90,7 @@ module.exports = async (request) => {
   data = await c.accounts.insert(userData);
 
   const host = request.get("host");
-  const scheme = process.env.STATE === "development" ? "http" : "https";
+  const { protocol: scheme } = request;
   const email_ver_link = `${scheme}://${host}/verify?token=${hash(
     email
   )}&email=${email}`;
