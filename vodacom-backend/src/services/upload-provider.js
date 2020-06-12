@@ -14,7 +14,7 @@ const uploadParams = {
 module.exports = {
   upload(file, key) {
     return s3
-      .putObject({
+      .upload({
         Key: `${key}`,
         Body: file.buffer,
         ContentType: file.mimetype,
