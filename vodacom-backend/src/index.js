@@ -1,10 +1,28 @@
 const app = require("./server");
 require("dotenv").config();
+const { readFileSync } = require("fs");
 
-const { PORT = 3000, HOST = "0.0.0.0" } = process.env;
+const http = require("http");
+const https = require("https");
 
-app.listen();
+const { HTTP_PORT = 3000, HTTPS_PORT = 3001, HOST = "0.0.0.0" } = process.env;
 
-app.listen(PORT, HOST, () => {
-  console.log(`HTTP server started on port ${PORT}`);
+const options = {
+  key: readFileSync("certificates/key.pem"),
+  cert: readFileSync("certificates/certificate.pem"),
+};
+
+http
+  .createServer((req, res) => {
+    res.writeHead(307, {
+      Location: `https://${req.headers["host"]}${req.url}`,
+    });
+    res.end();
+  })
+  .listen(HTTP_PORT, () => {
+    console.log(`HTTP Server started on port ${HTTP_PORT}`);
+  });
+
+https.createServer(options, app).listen(HTTPS_PORT, () => {
+  console.log(`HTTPS Server started on port ${HTTPS_PORT}`);
 });

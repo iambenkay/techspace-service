@@ -6,7 +6,8 @@ services:
     restart: always
     environment:
       - STATE=$STATE
-      - PORT=$PORT
+      - HTTP_PORT=$HTTP_PORT
+      - HTTPS_PORT=$HTTPS_PORT
       - MONGODB_URI=$MONGODB_URI
       - DB_NAME=$DB_NAME
       - CLIENT_APP=$CLIENT_APP
@@ -23,6 +24,7 @@ services:
     build: .
     ports:
       - "80:3000"
+      - "443:3001"
     links:
       - mongo
   mongo:
