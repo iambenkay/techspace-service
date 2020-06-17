@@ -26,8 +26,9 @@ app.use("/media/*", async (req, res) => {
   let file;
   try {
     file = await store.fetch(key);
+    res.status(200).send(file.data);
   } catch (e) {
-    res.status(404).send(file.data);
+    res.status(404).send();
   }
 });
 app.get("/*", (_, res) => {
