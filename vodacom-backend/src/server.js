@@ -2,6 +2,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
 const V = require("./services/validator");
+const store = require("./services/upload-provider");
 const path = require("path");
 
 const app = express();
@@ -20,7 +21,16 @@ app.get("/vendor-invite", require("./routes/vendor-invite"));
 app.get("/admin-invite", require("./routes/admin-invite"));
 app.use(express.static("static"));
 
-app.get("/*", (req, res) => {
+app.use("/media/*", async (req, res) => {
+  const key = req.url.split("/media/")[1];
+  let file;
+  try {
+    file = await store.fetch(key);
+  } catch (e) {
+    res.status(404).send(file.data);
+  }
+});
+app.get("/*", (_, res) => {
   return res.sendFile(path.resolve("./static/index.html"));
 });
 

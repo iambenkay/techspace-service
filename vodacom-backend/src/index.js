@@ -8,8 +8,8 @@ const https = require("https");
 const { HTTP_PORT = 3000, HTTPS_PORT = 3001, HOST = "0.0.0.0" } = process.env;
 
 const options = {
-  key: readFileSync("certificates/key.pem"),
-  cert: readFileSync("certificates/certificate.pem"),
+  key: readFileSync("certificates/cert.key"),
+  cert: readFileSync("certificates/cert.pem"),
 };
 
 http

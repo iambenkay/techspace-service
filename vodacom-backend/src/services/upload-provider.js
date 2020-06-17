@@ -21,12 +21,23 @@ module.exports = {
         ...uploadParams,
       })
       .promise()
-      .then((data) => {
+      .then(({ Key }) => {
         return {
-          secure_url: data.Location,
-          ...data,
+          secure_url: `https://34.244.236.30/media/${Key}`,
         };
       })
+      .catch((err) => {
+        throw err;
+      });
+  },
+  fetch(key) {
+    return s3
+      .getObject({
+        Key: key,
+        ...uploadParams,
+      })
+      .promise()
+      .then(({ Body }) => ({ data: Body }))
       .catch((err) => {
         throw err;
       });
