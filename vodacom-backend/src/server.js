@@ -22,7 +22,7 @@ app.get("/admin-invite", require("./routes/admin-invite"));
 app.use(express.static("static"));
 
 app.use("/media/*", async (req, res) => {
-  const key = req.url.split("/media/")[1];
+  const key = req.originalUrl.split("/media/")[1];
   let file;
   try {
     file = await store.fetch(key);

@@ -23,7 +23,7 @@ module.exports = {
       .promise()
       .then(({ Key }) => {
         return {
-          secure_url: `https://34.244.236.30/media/${Key}`,
+          secure_url: `${process.env.CLIENT_APP}/media/${Key}`,
         };
       })
       .catch((err) => {
@@ -33,8 +33,8 @@ module.exports = {
   fetch(key) {
     return s3
       .getObject({
-        Key: key,
         ...uploadParams,
+        Key: `${key}`,
       })
       .promise()
       .then(({ Body }) => ({ data: Body }))
@@ -45,7 +45,7 @@ module.exports = {
   remove(key) {
     return s3
       .deleteObject({
-        Key: key,
+        Key: `${key}`,
         ...uploadParams,
       })
       .promise()
