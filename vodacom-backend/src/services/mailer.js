@@ -1,11 +1,9 @@
-const nodemailer = require("nodemailer");
-const {
-  EMAIL_HOST,
-  EMAIL_USER,
-  EMAIL_PASSWORD,
-  EMAIL_PORT,
-  EMAIL_USE_TLS,
-} = process.env;
+const AWS = require("aws-sdk");
+const SESConfig = require("../../../ses-config.json");
+
+AWS.config.update(SESConfig);
+
+const ses = new AWS.SES({ apiVersion: "2010-12-01" });
 
 class Mail {
   /**
@@ -16,29 +14,37 @@ class Mail {
    * @param {String} html
    */
   constructor(to, subject, text, html) {
-    this.to = to.join(", ");
+    this.to = to;
     this.subject = subject;
     this.text = text;
     this.html = html;
   }
-  send() {
+  async send() {
     try {
-      let transporter = nodemailer.createTransport({
-        host: EMAIL_HOST,
-        port: EMAIL_PORT,
-        secure: EMAIL_USE_TLS == 0 ? false : true,
-        auth: {
-          user: EMAIL_USER,
-          pass: EMAIL_PASSWORD,
-        },
-      });
-      transporter.sendMail({
-        from: '"TechSpace" <support@techspace.com>',
-        to: this.to,
-        subject: this.subject,
-        text: this.text,
-        html: this.html,
-      });
+      await ses
+        .sendEmail({
+          Destination: {
+            ToAddresses: this.to,
+          },
+          Message: {
+            Body: {
+              Html: {
+                Charset: "UTF-8",
+                Data: this.html,
+              },
+              Text: {
+                Charset: "UTF-8",
+                Data: this.text,
+              },
+            },
+            Subject: {
+              Charset: "UTF-8",
+              Data: this.subject,
+            },
+          },
+          Source: "techspace@convageo.com",
+        })
+        .promise();
     } catch (e) {
       console.error(e.message);
     }
