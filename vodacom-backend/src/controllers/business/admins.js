@@ -41,13 +41,15 @@ module.exports.create = async request => {
         `You added the user ${email} to your business`,
         id,
         "accounts",
-        null
+        null,
+        "Admin was added to business"
       ),
       new Notification(
         `You were added to the business run by ${business.email}`,
         user.id,
         "accounts",
-        null
+        null,
+        "Added to business"
       )
     ]
   );
@@ -118,13 +120,15 @@ module.exports.destroy = async request => {
         `You removed the user ${email} from your business`,
         id,
         "accounts",
-        null
+        null,
+        "Admin was removed",
       ),
       new Notification(
         `You were removed from the business run by ${businessEmail}`,
         user.id,
         "accounts",
-        null
+        null,
+        "Removed from business"
       )
     ]
   );

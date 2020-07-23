@@ -45,13 +45,15 @@ module.exports.destroy = async request => {
         `You removed the vendor ${vendorEmail} from your business`,
         id,
         "accounts",
-        null
+        null,
+        "Vendor removed from business"
       ),
       new Notification(
         `You were removed from the business run by ${email}`,
         vendor.id,
         "accounts",
-        null
+        null,
+        "Removed from business"
       )
     ]
   );

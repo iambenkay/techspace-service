@@ -1,7 +1,7 @@
 const c = require("../../data/collections");
 const { Response, ResponseError } = require("../../utils");
 const store = require("../../services/upload-provider");
-const Id = require("../../services/provider");
+const {Id} = require("../../services/provider");
 
 module.exports.set = async (request) => {
   const { id: vId } = request.payload;

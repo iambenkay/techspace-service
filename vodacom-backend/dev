@@ -1,1 +1,1 @@
-mongod --dbpath ./mongodb > db.log & nodemon vodacom-backend/src
+nodemon vodacom-backend/src

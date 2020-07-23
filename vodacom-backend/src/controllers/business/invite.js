@@ -38,13 +38,15 @@ module.exports = async request => {
         `You invited the vendor ${vendor.name} to your business`,
         id,
         "accounts",
-        null
+        null,
+        "Sent vendor invitation"
       ),
       new Notification(
         `You were invited to the business run by ${business.objects.name}`,
         vendor.id,
         "accounts",
-        null
+        null,
+        "Invitiation from business"
       )
     ]
   );

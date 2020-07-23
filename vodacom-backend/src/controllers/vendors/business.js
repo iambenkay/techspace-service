@@ -124,13 +124,15 @@ module.exports.destroy = async (request) => {
         `The vendor ${email} detached from your business account`,
         business.id,
         "accounts",
-        null
+        null,
+        "Vendor removed your business"
       ),
       new Notification(
         `You dissociated from the business run by ${businessEmail}`,
         id,
         "accounts",
-        null
+        null,
+        "Removed business"
       ),
     ]
   );

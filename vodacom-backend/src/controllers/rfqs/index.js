@@ -1,7 +1,7 @@
 const c = require("../../data/collections");
 const { Response, ResponseError } = require("../../utils");
 const V = require("../../services/validator");
-const Id = require("../../services/provider");
+const {Id} = require("../../services/provider");
 const store = require("../../services/upload-provider");
 
 module.exports.create = async (request) => {

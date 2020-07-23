@@ -2,19 +2,21 @@ const c = require("../data/collections");
 const {pubnub} = require("./provider")
 
 class Notification {
-  constructor(message, user, type, action) {
+  constructor(message, user, type, action, title) {
     this.message = message;
     this.user = user;
     this.type = type;
     this.action = action;
+    this.title = title;
   }
   static create(notifications) {
-      notifications.forEach(async ({message, user, type, action}) => {
+      notifications.forEach(async ({message, user, type, action, title}) => {
          const a = await c.notifications.insert({
               message,
               user,
               type,
-              action
+              action,
+              title
           });
           pubnub.publish({
             message: a,

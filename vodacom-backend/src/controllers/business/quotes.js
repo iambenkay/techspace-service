@@ -25,7 +25,8 @@ module.exports.accept = async (request) => {
         `${(business.name || "").toUpperCase()} has accepted your quote.`,
         quote.vendor_id,
         "rfq",
-        null
+        null,
+        "Quote accepted"
       ),
     ]
   );
