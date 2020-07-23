@@ -10,5 +10,6 @@ module.exports = {
   vendor_rfq_rel: C("vendor-rfq-rel"),
   message_head : C("message-head"),
   messages: C("messages"),
-  archives: C("archives")
+  archives: C("archives"),
+  portfolio: C("portfolio")
 };

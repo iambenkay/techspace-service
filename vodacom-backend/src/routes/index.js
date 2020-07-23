@@ -9,5 +9,6 @@ router.use(require("./details"));
 router.use(require("./quotes"));
 router.use(require("./messages"));
 router.use(require("./archives"));
+router.use(require("./portfolio"));
 
 module.exports = router;

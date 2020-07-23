@@ -873,7 +873,9 @@ Example result:
   ]
 }
 ```
+
 ## Reject vendor application
+
 ```js
 GET /api/v1/accounts/business/reject
 Authorization
@@ -882,5 +884,39 @@ Authorization
   vendorId: ...,
   review: true | false
   comment: (if review is true) ...
+}
+```
+
+## Set portfolio
+
+```
+POST /api/v1/portfolio
+Authorization
+
+{
+  business_name: ...,
+  description: ...,
+  founded: ...,
+  rc_number: ...,
+  tax_id: ...,
+  business_address: ...,
+  top_capabilities; [...],
+  top_partnership_affiliations: [...],
+  sector_specialties: [...],
+  regulatory_accreditations: [...],
+  membership_of: ...,
+  awards: [...],
+  recommendations: [...],
+}
+```
+
+## Get portfolio
+
+```
+POST /api/v1/portfolio
+Authorization
+
+{
+  sss
 }
 ```
