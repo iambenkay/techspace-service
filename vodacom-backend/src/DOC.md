@@ -915,8 +915,4 @@ Authorization
 ```
 GET /api/v1/portfolio
 Authorization
-
-{
-  sss
-}
 ```
