@@ -913,7 +913,7 @@ Authorization
 ## Get portfolio
 
 ```
-POST /api/v1/portfolio
+GET /api/v1/portfolio
 Authorization
 
 {
