@@ -24,3 +24,14 @@ module.exports.get = async (request) => {
 
   return new Response(200, { portfolio: found });
 };
+
+module.exports.findForUser = async (request) => {
+  const { id } = request.params;
+
+  const found = await c.portfolio.find({ owner: id });
+  if (found === null) {
+    throw new ResponseError(404, "Portfolio not found");
+  }
+
+  return new Response(200, { portfolio: found });
+};

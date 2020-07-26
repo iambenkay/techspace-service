@@ -5,5 +5,6 @@ const { isAuthenticated } = require("../middleware");
 
 router.post("/portfolio", isAuthenticated, handler(portfolio.post));
 router.get("/portfolio", isAuthenticated, handler(portfolio.get));
+router.get("/portfolio/:id", handler(portfolio.findForUser));
 
 module.exports = router;

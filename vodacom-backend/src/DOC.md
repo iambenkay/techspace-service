@@ -916,3 +916,10 @@ Authorization
 GET /api/v1/portfolio
 Authorization
 ```
+
+## Get portfolio of specific user
+
+```
+GET /api/v1/portfolio/<user_id>
+Authorization
+```
