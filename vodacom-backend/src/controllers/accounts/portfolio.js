@@ -36,6 +36,14 @@ module.exports.findForUser = async (request) => {
   if (found === null) {
     throw new ResponseError(404, "Portfolio not found");
   }
+  const user = await c.accounts.find({ _id: id });
+  if (user === null) {
+    throw new ResponseError(404, "Portfolio not found");
+  }
 
-  return new Response(200, { portfolio: found });
+  return new Response(200, {
+    portfolio: found,
+    name: user.name,
+    avatar: user.avatar,
+  });
 };
