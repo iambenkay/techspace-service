@@ -82,14 +82,16 @@ module.exports.fetchHead = async (request) => {
     const sender = await c.accounts.find({ _id: head.senderId });
     const receiver = await c.accounts.find({ _id: head.receiverId });
     const last_message = await c.messages.find_latest({ head_id: head.id });
-    data.push({
-      last_message,
-      senderName: sender.name,
-      senderId: sender.id,
-      receiverId: receiver.id,
-      receiverName: receiver.name,
-      ...head,
-    });
+    if (sender !== null && receiver !== null && last_message !== null) {
+      data.push({
+        last_message,
+        senderName: sender.name,
+        senderId: sender.id,
+        receiverId: receiver.id,
+        receiverName: receiver.name,
+        ...head,
+      });
+    }
   }
   return new Response(200, {
     error: false,

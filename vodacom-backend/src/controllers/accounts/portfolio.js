@@ -21,8 +21,12 @@ module.exports.get = async (request) => {
   if (found === null) {
     throw new ResponseError(404, "Portfolio not found");
   }
-
-  return new Response(200, { portfolio: found });
+  const user = await c.accounts.find({ _id: id });
+  return new Response(200, {
+    portfolio: found,
+    name: user.name,
+    avatar: user.avatar,
+  });
 };
 
 module.exports.findForUser = async (request) => {
