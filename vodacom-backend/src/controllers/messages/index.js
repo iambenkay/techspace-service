@@ -82,7 +82,7 @@ module.exports.fetchHead = async (request) => {
     const sender = await c.accounts.find({ _id: head.senderId });
     const receiver = await c.accounts.find({ _id: head.receiverId });
     const last_message = await c.messages.find_latest({ head_id: head.id });
-    if (sender !== null && receiver !== null && last_message !== null) {
+    if (sender !== null && receiver !== null) {
       data.push({
         last_message,
         senderName: sender.name,
