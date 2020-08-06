@@ -35,12 +35,18 @@ const requirements = require("../controllers/business/requirements");
 const fulfill = require("../controllers/vendors/fulfill-requirements");
 const rate = require("../controllers/business/rate");
 
+const forgotPassword = require("../controllers/auth/forgot-password");
+const resetPassword = require("../controllers/auth/reset-password");
+
 router.post(
   "/accounts/business/rate",
   isAuthenticated,
   isAccountType("business"),
   handler(rate)
 );
+
+router.post("/accounts/forgot-password", handler(forgotPassword));
+router.post("/accounts/reset-password", handler(resetPassword));
 
 // Get Account details
 router.get("/accounts", isAuthenticated, handler(account_details));

@@ -923,3 +923,24 @@ Authorization
 GET /api/v1/portfolio/<user_id>
 Authorization
 ```
+
+## Get password reset link in email
+
+```
+POST /api/v1/accounts/forgot-password
+
+{
+  email: "..."
+}
+```
+
+## Reset password
+
+```
+POST /api/v1/accounts/reset-password
+
+{
+  token: "...",
+  password: "..."
+}
+```

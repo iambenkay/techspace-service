@@ -7,8 +7,8 @@ class Token {
    * @param {Object} data
    * @returns String
    */
-  static create(data) {
-    return jwt.sign(data, JWT_SECRET_KEY);
+  static create(data, options = {}) {
+    return jwt.sign(data, JWT_SECRET_KEY, { ...options });
   }
   /**
    *
