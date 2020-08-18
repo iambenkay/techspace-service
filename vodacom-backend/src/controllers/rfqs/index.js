@@ -1,7 +1,7 @@
 const c = require("../../data/collections");
 const { Response, ResponseError } = require("../../utils");
 const V = require("../../services/validator");
-const {Id} = require("../../services/provider");
+const { Id } = require("../../services/provider");
 const store = require("../../services/upload-provider");
 
 module.exports.create = async (request) => {
@@ -41,10 +41,7 @@ module.exports.create = async (request) => {
       throw new ResponseError(400, "You must provide only pdf files");
     let result;
     try {
-      result = await store.upload(
-        request.file,
-        "rfq_description_documents/" + Id()
-      );
+      result = await store.upload(request.file, `${id}/` + Id());
     } catch (error) {
       throw new ResponseError(400, error.message);
     }

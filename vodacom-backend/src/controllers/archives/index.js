@@ -54,7 +54,7 @@ module.exports.add = async (request) => {
   let result;
   try {
     result = await store
-      .upload(doc, "archives/" + doc_id)
+      .upload(doc, `${id}/` + doc_id)
       .then((result) => result.secure_url);
   } catch (error) {
     throw new ResponseError(400, error.message);

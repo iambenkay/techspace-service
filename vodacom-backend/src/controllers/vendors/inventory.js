@@ -23,7 +23,7 @@ module.exports.add = async (request) => {
   let result;
   try {
     result = await store
-      .upload(picture, "product_images/" + product_id)
+      .upload(picture, `${id}/` + product_id)
       .then((result) => result.secure_url);
   } catch (error) {
     throw new ResponseError(400, error.message);

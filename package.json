@@ -6,9 +6,9 @@
     "start": "node vodacom-backend/src",
     "dev": "./vodacom-backend/dev",
     "commit": "git add . ; git commit",
-    "push": "git add . ; git commit ; git push origin master",
-    "deploy": "git add . ; git commit ; git push heroku master",
-    "sync": "git add . ; git commit ; git push heroku master ; git push origin master"
+    "push": "npm run commit ; git push origin master",
+    "deploy": "npm run commit ; git push heroku master",
+    "sync": "npm run deploy ; git push origin master"
   },
   "jest": {
     "testEnvironment": "node",
@@ -36,6 +36,7 @@
     "multer-gridfs-storage": "^4.0.1",
     "nodeshift": "^6.0.2",
     "pubnub": "^4.27.4",
+    "short-unique-id": "^3.0.4",
     "throng": "^4.0.0"
   },
   "devDependencies": {

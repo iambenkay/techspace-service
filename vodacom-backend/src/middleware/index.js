@@ -31,6 +31,33 @@ async function isAuthenticated(req, res, next) {
   return next();
 }
 
+async function processCookieToken(req, res, next) {
+  let token = null;
+  if (req.cookies && req.cookies.token) {
+    token = req.cookies.token;
+  }
+  if (token) {
+    req.payload = tokeniser.decode(token);
+    if (!req.payload)
+      return res.status(401).send({
+        error: true,
+        message: "Invalid JWT Token",
+      });
+    const user = await c.accounts.find({ _id: req.payload.id });
+    if (!user)
+      return res.status(401).send({
+        error: true,
+        message: "Invalid Account details",
+      });
+    if (!user.isVerified)
+      return res.status(401).send({
+        error: true,
+        message: "This account has not yet been verified",
+      });
+  }
+  return next();
+}
+
 function isAccountType(...type) {
   return async (req, res, next) => {
     const { userType } = req.payload;
@@ -47,6 +74,7 @@ module.exports = Object.freeze({
   isAuthenticated,
   isAccountType,
   mustHaveRequirement,
+  processCookieToken,
 });
 
 async function mustHaveRequirement(req, res, next) {

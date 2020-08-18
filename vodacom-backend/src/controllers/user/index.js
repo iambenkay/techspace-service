@@ -19,7 +19,7 @@ module.exports.uploadImage = async (request) => {
 
   let result;
   try {
-    result = await store.upload(image, "avatars/" + id);
+    result = await store.upload(image, `${id}/` + id);
   } catch (error) {
     throw new ResponseError(400, error.message);
   }

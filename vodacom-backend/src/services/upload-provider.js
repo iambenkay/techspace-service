@@ -1,4 +1,7 @@
 const AWS = require("aws-sdk");
+const c = require("../data/collections");
+const shortid = require("../services/shortid-provider");
+
 const { AWS_BUCKET_NAME } = process.env;
 
 AWS.config.update({ region: "eu-west-1" });
@@ -12,7 +15,7 @@ const uploadParams = {
 };
 
 module.exports = {
-  upload(file, key) {
+  async upload(file, key) {
     return s3
       .upload({
         Key: `${key}`,
@@ -21,9 +24,13 @@ module.exports = {
         ...uploadParams,
       })
       .promise()
-      .then(({ Key }) => {
+      .then(async ({ Key }) => {
+        const media = await c.media.insert({
+          code: shortid.generate(),
+          key: Key,
+        });
         return {
-          secure_url: `${process.env.CLIENT_APP}/media/${Key}`,
+          secure_url: `${process.env.CLIENT_APP}/m/${media.code}`,
         };
       })
       .catch((err) => {

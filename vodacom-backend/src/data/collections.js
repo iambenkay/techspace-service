@@ -12,4 +12,5 @@ module.exports = {
   messages: C("messages"),
   archives: C("archives"),
   portfolio: C("portfolio"),
+  media: C("media"),
 };
