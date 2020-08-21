@@ -6,7 +6,7 @@ const store = require("./services/upload-provider");
 const path = require("path");
 const c = require("./data/collections");
 
-const { processCookieToken } = require("../middleware");
+const { processCookieToken } = require("./middleware");
 
 const app = express();
 
